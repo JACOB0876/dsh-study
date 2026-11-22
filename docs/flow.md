@@ -26,8 +26,13 @@ flowchart TD
 
   B5 --> END1["用户：去翻书 / 下一关"]
   A1 -.-> S["study_search（可选）<br/>搜概念与章节"]
-  B5 -.-> GAP["缺口（M2）：进度不落盘<br/>学完不打勾、跨会话不连续"]
+  B5 --> DONE["study_progress(mark)<br/>写入 ~/.dsh/study-progress.json"]
 ```
+
+## 进度（v0.2 起）
+
+每关收尾时 agent 调 `study_progress action=mark lesson_id=<id>`；
+下一次会话 `study_catalog` 会直接显示「已学 3/13，下一关 l5」。
 
 ## 两条离线链路
 

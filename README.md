@@ -65,7 +65,7 @@ docs/            学习路线、环境配置、进度表、插件设计
 
 `plugin/` 是一个 DeepSeek Harness 插件：装上后可以在任意对话里说「我想学 LLM」，agent 会逐关带你学。
 
-三个工具：`study_catalog`（路线/关卡）、`study_lesson`（一关的完整内容）、`study_search`（搜概念与章节）。
+四个工具：`study_catalog`（路线/关卡/进度）、`study_lesson`（一关的完整内容）、`study_search`（搜概念与章节）、`study_progress`（打勾与续学）。
 
 ```bash
 git clone https://github.com/JACOB0876/dsh-study.git

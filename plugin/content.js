@@ -48,3 +48,11 @@ export function findLessonByTitle(text) {
     || all.find(l => l.title.toLowerCase().includes(q))
     || null
 }
+
+// 下一关：以「最后完成的那一关」为锚点往后找，避免总把人送回第一关
+export function nextLessonFor(list, doneIds) {
+  const done = new Set(doneIds || [])
+  let last = -1
+  list.forEach((l, i) => { if (done.has(l.id)) last = i })
+  return list.slice(last + 1).find(l => !done.has(l.id)) || list.find(l => !done.has(l.id)) || null
+}

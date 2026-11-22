@@ -4,6 +4,7 @@ import { defineTool } from '@deepseek-ai/dsh-tools'
 import { catalogTool } from './tools/catalog.js'
 import { lessonTool } from './tools/lesson.js'
 import { searchTool } from './tools/search.js'
+import { progressTool } from './tools/progress.js'
 import { content } from './content.js'
 
 export const inject = ['tools']
@@ -12,7 +13,7 @@ export function apply(ctx) {
   const c = content()
   const count = Object.keys(c.lessons).length
 
-  for (const def of [catalogTool, lessonTool, searchTool]) {
+  for (const def of [catalogTool, lessonTool, searchTool, progressTool]) {
     ctx.tools.register(defineTool(def))
   }
 

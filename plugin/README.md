@@ -9,6 +9,7 @@
 | `study_catalog` | 列出 4 条路线，或某条线的关卡清单 |
 | `study_lesson` | 取一关的完整内容（可用 `section` 只取一部分） |
 | `study_search` | 搜关卡 / 概念 / 书章 |
+| `study_progress` | 查看进度 / 标记完成（写 `~/.dsh/study-progress.json`） |
 
 ## 安装
 
@@ -63,7 +64,7 @@ python scripts/pack_content.py
 ## 限制
 
 - 不提供原书 PDF
-- v0.1 不保存学习进度
+- 进度只存本机，不跨设备同步
 - 不能替用户跑代码
 
 ## 开发
