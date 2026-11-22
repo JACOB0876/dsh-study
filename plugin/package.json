@@ -39,5 +39,21 @@
   ],
   "dependencies": {
     "@deepseek-ai/dsh-tools": "0.2.2-rc.5"
+  },
+  "author": "JACOB0876",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JACOB0876/dsh-study.git",
+    "directory": "plugin"
+  },
+  "homepage": "https://github.com/JACOB0876/dsh-study#readme",
+  "bugs": {
+    "url": "https://github.com/JACOB0876/dsh-study/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-rc.5"
   }
 }
