@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>dsh-study 插件工作流程</title>
+<style>
+  html,body{margin:0;background:#f7f9fc;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;color:#0f172a}
+  .wrap{width:1520px;margin:0 auto;padding:26px 30px 10px}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:#64748b;font-size:13px;margin-bottom:14px}
+  svg{display:block}
+  .lane{font-size:12px;fill:#94a3b8;letter-spacing:2px;font-weight:700}
+  .box{fill:#fff;stroke:#dbe6f3;stroke-width:1.4}
+  .box.agent{stroke:#bfdbfe;fill:#f8fbff}
+  .box.plugin{stroke:#c7b7f5;fill:#fbf9ff}
+  .box.data{stroke:#a7f3d0;fill:#f6fefb}
+  .box.user{stroke:#cbd5e1;fill:#fff}
+  .box.gap{stroke:#fca5a5;stroke-dasharray:6 4;fill:#fff5f5}
+  .t{font-size:13px;fill:#0f172a}
+  .t.b{font-weight:600}
+  .t.s{font-size:11.5px;fill:#64748b}
+  .code{font-family:Consolas,ui-monospace,monospace;font-size:11.5px;fill:#1d4ed8}
+  .arrow{stroke:#94a3b8;stroke-width:1.4;fill:none;marker-end:url(#a)}
+  .arrow.sub{stroke-dasharray:4 3;stroke:#b6c2d1}
+  .lbl{font-size:11px;fill:#94a3b8}
+</style></head><body>
+<div class="wrap">
+  <h1>dsh-study 插件：当前工作流程（v0.1）</h1>
+  <div class="sub">实线 = 已经实现并在本机跑通；虚线 = 设计里已有、这一版还没做</div>
+  <svg width="1460" height="880" viewBox="0 0 1460 880">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+
+    <!-- lanes -->
+    <rect x="20" y="10" width="250" height="770" rx="14" fill="#ffffff80"/>
+    <rect x="280" y="10" width="360" height="770" rx="14" fill="#ffffff80"/>
+    <rect x="650" y="10" width="380" height="770" rx="14" fill="#ffffff80"/>
+    <rect x="1040" y="10" width="400" height="770" rx="14" fill="#ffffff80"/>
+
+    <text class="lane" x="40" y="36">用户</text>
+    <text class="lane" x="300" y="36">AGENT（会话）</text>
+    <text class="lane" x="670" y="36">dsh-study 插件</text>
+    <text class="lane" x="1060" y="36">内容层</text>
+
+    <!-- 1 用户发起 -->
+    <rect class="box user" x="40" y="60" width="210" height="64" rx="10"/>
+    <text class="t b" x="56" y="86">「我想学 LLM」</text>
+    <text class="t s" x="56" y="106">任意会话，不需要特定对话</text>
+
+    <!-- 2 agent 调 catalog -->
+    <rect class="box agent" x="300" y="60" width="320" height="64" rx="10"/>
+    <text class="t b" x="316" y="86">判断意图 → study_catalog()</text>
+    <text class="t s" x="316" y="106">没有路线信息时先问，不瞎猜</text>
+
+    <!-- 3 插件读内容 -->
+    <rect class="box plugin" x="670" y="60" width="340" height="64" rx="10"/>
+    <text class="t b" x="686" y="86">content.js 读 content.json</text>
+    <text class="t s" x="686" y="106">启动时载入一次，缓存在内存</text>
+
+    <!-- 4 数据 -->
+    <rect class="box data" x="1060" y="60" width="360" height="64" rx="10"/>
+    <text class="t b" x="1076" y="86">content.json · 321 KB</text>
+    <text class="t s" x="1076" y="106">41 关 / 51 概念 / 8 本书 / 1229 节索引</text>
+
+    <path class="arrow" d="M250,92 L296,92"/>
+    <path class="arrow" d="M620,92 L666,92"/>
+    <path class="arrow" d="M1010,92 L1056,92"/>
+
+    <!-- 5 返回路线 -->
+    <rect class="box plugin" x="670" y="160" width="340" height="70" rx="10"/>
+    <text class="t b" x="686" y="186">返回：4 条路线 + 关卡数</text>
+    <text class="t s" x="686" y="206">LLM 11 关 · 量化 13 · 文本 8 · C++ 9</text>
+    <text class="t s" x="686" y="222">附一句「没有偏好就建议 llm」</text>
+    <path class="arrow" d="M840,124 L840,156"/>
+
+    <rect class="box agent" x="300" y="160" width="320" height="70" rx="10"/>
+    <text class="t b" x="316" y="186">让用户选路线</text>
+    <text class="t s" x="316" y="206">不一口气列 41 关</text>
+    <path class="arrow" d="M666,195 L624,195"/>
+
+    <!-- 6 用户选 -->
+    <rect class="box user" x="40" y="272" width="210" height="60" rx="10"/>
+    <text class="t b" x="56" y="298">「LLM，零基础」</text>
+    <text class="t s" x="56" y="318">也可以直接说「学第 7 关」</text>
+    <path class="arrow" d="M296,195 L145,195 L145,268"/>
+
+    <!-- 7 agent 调 lesson -->
+    <rect class="box agent" x="300" y="272" width="320" height="60" rx="10"/>
+    <text class="t b" x="316" y="298">study_lesson("llm1")</text>
+    <text class="t s" x="316" y="318">可加 section：intro / concepts / steps…</text>
+    <path class="arrow" d="M250,302 L296,302"/>
+
+    <rect class="box plugin" x="670" y="272" width="340" height="60" rx="10"/>
+    <text class="t b" x="686" y="298">返回一关的五段</text>
+    <text class="t s" x="686" y="318">钩子 / 概念 / 步骤 / 自测 / 回书</text>
+    <path class="arrow" d="M620,302 L666,302"/>
+
+    <!-- 回书数据 -->
+    <rect class="box data" x="1060" y="272" width="360" height="60" rx="10"/>
+    <text class="t b" x="1076" y="298">lesson_books + readback</text>
+    <text class="t s" x="1076" y="318">每关对应哪本书第几章、为什么去</text>
+    <path class="arrow sub" d="M1010,302 L1056,302"/>
+
+    <!-- 8 教学循环（大框） -->
+    <rect x="300" y="376" width="700" height="250" rx="14" fill="#f8fbff" stroke="#bfdbfe" stroke-width="1.6"/>
+    <text class="t b" x="320" y="402">教学循环（一次只推进一格）</text>
+
+    <rect class="box agent" x="320" y="416" width="300" height="56" rx="9"/>
+    <text class="t" x="336" y="440">① 抛钩子 + 三个概念</text>
+    <text class="t s" x="336" y="458">不加解释，先问用户猜多少</text>
+
+    <rect class="box agent" x="320" y="488" width="300" height="56" rx="9"/>
+    <text class="t" x="336" y="512">② 给代码，要求跑完贴输出</text>
+    <text class="t s" x="336" y="530">没贴输出就不往下走</text>
+
+    <rect class="box agent" x="320" y="560" width="300" height="52" rx="9"/>
+    <text class="t" x="336" y="584">③ 对照预期输出定位问题</text>
+    <text class="t s" x="336" y="600">路径 / 版本 / 编码</text>
+
+    <rect class="box user" x="660" y="416" width="310" height="56" rx="9"/>
+    <text class="t" x="676" y="440">用户：跑代码、贴结果</text>
+    <text class="t s" x="676" y="458">真实输出，不是「应该对」</text>
+
+    <rect class="box agent" x="660" y="488" width="310" height="56" rx="9"/>
+    <text class="t" x="676" y="512">④ 一次一题地自测</text>
+    <text class="t s" x="676" y="530">答错先给提示，不直接给答案</text>
+
+    <rect class="box user" x="660" y="560" width="310" height="52" rx="9"/>
+    <text class="t" x="676" y="584">用户答题</text>
+    <text class="t s" x="676" y="600">错两次 → 退回上一关的概念</text>
+
+    <path class="arrow" d="M620,444 L656,444"/>
+    <path class="arrow" d="M470,472 L470,484"/>
+    <path class="arrow" d="M620,516 L656,516"/>
+    <path class="arrow" d="M470,544 L470,556"/>
+    <path class="arrow" d="M620,586 L656,586"/>
+    <path class="arrow sub" d="M815,556 L815,548"/>
+
+    <!-- 9 收尾 -->
+    <rect class="box agent" x="300" y="666" width="320" height="66" rx="10"/>
+    <text class="t b" x="316" y="692">⑤ 收尾：能做什么 + 回书指引</text>
+    <text class="t s" x="316" y="712">「去《05 FTP》第 2 章 p.33–74，目的是推导」</text>
+    <path class="arrow" d="M470,630 L470,662"/>
+
+    <rect class="box user" x="40" y="666" width="210" height="66" rx="10"/>
+    <text class="t b" x="56" y="692">去翻书 / 下一关</text>
+    <text class="t s" x="56" y="712">书要自己买，插件只给索引</text>
+    <path class="arrow" d="M296,699 L246,699"/>
+
+    <!-- 缺口 -->
+    <rect class="box gap" x="650" y="666" width="380" height="66" rx="10"/>
+    <text class="t" x="666" y="692" fill="#b91c1c">⚠ 缺口：进度不落盘</text>
+    <text class="t s" x="666" y="712" fill="#dc2626">学完不打勾、跨会话不连续（M2 补 study_progress）</text>
+
+    <!-- 内容链路 -->
+    <rect class="box data" x="1060" y="380" width="360" height="230" rx="10"/>
+    <text class="t b" x="1076" y="406">内容从哪来（离线构建）</text>
+    <text class="t s" x="1076" y="432">course/*.json（41 关）</text>
+    <text class="t s" x="1076" y="452">graph/concepts.json（51 概念）</text>
+    <text class="t s" x="1076" y="472">mindmap/sections.json（章节索引）</text>
+    <text class="t s" x="1076" y="492">course/readlist.json · readback.json</text>
+    <text class="t s" x="1076" y="520">↓ pack_content.py 校验</text>
+    <text class="t s" x="1076" y="540">（每关 3 概念 / 页码存在性）</text>
+    <text class="t s" x="1076" y="568">↓ 合并</text>
+    <text class="t code" x="1076" y="592">plugin/content/content.json</text>
+
+    <!-- 安装链路 -->
+    <rect class="box" x="1060" y="630" width="360" height="110" rx="10"/>
+    <text class="t b" x="1076" y="656">装一次即生效</text>
+    <text class="t s" x="1076" y="678">git clone → plugin/ pnpm install</text>
+    <text class="t s" x="1076" y="698">→ Plugins → Add plugin</text>
+    <text class="t s" x="1076" y="718">→ 工具注入所有会话（重启后仍在）</text>
+  </svg>
+</div>
+</body></html>
