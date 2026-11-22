@@ -4,7 +4,13 @@
 
 不包含原书 PDF——那些请自行购买或借阅。本仓库只有我们自己的课程、卡片和索引。
 
-## 快速开始
+## 在线访问（不用下载）
+
+- 课程：<https://jacob0876.github.io/dsh-study/course/index.html>
+- 目录树：<https://jacob0876.github.io/dsh-study/mindmap/books-mindmap.html>
+- 概念图谱：<https://jacob0876.github.io/dsh-study/graph/index.html>
+
+## 本地打开
 
 下载后双击：
 
