@@ -100,47 +100,7 @@ if CPP:
                    "intro": INTROS["cpp"]})
 
 
-READLIST = [
-    {"code": "01", "short": "PDSH", "zh": "Python 数据科学手册", "cover": "起点三关 + 量化 1–3 关",
-     "need": [{"ch": 5, "t": "Machine Learning", "p": "349–470",
-               "why": "课程只给了直觉；estimator API、网格搜索、PCA 与聚类在这里"}],
-     "skip": "第 1 章 IPython、第 4 章后半（3D / 地图 / Seaborn）"},
-    {"code": "02", "short": "MLCK", "zh": "Python 机器学习经典实例", "cover": "几乎没覆盖（只借了评估概念）",
-     "need": [{"ch": 11, "t": "Model Evaluation", "p": "190–216", "why": "交叉验证、指标、学习曲线"},
-              {"ch": 12, "t": "Model Selection", "p": "217–229", "why": "网格/随机搜索、Pipeline 调参"},
-              {"ch": 14, "t": "Trees and Forests", "p": "240–258", "why": "树、随机森林、boosting 的配方"},
-              {"ch": 16, "t": "Logistic Regression", "p": "270–275", "why": "最常用的二分类基线"}],
-     "skip": "图像、日期、KNN、部署（当字典查，不用读）"},
-    {"code": "03", "short": "NLP", "zh": "Python 文本分析实战", "cover": "文本线 5 关 ≈ 第 1/4/5/6 章主干",
-     "need": [{"ch": 6, "t": "Text Classification Algorithms", "p": "173–204", "why": "四步分类流程与调参，课程讲得浅"},
-              {"ch": 7, "t": "How to Explain a Text Classifier", "p": "205–228", "why": "LIME / Anchor 的实操"}],
-     "skip": "第 2–3 章抓数据、第 9 章摘要、第 13 章生产化"},
-    {"code": "04", "short": "LLM", "zh": "LLM 服务与优化实战", "cover": "LLM 线 8 关 ≈ 第 1/2/5/6/9 章的概念层",
-     "need": [{"ch": 5, "t": "Challenges When Serving LLMs", "p": "175–206", "why": "显存与瓶颈的估算，课程只给结论"},
-              {"ch": 6, "t": "Essential Optimization Techniques", "p": "207–250", "why": "连续批处理、量化、PagedAttention 的细节"},
-              {"ch": 7, "t": "Advanced Optimization Techniques", "p": "251–288", "why": "投机解码、并行策略——课程完全没讲"}],
-     "skip": "第 3 章系统设计、第 4 章最佳实践、第 10 章展望"},
-    {"code": "05", "short": "FTP", "zh": "Python 金融理论", "cover": "量化 7–8 关 ≈ 第 2 章 + 第 6 章皮毛",
-     "need": [{"ch": 2, "t": "Two-State Economy", "p": "33–74", "why": "复制、无套利、鞅测度的源头"},
-              {"ch": 3, "t": "Three-State Economy", "p": "75–98", "why": "不完备市场、超复制——课程没讲"},
-              {"ch": 5, "t": "Static Economy", "p": "133–162", "why": "BSM 与 Merton 跳扩散的推导"},
-              {"ch": 6, "t": "Dynamic Economy", "p": "163–184", "why": "二叉树与蒙特卡洛的完整实现"}],
-     "skip": "第 7 章（延伸书单）"},
-    {"code": "06", "short": "RLF", "zh": "面向金融的强化学习", "cover": "量化 9–10 关 ≈ 第 2/3/7 章概念",
-     "need": [{"ch": 7, "t": "Dynamic Hedging", "p": "119–142", "why": "课程只讲架构，这里才是完整实现"},
-              {"ch": 8, "t": "Dynamic Asset Allocation", "p": "143–180", "why": "多资产配置与奖励设计"}],
-     "skip": "第 4–5 章造数据、第 9 章最优执行"},
-    {"code": "07", "short": "DLF", "zh": "面向金融的深度学习", "cover": "量化 5–6 关 ≈ 第 3/7 章",
-     "need": [{"ch": 8, "t": "Deep Learning for Time Series I", "p": "231–264", "why": "MLP / RNN / LSTM / TCN 的结构"},
-              {"ch": 9, "t": "Deep Learning for Time Series II", "p": "265–292", "why": "分数阶差分、时序交叉验证"},
-              {"ch": 11, "t": "Advanced Techniques and Strategies", "p": "307–340", "why": "COT、波动率、训练可视化"}],
-     "skip": "第 1–2 章、第 6 章 Python 入门、第 10 章（14 页 DRL）"},
-    {"code": "08", "short": "C++", "zh": "面向金融的现代 C++", "cover": "C++ 线 6 关 ≈ 第 1/2/3/6/8 章主干",
-     "need": [{"ch": 2, "t": "User-Defined Classes", "p": "55–84", "why": "BS 定价类的完整写法"},
-              {"ch": 3, "t": "Inheritance, Polymorphism, Smart Pointers", "p": "85–124", "why": "Payoff 体系与所有权"},
-              {"ch": 6, "t": "Random Numbers and Concurrency", "p": "199–246", "why": "蒙特卡洛与并行，课程是压缩版"}],
-     "skip": "第 4–5 章 STL（当手册）、第 7 章固定收益、第 9 章 Boost、第 10 章 modules"},
-]
+READLIST = json.load(open(os.path.join(HERE, "readlist.json"), encoding="utf-8"))
 
 BOOKS = [
     {"code": "01", "short": "PDSH", "zh": "Python 数据科学手册", "role": "工具底座 A",
@@ -175,37 +135,7 @@ for _t in TRACKS:
 
 
 # 关卡 → 回书指引：purpose ∈ 佐证 / 拓展 / 推导 / 查漏
-READBACK = {
-    "llm1": ("查漏", "变量与作用域这些细节，课程只讲到「能取字段」为止"),
-    "llm2": ("拓展", "服务形态、部署拓扑与鉴权方式，书里才有完整讨论"),
-    "llm3": ("佐证", "KV cache 与 prefill/decode 的原理图和数字，用来验证你测出来的结果"),
-    "llm4": ("拓展", "词向量怎么训练、怎么可视化，想自己做 embedding 时看"),
-    "llm5": ("佐证", "分类流程、调参与评估的完整例子，对照你的通过率"),
-    "llm6": ("推导", "显存与吞吐的估算公式怎么来的，课程只给了结论"),
-    "llm7": ("佐证", "量化与 PagedAttention 的实测数据，对照你算出来的显存"),
-    "llm8": ("拓展", "端到端优化的完整步骤与踩坑记录"),
-    "l1": ("查漏", "变量、函数、作用域的细节，课程只讲了「能算出结果」"),
-    "l2": ("佐证", "pandas 的索引、分组、时间重采样，用来核对你的月度收益"),
-    "l3": ("拓展", "该用什么图、怎么配色、子图怎么排，课程只画了三条线"),
-    "l4": ("佐证", "分布与平稳性的描述统计，验证「波动 20% 是什么感觉」"),
-    "l5": ("拓展", "特征缩放、编码、异常值处理的完整配方"),
-    "l6": ("佐证", "时序特征工程与回测细节，对照你的扣费前后差异"),
-    "l7": ("推导", "复制组合、鞅测度、1FTAP/2FTAP 的完整推导——课程只给结论"),
-    "l8": ("推导", "BSM 与蒙特卡洛的数学来路，以及 LSM 美式期权"),
-    "rl1": ("佐证", "MDP、Bellman 方程与 Q 学习的推导，验证你写的环境"),
-    "rl2": ("拓展", "DQN 的网络结构、经验回放与训练技巧的完整实现"),
-    "nlp1": ("佐证", "EDA 的更多切面：KWIC、n-gram、词云"),
-    "nlp2": ("佐证", "spaCy 的词形还原、NER、依存句法，课程只用了正则"),
-    "nlp3": ("推导", "TF-IDF 的权重公式与 n-gram 的取舍"),
-    "nlp4": ("拓展", "四步分类流程、调参、以及为什么准确率会骗人"),
-    "nlp5": ("拓展", "LDA / NMF 的数学与 coherence 选主题数的方法"),
-    "cpp1": ("查漏", "C++ 标准演进与工具链的细节，课程只讲了怎么跑起来"),
-    "cpp2": ("佐证", "BS 定价类的完整写法：const、移动语义、RVO"),
-    "cpp3": ("拓展", "虚函数派发、所有权模型、Rule of Five 的完整讨论"),
-    "cpp4": ("查漏", "容器的复杂度与选型（vector / map / unordered_map）"),
-    "cpp5": ("推导", "随机数引擎、分布与并发的正确用法，以及 pthread 链接细节"),
-    "cpp6": ("拓展", "Eigen 的表达式模板、Cholesky 与回归实现"),
-}
+READBACK = json.load(open(os.path.join(HERE, "readback.json"), encoding="utf-8"))
 
 LESSON_BOOKS = {
     "llm1": [("01", 1)], "llm2": [("04", 1)], "llm3": [("04", 2)], "llm4": [("03", 10)],

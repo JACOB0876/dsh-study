@@ -1,0 +1,5 @@
+# dsh-study 插件行
+- insert:
+    - id: dsh-study
+      name: dsh-study
+      config: {}

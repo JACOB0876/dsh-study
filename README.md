@@ -61,10 +61,19 @@ docs/            学习路线、环境配置、进度表、插件设计
 
 章节标题与页码属于事实性索引（和图书馆目录同类）；课程正文、概念卡片、图示均为原创。
 
-## 插件计划
+## DSH 插件（已可安装）
 
-正在做一个 DSH 插件版本，装进 DeepSeek Harness 后可以在任意对话里直接开始学、自动出题、记进度。
-设计见 [`docs/PLUGIN-SPEC.md`](docs/PLUGIN-SPEC.md)。
+`plugin/` 是一个 DeepSeek Harness 插件：装上后可以在任意对话里说「我想学 LLM」，agent 会逐关带你学。
+
+三个工具：`study_catalog`（路线/关卡）、`study_lesson`（一关的完整内容）、`study_search`（搜概念与章节）。
+
+```bash
+git clone https://github.com/JACOB0876/dsh-study.git
+cd dsh-study/plugin && pnpm install
+# 然后在 DSH 里：Plugins → Add plugin → 选这个目录
+```
+
+详见 [`plugin/README.md`](plugin/README.md)，设计文档在 [`docs/PLUGIN-SPEC.md`](docs/PLUGIN-SPEC.md)。
 
 ## 许可
 
