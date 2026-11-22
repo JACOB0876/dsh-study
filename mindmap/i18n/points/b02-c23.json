@@ -1,0 +1,7 @@
+{
+  "23.1": ["用 Keras 的保存与加载接口存取模型", "SavedModel 是 TensorFlow 的标准格式"],
+  "23.2": ["用 torch.save 与 torch.load 存取模型", "model.pt 其实是含参数的字典", "用 model_state_dict 键恢复权重"],
+  "23.3": ["用 Flask 把 scikit-learn 模型包成 Web 服务", "先用 joblib.dump 存模型文件", "curl POST 到 /predict 得预测结果"],
+  "23.4": ["用 Flask 把 TensorFlow 模型部署成 API", "开发服务器不能直接用于生产环境"],
+  "23.5": ["用 Seldon Core 的 Python wrapper 部署模型", "网络用 nn.Sequential 逐层堆叠"]
+}

@@ -1,0 +1,17 @@
+{
+  "7.1": ["投机解码（speculative decoding）：草稿模型猜 token，目标模型验证", "验证通过即接受并跳跃前进，加速 decode 阶段"],
+  "7.2": ["被拒 token 之后全部作废，由目标模型重新生成", "投机解码不损精度，输出与原始解码一致", "理论依据：Leviathan 2022、Chen 2023 两篇论文"],
+  "7.3": ["vLLM 可配三种模式：基线、n-gram、EAGLE-3", "n-gram 投机配置：候选 6 个 token、lookup 4–6", "改进版 n-gram 目标是提高接受率（acceptance rate）并降开销"],
+  "7.4": ["EAGLE-3 的 ITL 更优，但多出投机头使 TTFT 变长", "在 TTFT 与 ITL 间按 SLA/SLO 取舍", "需按数据集多轮实测接受率再定参数"],
+  "7.5": ["数据并行（DP）复制多份模型实例，用于提吞吐", "TP/PP 装下大模型，DP 扩吞吐，EP 服 MoE", "请求量大时先水平扩展副本"],
+  "7.6": ["LLM 路由比传统 Web 更关键：硬件贵、负载差异大", "路由信号：KV cache 命中率、显存占用、队列长度、输入长度"],
+  "7.7": ["TP=4、PP=2 可在单台 8 卡节点内跑 7B 模型", "跨节点推理受网络瓶颈限制，需 Ray 编排", "专家并行（EP）把 MoE 专家分散到多块 GPU"],
+  "7.8": ["prefill 计算密集、decode 访存密集，同卡部署互相干扰", "PD 分离（PD disaggregation）把两阶段拆到不同实例"],
+  "7.9": ["PD 分离可对两阶段做非对称、独立扩缩", "prefill 突发性强宜激进扩容，decode 平稳可预测", "DistServe 由控制器（controller）统一路由请求"],
+  "7.10": ["PD 分离成败取决于 KV cache 能否高效传到 decode 实例", "分离收益必须大于 KV cache 传输开销"],
+  "7.11": ["KV cache 可分块（chunk）流式传输，边算边传", "异步非阻塞传输让通信与计算重叠", "KV cache 按层切分，可逐层传以尽早启动 decode"],
+  "7.12": ["进阶 KV 缓存面向超长上下文（如代码 copilot）", "前文三招：投机解码、并行、PD 分离"],
+  "7.13": ["KV cache 可卸载到 CPU 内存、SSD 或远端存储", "跨副本路由（cross-replica routing）让缓存可复用", "长上下文 CAG 省掉实时检索，但也带来成本"],
+  "7.14": ["CAG 缓存 10 万 token，成本近 RAG（5 千 token）两倍", "RAG 的索引与检索成本远低于 LLM 调用，总体更便宜", "自托管可用 KV cache 卸载（offloading）压成本"],
+  "7.15": ["CacheBlend 只重算约 15% 的 KV cache 以保跨 token 关系", "少量重算即可保住质量，避免全量重算", "LMCache 实战对比：CPU 卸载 vs 原生前缀缓存"]
+}

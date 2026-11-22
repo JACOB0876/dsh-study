@@ -1,0 +1,12 @@
+{
+  "8.1": ["传统 DL 服务：短输入、定长张量，主靠批处理", "LLM 逐 token 自回归生成，服务难题与图像模型不同"],
+  "8.2": ["vLLM 两大招牌：分页 KV 缓存（paged KV caching）＋连续批处理", "还支持量化、投机解码、流式与多 GPU 分布式", "直击长提示、高显存、多用户并发的痛点"],
+  "8.3": ["三层组件：ModelExecutor、GPUWorker、GPUModelRunner", "ModelExecutor 编排多 worker，ModelRunner 跑网络", "每个模型独立进程，靠分层隔离关注点"],
+  "8.4": ["LLM 主进程初始化引擎、调度器、KV 管理器与执行器", "MultiProcessExecutor 起 4 个 worker，用消息队列下发指令"],
+  "8.5": ["GPUWorker 负责实际前向计算与模型级优化", "Scheduler 负责通用服务规划与调度优化"],
+  "8.6": ["分层优化：调度器管全局、执行器懂架构、层内做融合", "调度器与模型无关，架构优化独立演进", "层内优化：KV 复用、FlashAttention、算子融合"],
+  "8.7": ["TensorRT-LLM 目标是榨干 NVIDIA GPU 与 Tensor Core", "适合已标准化在 NVIDIA 栈、追求极致效率的组织"],
+  "8.8": ["SGLang 硬件覆盖广：NVIDIA、AMD、CPU、TPU、Jetson、昇腾", "性能与 vLLM 相当，某些负载更好，但社区更小", "强项：结构化生成与多步 Agent 提示"],
+  "8.9": ["Llama.cpp 可在 CPU、Apple Silicon 与小 GPU 上直接跑", "暴露 OpenAI 兼容接口，本地零云费部署"],
+  "8.10": ["低并发、重延迟隐私时，选轻量本地方案", "选框架先看负载：吞吐型才需要复杂调度与大批次"]
+}

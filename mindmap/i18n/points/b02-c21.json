@@ -1,0 +1,16 @@
+{
+  "21.1": ["PyTorch 的 autograd 自动计算梯度", "用有向无环图（DAG）记录运算", "转成 NumPy 会“断开计算图”"],
+  "21.2": ["用张量运算做标准化，梯度仍可回传", "grad_fn 记录该张量由哪步运算得来"],
+  "21.3": ["继承 nn.Module 定义神经网络", "用 nn.Linear 堆层、ReLU/Sigmoid 激活", "在 forward 里写前向传播"],
+  "21.4": ["用 BCELoss 与优化器训练二分类网络", "评估放在 torch.no_grad() 里"],
+  "21.5": ["训练循环：zero_grad→backward→step", "评估时用 no_grad 关掉梯度"],
+  "21.6": ["回归网络用 TensorDataset 与 DataLoader 供数", "batch_size=100、shuffle=True 打乱批次", "用 MSE 评估回归效果"],
+  "21.7": ["用 network.forward(x).round() 取预测类别", "round() 把概率输出转成 0/1 类别"],
+  "21.8": ["画训练与测试损失随轮次变化", "测试误差先降后升说明开始过拟合"],
+  "21.9": ["用 weight_decay 做权重正则化", "在优化器里设 lr 与 weight_decay"],
+  "21.10": ["用 PyTorch Lightning 的 EarlyStopping 早停", "monitor='val_loss'、patience=3 无改善即停"],
+  "21.11": ["Dropout 每批随机把部分单元置零", "是正则化小型网络的常用方法"],
+  "21.12": ["用 torch.save 存 epoch、模型与优化器状态", "训练可能数小时数天，中断会丢进度"],
+  "21.13": ["用 ray tune 自动搜索层大小与学习率", "best_trial.config 给出最优配置", "自动调参不是万能药"],
+  "21.14": ["把网络结构画出来便于检查层与形状"]
+}

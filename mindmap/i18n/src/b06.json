@@ -1,0 +1,95 @@
+{
+ "book_id": "06",
+ "book_title": "Reinforcement Learning for Finance",
+ "book_short": "RLF",
+ "chapters": [
+  "Learning Through Interaction",
+  "Deep Q-Learning",
+  "Financial Q-Learning",
+  "Simulated Data",
+  "Generated Data",
+  "Algorithmic Trading",
+  "Dynamic Hedging",
+  "Dynamic Asset Allocation",
+  "Optimal Execution",
+  "Concluding Remarks"
+ ],
+ "sections": [
+  [
+   "Tossing a Biased Coin",
+   "Rolling a Biased Die",
+   "Bayesian Updating",
+   "Reinforcement Learning",
+   "Major Breakthroughs",
+   "Major Building Blocks",
+   "Deep Q-Learning",
+   "Conclusions"
+  ],
+  [
+   "Decision Problems",
+   "Dynamic Programming",
+   "Q-Learning",
+   "CartPole as an Example",
+   "The Game Environment",
+   "A Random Agent",
+   "The DQL Agent",
+   "Q-Learning Versus Supervised Learning",
+   "Conclusions"
+  ],
+  [
+   "DQL Agent",
+   "Where the Analogy Fails",
+   "Limited Data",
+   "No Impact",
+   "Conclusions",
+   "References"
+  ],
+  [
+   "Noisy Time Series Data",
+   "Simulated Time Series Data",
+   "Conclusions",
+   "References"
+  ],
+  [
+   "Simple Example",
+   "Financial Example",
+   "Kolmogorov-Smirnov Test",
+   "Conclusions",
+   "References"
+  ],
+  [
+   "Prediction Game Revisited",
+   "Trading Environment",
+   "Trading Agent",
+   "Conclusions",
+   "References",
+   "Finance Environment",
+   "DQLAgent Class"
+  ],
+  [
+   "Delta Hedging",
+   "Hedging Agent",
+   "Conclusions",
+   "References"
+  ],
+  [
+   "Two-Fund Separation",
+   "Two-Asset Case",
+   "Three-Asset Case",
+   "Equally Weighted Portfolio",
+   "Conclusions",
+   "References"
+  ],
+  [
+   "The Model",
+   "Model Implementation",
+   "Execution Environment",
+   "Random Agent",
+   "Execution Agent",
+   "Conclusions"
+  ],
+  [
+   "References"
+  ]
+ ]
+}

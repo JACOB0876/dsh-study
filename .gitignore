@@ -1,0 +1,23 @@
+# .gitignore
+
+# 原书与全文转录 —— 版权原因，绝不入库
+pdfs/
+extracted/
+*.pdf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+package-lock.json
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

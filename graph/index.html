@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>8 本书 · 概念关系图谱</title>
+<style>
+  :root{--bg:#f6f8fc;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+  body{background:var(--bg) radial-gradient(circle at 1px 1px,#dde6f1 1px,transparent 0) 0 0/26px 26px}
+  #bar{position:fixed;top:0;left:0;right:0;height:58px;display:flex;align-items:center;gap:9px;padding:0 18px;
+    background:#fffdfa;border-bottom:1px solid var(--line);z-index:20;box-shadow:0 1px 10px #0f172a0a}
+  #bar h1{font-size:15.5px;margin:0 6px 0 0;font-weight:700;white-space:nowrap}
+  #bar h1 small{font-weight:500;color:var(--muted);font-size:11.5px;margin-left:7px}
+  .hint{font-size:11.5px;color:var(--muted);margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  button{font:inherit;font-size:12.5px;padding:7px 12px;border:1px solid #d7e0ec;background:#fff;border-radius:9px;
+    cursor:pointer;color:#334155;white-space:nowrap;transition:.15s}
+  button:hover{background:#f1f5fb;border-color:#a9bcd2;transform:translateY(-1px)}
+  button.on{background:#0f172a;color:#fff;border-color:#0f172a}
+  input{font:inherit;font-size:12.5px;padding:7px 12px;border:1px solid #d7e0ec;border-radius:9px;width:150px;outline:none}
+  input:focus{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb18}
+  #chips{position:fixed;left:18px;bottom:16px;display:flex;gap:7px;flex-wrap:wrap;max-width:60vw;z-index:15}
+  .chip{font-size:11.5px;padding:5px 10px;border-radius:20px;background:#fff;border:1px solid #e2e8f0;color:#475569;
+    cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
+  .chip i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .chip.off{opacity:.35}
+  svg{width:100%;height:100%;display:block;cursor:grab}
+  svg.drag{cursor:grabbing}
+  .link{stroke-linecap:round;fill:none}
+  .node circle{cursor:pointer;transition:r .15s,opacity .15s}
+  .node text{pointer-events:none;text-anchor:middle;font-size:12px;fill:#334155}
+  .node.dim{opacity:.15}
+  .link.dim{opacity:.05}
+  .node.hot circle{stroke:#0f172a;stroke-width:2.2}
+  .node.hot text{font-weight:700;fill:#0f172a}
+  #panel{position:fixed;top:58px;right:0;bottom:0;width:392px;background:#fff;border-left:1px solid var(--line);
+    transform:translateX(100%);transition:transform .22s ease;z-index:18;display:flex;flex-direction:column;
+    box-shadow:-8px 0 30px #0f172a0d}
+  #panel.open{transform:none}
+  #panel .head{padding:20px 22px 14px;border-bottom:1px solid #eef2f7}
+  #panel .head .cz{font-size:19px;font-weight:700;letter-spacing:.3px}
+  #panel .head .en{font-size:12.5px;color:var(--muted);margin-top:3px;font-style:italic}
+  #panel .tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .tag{font-size:10.5px;padding:3px 8px;border-radius:20px;background:#f1f5f9;color:#475569}
+  .knowtag{border:none;cursor:pointer;background:#ecfdf5;color:#047857;font-weight:600;font-size:11px}
+  .knowtag:hover{background:#d1fae5}
+  #panel .body{padding:16px 22px 40px;overflow:auto;font-size:13.4px;line-height:1.78}
+  #panel h4{font-size:11.5px;color:#94a3b8;letter-spacing:1.2px;margin:20px 0 6px;font-weight:600}
+  #panel p{margin:0 0 6px}
+  #panel .ex{font-family:Consolas,ui-monospace,monospace;font-size:12px;background:#f8fafc;border:1px solid #eef2f7;
+    border-radius:8px;padding:9px 11px;color:#0f172a;overflow:auto;white-space:pre-wrap}
+  #panel .hook{font-size:14.6px;line-height:1.85;color:#0f172a;background:#f8fafc;
+    border-left:3px solid #93c5fd;border-radius:0 9px 9px 0;padding:12px 14px;margin:0 0 4px}
+  #panel .myth{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:9px 11px;color:#9a3412;font-size:12.8px}
+  #panel .rel{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  #panel .rel span{font-size:12px;padding:4px 9px;border-radius:7px;background:#eff6ff;color:#1d4ed8;cursor:pointer}
+  #panel .rel span:hover{background:#dbeafe}
+  #close{position:absolute;top:14px;right:16px;border:none;background:none;font-size:19px;color:#94a3b8;cursor:pointer}
+  #legend{position:fixed;top:70px;left:18px;background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:10px 13px;font-size:11px;color:#475569;z-index:12;display:none}
+  #legend div{display:flex;align-items:center;gap:7px;margin:3px 0}
+  #legend i{width:9px;height:9px;border-radius:50%}
+  #tip{position:fixed;right:18px;bottom:16px;font-size:11px;color:#94a3b8;z-index:12}
+  #prog{font-size:12px;padding:6px 11px;border-radius:20px;background:#ecfdf5;color:#047857;
+    border:1px solid #a7f3d0;white-space:nowrap;cursor:pointer;user-select:none}
+  #prog:hover{background:#d1fae5}
+  .knowbtn{width:100%;margin-top:16px;padding:11px;border-radius:10px;border:1px solid #a7f3d0;
+    background:#ecfdf5;color:#047857;font-weight:600;cursor:pointer}
+  .knowbtn.on{background:#047857;color:#fff;border-color:#047857}
+  .knowbtn:hover{filter:brightness(.97)}
+  .reflink{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0;
+    padding:8px 11px;border:1px solid #e2e8f0;border-radius:9px;background:#fff;color:#1e293b;
+    text-decoration:none;font-size:12.8px;transition:.15s}
+  .reflink:hover{border-color:#93c5fd;background:#f8fbff;transform:translateX(2px)}
+  .reflink b{font-weight:600;color:#2563eb;font-size:11.5px;white-space:nowrap}
+  .reflink.disabled{opacity:.6;cursor:default;transform:none}
+  .node .done{stroke:#10b981;stroke-width:2.2}
+  #barwrap{display:flex;align-items:center;gap:9px}
+</style></head><body>
+<div id="bar">
+  <h1>概念关系图谱<small>51 个概念 · 57 条前置关系 · 按「零基础 + 两端都要」设计</small></h1>
+  <button id="start">从哪开始</button>
+  <button id="path">按学习阶段看</button>
+  <button id="reset">复位</button>
+  <button id="fit">适配</button>
+  <span id="prog" title="点一下清除进度">已懂 0/50</span>
+  <input id="q" placeholder="搜概念…">
+  <span class="hint">滚轮缩放 · 拖动平移 · 点节点看解释 · 边上箭头表示「先学这个才能学那个」</span>
+</div>
+<svg id="map"><g id="scene">
+  <g id="links"></g>
+  <g id="nodes"></g>
+</g></svg>
+<div id="chips"></div>
+<div id="legend"></div>
+<div id="tip">节点越大 = 它被越多概念依赖（地基）</div>
+<aside id="panel">
+  <button id="close">×</button>
+  <div class="head"><div class="cz"></div><div class="en"></div><div class="tags"></div></div>
+  <div class="body"></div>
+</aside>
+<script>
+const DATA = {"clusters": {"code": {"zh": "编程底座", "en": "Programming", "color": "#2563eb"}, "data": {"zh": "数据工具", "en": "Data Tooling", "color": "#0ea5e9"}, "stat": {"zh": "统计与概率", "en": "Stats & Prob", "color": "#0891b2"}, "ml": {"zh": "机器学习", "en": "Machine Learning", "color": "#7c3aed"}, "fin": {"zh": "金融与定价", "en": "Finance", "color": "#059669"}, "algo": {"zh": "策略与回测", "en": "Strategy", "color": "#d97706"}, "rl": {"zh": "强化学习", "en": "Reinforcement", "color": "#db2777"}, "llm": {"zh": "LLM 与部署", "en": "LLM Serving", "color": "#9333ea"}, "eng": {"zh": "工程与性能", "en": "Engineering", "color": "#475569"}}, "stages": [{"id": 0, "zh": "会写代码", "hint": "能跑通一段脚本，看得懂报错"}, {"id": 1, "zh": "会看数据", "hint": "能读进表格、清洗、画图"}, {"id": 2, "zh": "会做统计", "hint": "知道数据在说什么、什么算显著"}, {"id": 3, "zh": "会建模型", "hint": "能训练、能评估、知道什么时候失效"}, {"id": 4, "zh": "会定价/回测", "hint": "能把模型落到金融问题上并验证"}, {"id": 5, "zh": "会部署/优化", "hint": "能把东西跑起来、跑得快"}], "nodes": [{"id": "py", "zh": "Python 语法", "en": "Python basics", "c": "code", "lvl": 0, "plain": "Python 语法只有四件事：变量（给一个值起名字）、循环（同一件事重复做）、判断（满足条件才做）、缩进（哪几行属于同一块）。", "why": "能独立写一段 30 行以内的小脚本：读一张表、算一列涨跌、存成新文件。", "myth": "很多人以为要把整本语法书背完才能动手，其实后面这 8 本书只用得到两成语法。", "ex": "for x in [1, 2, 3]: print(x * 2)  # 打出 2 4 6", "pre": [], "refs": [{"b": "01 PDSH", "p": "19", "link": "../mindmap/books-mindmap.html#01-1"}], "hook": "学车不用先懂发动机，会踩油门、刹车就能上路。学编程也一样。"}, {"id": "struct", "zh": "列表与字典", "en": "list / dict", "c": "code", "lvl": 0, "plain": "列表（list）是按顺序排好的一串东西，用位置取；字典（dict）是「名字→值」的查表，用名字取。", "why": "能自己用字典存一张「股票代码→价格」的表，再按代码一秒取到值。", "myth": "很多人以为要背下所有方法，其实常用的只有三件：取值、加一个、遍历一遍。", "ex": "d = {'AAPL': 190.2}; d['AAPL']  # 取到 190.2", "pre": ["py"], "refs": [{"b": "01 PDSH", "p": "19", "link": "../mindmap/books-mindmap.html#01-1"}], "hook": "一排快递柜，按编号找件；另一个柜台报名字，人家替你查出来。"}, {"id": "func", "zh": "函数", "en": "function", "c": "code", "lvl": 0, "plain": "函数（function）是把一段固定动作打包、起个名字，以后喊名字就执行一遍。定价、算指标、画图，最后都写成函数。", "why": "能把一个定价公式写成可复用的函数，改一处参数，整张表的结果跟着变。", "myth": "很多人以为函数是为了省字，其实它是为了让错误只出现在一个地方。", "ex": "def pv(c, r, t): return c / (1 + r) ** t  # 100 元、5%、2 年 → 90.70", "pre": ["py"], "refs": [{"b": "01 PDSH", "p": "60", "link": "../mindmap/books-mindmap.html#01-2"}], "hook": "外卖店把「一份炒饭」写进菜单，客人报菜名就行，不用再说一遍做法。"}, {"id": "err", "zh": "读报错", "en": "reading tracebacks", "c": "code", "lvl": 0, "plain": "报错（traceback）是程序给的路标：最后一行写错误类型，往上倒数几行指到你写的那一句。", "why": "能自己解决八成的报错，不用每次都截图问人，学习速度大约翻倍。", "myth": "很多人以为报错只能搜或问人，其实先看类型和行号，一半问题当场就解决。", "ex": "KeyError: 'AAPL' → 字典没这个键；改 d.get('AAPL', 0)，缺键就不报错。", "pre": ["py"], "refs": [{"b": "01 PDSH", "p": "20", "link": "../mindmap/books-mindmap.html#01-1"}], "hook": "体检报告最后一行写着「建议复查甲状腺」，前面几十项你都不用先纠结。"}, {"id": "jupyter", "zh": "Jupyter / Notebook", "en": "Jupyter", "c": "code", "lvl": 0, "plain": "Notebook（Jupyter）是能一格一格运行的笔记本：写一格、跑一格、当场看结果，再写下一格。", "why": "能边读公式边试算，改一个数字立刻看到图变，比写完整个脚本再跑快得多。", "myth": "很多人以为它只能练手，其实正式项目也能用它，只是要自己管好执行顺序。", "ex": "jupyter lab  # 一条命令，在浏览器里开这个格子的界面", "pre": ["py"], "refs": [{"b": "01 PDSH", "p": "19", "link": "../mindmap/books-mindmap.html#01-1"}], "hook": "边看菜谱边炒，尝一口再放盐，不是等整道菜做完才发现咸了。"}, {"id": "numpy", "zh": "NumPy 数组", "en": "ndarray", "c": "data", "lvl": 1, "plain": "数组（ndarray）是一整块同类型的数字，可以对全部元素同时做运算，不用写循环。", "why": "能一行算出 10 万条每日收益的均值和波动率，不用循环跑上十分钟。", "myth": "很多人以为它是更快的列表，其实它长度基本固定，换来的是同时算一整块。", "ex": "prices * np.array([1, -1])  # 整个数组一起乘，不用 for", "pre": ["struct"], "refs": [{"b": "01 PDSH", "p": "51", "link": "../mindmap/books-mindmap.html#01-2"}, {"b": "05 FTP", "p": "151", "link": "../mindmap/books-mindmap.html#05-5"}], "hook": "一百份外卖要贴单号，一份一份贴很慢；盖章一次压一百份就快了。"}, {"id": "pandas", "zh": "DataFrame 表格", "en": "DataFrame", "c": "data", "lvl": 1, "plain": "DataFrame 是带行标签和列名的二维表格，像 Excel，但能用代码一次改一整列。", "why": "能一行把收盘价列变成每日收益率，再按月份汇总，这些用 Excel 要写半天。", "myth": "很多人以为要一行行改表，其实整列运算或按组汇总（groupby）快几十倍。", "ex": "df['ret'] = df['close'].pct_change()  # 100 行收盘价 → 99 个收益率", "pre": ["numpy"], "refs": [{"b": "01 PDSH", "p": "115", "link": "../mindmap/books-mindmap.html#01-3"}, {"b": "02 MLCK", "p": "42", "link": "../mindmap/books-mindmap.html#02-3"}], "hook": "一张体检报告表，每行一个项目、每列一项指标，你一眼找到血脂那一行。"}, {"id": "index", "zh": "筛选与索引", "en": "indexing / loc", "c": "data", "lvl": 1, "plain": "索引（indexing）是按条件挑行：loc 用行名、列名挑，iloc 用第几行、第几列的位置挑。", "why": "能一句话取出「2020 年以后、成交量高于均值」的交易日，这是策略研究第一步。", "myth": "很多人以为 loc 和 iloc 差不多，其实一个按名字、一个按序号，混了就静默取错行。", "ex": "df.loc['2020':, ['close', 'volume']]  # 2020 年起的收盘价和成交量", "pre": ["pandas"], "refs": [{"b": "01 PDSH", "p": "125", "link": "../mindmap/books-mindmap.html#01-3"}, {"b": "02 MLCK", "p": "46", "link": "../mindmap/books-mindmap.html#02-3"}], "hook": "在货架上只拿「三天内生产、价格低于 20 块」的那几盒，其余不看。"}, {"id": "clean", "zh": "缺失值与清洗", "en": "missing data", "c": "data", "lvl": 1, "plain": "缺失值（missing）是表格里空着的格子。先数清缺多少、缺在哪，再决定删掉、填上还是留着。", "why": "能发现「某只股票停牌三个月」这种缺口，避免回测把停牌日当成没涨没跌。", "myth": "很多人以为有空格就删，其实先看缺的是不是集中在某几个日期，比如停牌。", "ex": "df.isna().mean()  # 一行看清每列缺几成，输出 0 到 1 的比例", "pre": ["pandas"], "refs": [{"b": "02 MLCK", "p": "42", "link": "../mindmap/books-mindmap.html#02-3"}, {"b": "03 NLP", "p": "28", "link": "../mindmap/books-mindmap.html#03-1"}], "hook": "收快递先拆开看有没有少件，再决定是补、是退，还是就这样收下。"}, {"id": "plot", "zh": "画图", "en": "matplotlib", "c": "data", "lvl": 1, "plain": "画图（matplotlib）是把数字变成折线、直方图或热图，让你一眼看出走势和异常。", "why": "能自己画出净值曲线和回撤图，判断策略是稳，还是靠一次暴赚撑起来的。", "myth": "很多人以为图要好看，其实研究阶段只要三件事：横轴是什么、纵轴是什么、异常在哪。", "ex": "plt.plot(df.index, df['equity'])  # 250 个交易日的净值曲线，一行成图", "pre": ["pandas"], "refs": [{"b": "01 PDSH", "p": "235", "link": "../mindmap/books-mindmap.html#01-4"}], "hook": "同一份体重记录，看数字看不出趋势，拉成一条曲线，一眼就知道胖了。"}, {"id": "prob", "zh": "概率", "en": "probability", "c": "stat", "lvl": 2, "plain": "概率（probability）：给不确定的事打一个 0 到 1 的分，分数越高越可能发生。", "why": "所有风险、定价、回测结论都建在它上面；没有这个分数，两个赌注没法比。", "myth": "很多人以为概率是事情自带的属性，其实它多半取决于你掌握了多少信息。", "ex": "抛一枚均匀硬币，正面概率 0.5；连抛 10 次至少出现一次正面 = 1 − 0.5^10 ≈ 0.999。", "pre": ["numpy"], "refs": [{"b": "05 FTP", "p": "45", "link": "../mindmap/books-mindmap.html#05-2"}, {"b": "07 DLF", "p": "35", "link": "../mindmap/books-mindmap.html#07-2"}], "hook": "天气预报说降水 60%，你还是带了伞——60% 不是「会下」，是「下的可能性更大」。"}, {"id": "dist", "zh": "分布", "en": "distribution", "c": "stat", "lvl": 2, "plain": "分布（distribution）：把大量结果按取值大小排开，看哪些常见、哪些罕见；最常见的钟形叫正态分布。", "why": "算 VaR、最大回撤得先假设收益长什么样；形状猜错，风险就估错。", "myth": "很多人以为收益服从正态，其实极端行情比正态预测的更常出现（肥尾）。", "ex": "1000 个模拟样本：正态分布下 ±1σ 装下约 683 个，±2σ 装下约 954 个；真实收益落在两端的次数通常更多。", "pre": ["prob"], "refs": [{"b": "07 DLF", "p": "51", "link": "../mindmap/books-mindmap.html#07-3"}, {"b": "05 FTP", "p": "118", "link": "../mindmap/books-mindmap.html#05-4"}], "hook": "把全班身高按高低排开画成柱子，中间高、两边少，一眼看出大多数人长什么样。"}, {"id": "moments", "zh": "均值与方差", "en": "mean / variance", "c": "stat", "lvl": 2, "plain": "均值（mean）是平均水平；方差（variance）是离平均水平有多散，开方就是标准差，也就是波动率。", "why": "夏普比率、组合优化、风险预算都由这两个数推出来。", "myth": "很多人以为收益一样就一样好，其实年化都 10%，波动 8% 和 30% 是两种人生。", "ex": "年化都 10%，A 波动 8%、B 波动 30%，夏普（无风险利率取 0）A≈1.25、B≈0.33。", "pre": ["dist"], "refs": [{"b": "05 FTP", "p": "52", "link": "../mindmap/books-mindmap.html#05-2"}, {"b": "07 DLF", "p": "51", "link": "../mindmap/books-mindmap.html#07-3"}], "hook": "两个人都说月薪 3 万：一个每月一模一样，一个忽高忽低——差别就在稳不稳。"}, {"id": "corr", "zh": "相关与协方差", "en": "correlation", "c": "stat", "lvl": 2, "plain": "相关系数（correlation）衡量两件事是否同向变动，取值 −1 到 1：1 完全同向，−1 完全反向，0 无关。", "why": "分散化、对冲、因子分析都靠它；配资产前先看它们会不会一起跌。", "myth": "很多人以为相关就是因果、而且稳定，其实危机时它常一起冲高。", "ex": "两个波动率都是 20% 的资产等权：相关性 0 时组合波动 14.1%，相关性 1 时变成 20%。", "pre": ["moments"], "refs": [{"b": "07 DLF", "p": "60", "link": "../mindmap/books-mindmap.html#07-3"}, {"b": "05 FTP", "p": "79", "link": "../mindmap/books-mindmap.html#05-3"}], "hook": "冰淇淋卖得多的日子，溺水的人也更多——一起发生，不等于一个害了另一个。"}, {"id": "sample", "zh": "抽样与估计", "en": "sampling", "c": "stat", "lvl": 2, "plain": "抽样（sampling）：用手里这段局部数据推断整体规律；样本越多越稳，但样本彼此很像时，数量不等于信息。", "why": "回测本身就是一次抽样；分不清规律和运气，策略就只是错觉。", "myth": "很多人以为数据越长越可靠，其实相邻的日子很像，长度不等于信息。", "ex": "300 天、年化夏普 1.5：bootstrap 重抽 1000 次，95% 区间约 −1.2 到 4.2，连「大于 0」都不敢保证。", "pre": ["dist"], "refs": [{"b": "07 DLF", "p": "35", "link": "../mindmap/books-mindmap.html#07-2"}, {"b": "05 FTP", "p": "163", "link": "../mindmap/books-mindmap.html#05-6"}], "hook": "想尝一锅汤咸不咸，舀一勺就够——但得先搅匀，不然只喝到表层。"}, {"id": "ts", "zh": "时间序列与平稳性", "en": "stationarity", "c": "stat", "lvl": 2, "plain": "平稳性（stationarity）：均值、方差、自相关都不随时间推移而变；价格不平稳，收益率大致平稳。", "why": "拿价格直接回归会得出假规律，还会把未来信息漏进来。", "myth": "很多人以为差分一次就万事大吉，其实差分过头会把信号磨成噪声。", "ex": "某股票 10 年从 8 元涨到 120 元，价格均值逐年抬升、不平稳；日收益均值 0.09%、标准差 2.1%，近似平稳。", "pre": ["corr"], "refs": [{"b": "07 DLF", "p": "51", "link": "../mindmap/books-mindmap.html#07-3"}, {"b": "01 PDSH", "p": "181", "link": "../mindmap/books-mindmap.html#01-3"}], "hook": "同一只股票从 10 块涨到 100 块，不代表它「贵」；比涨跌要看变化，不看价位。"}, {"id": "feat", "zh": "特征与标签", "en": "features / labels", "c": "ml", "lvl": 3, "plain": "特征（features）是喂给模型的输入，比如昨天的收益、成交量；标签（labels）是要它预测的答案。", "why": "模型能学到什么，八成由特征决定；换特征常比换模型更有效。", "myth": "很多人以为模型越新越强，其实烂特征喂进去，换十个模型也一样烂。", "ex": "3 个特征（5 日收益、20 日均量、20 日波动率）预测次日涨跌，2400 天样本，AUC 从 0.50 到 0.56。", "pre": ["ts"], "refs": [{"b": "02 MLCK", "p": "77", "link": "../mindmap/books-mindmap.html#02-4"}, {"b": "07 DLF", "p": "193", "link": "../mindmap/books-mindmap.html#07-7"}], "hook": "想猜明天会不会下雨，你盯的是今天的气压、湿度和风向——这些就是线索。"}, {"id": "split", "zh": "训练/测试集", "en": "train-test split", "c": "ml", "lvl": 3, "plain": "训练/测试集（train-test split）：一部分数据用来学，另一部分留到最后考试，考题不许提前看。", "why": "没有留出这一份，你的准确率只是背答案的成绩，实盘会打回原形。", "myth": "很多人以为随机打乱就行，其实时间序列一打乱，就是用未来预测过去。", "ex": "10 年日数据：前 7 年训练、后 3 年测试；随机打乱后同一模型 AUC 从 0.54 虚高到 0.78。", "pre": ["feat"], "refs": [{"b": "01 PDSH", "p": "377", "link": "../mindmap/books-mindmap.html#01-5"}, {"b": "02 MLCK", "p": "190", "link": "../mindmap/books-mindmap.html#02-11"}], "hook": "考前老师给的那套模拟题，你要是背到滚瓜烂熟，期末换个题型照样翻车。"}, {"id": "overfit", "zh": "过拟合", "en": "overfitting", "c": "ml", "lvl": 3, "plain": "过拟合（overfitting）：模型把训练数据里的巧合也当成规律，见过的数据很准、新数据很差。", "why": "金融数据信噪比极低，最容易过拟合；识别不了它，策略基本是幻觉。", "myth": "很多人以为参数越多模型越强，其实参数越多越容易记住噪声。", "ex": "训练集准确率 0.92、测试集 0.51：0.41 的落差就是过拟合的量，而瞎猜也有 0.50。", "pre": ["split"], "refs": [{"b": "01 PDSH", "p": "388", "link": "../mindmap/books-mindmap.html#01-5"}, {"b": "07 DLF", "p": "231", "link": "../mindmap/books-mindmap.html#07-8"}], "hook": "考前把模拟卷的答案背下来，一换题型就崩，分数全还回去。"}, {"id": "reg", "zh": "正则化", "en": "regularization", "c": "ml", "lvl": 3, "plain": "正则化（regularization）：在损失里加惩罚项压住参数大小，让模型别死记细节；Ridge 压小权重，Lasso 能把没用的特征压到 0。", "why": "特征几十上百个时，正则化常比换模型管用；Lasso 还能顺手筛因子。", "myth": "很多人以为正则化只是防过拟合，其实 Lasso 同时在做特征选择。", "ex": "80 个因子跑 Lasso(alpha=0.01)，63 个权重被压到 0，只剩 17 个；测试集 R² 从 0.02 升到 0.06。", "pre": ["overfit"], "refs": [{"b": "02 MLCK", "p": "230", "link": "../mindmap/books-mindmap.html#02-13"}], "hook": "给爱死记硬背的学生加一条规矩：写太长要扣分，他反而学会了抓重点。"}, {"id": "metric", "zh": "评估指标", "en": "metrics", "c": "ml", "lvl": 3, "plain": "评估指标（metrics）：把「好不好」变成一个数，分类看准确率、召回、AUC，回归看 MAE、R²，策略看夏普、回撤。", "why": "指标选错，会把没用的模型当宝贝；金融里尤其不能只看准确率。", "myth": "很多人以为准确率高就是好模型，其实 99% 都不涨时，全猜不涨也有 99%。", "ex": "1000 天里 990 天不涨：全猜「不涨」准确率 0.99，但 AUC 只有 0.50，排序跟随机没差别。", "pre": ["overfit"], "refs": [{"b": "02 MLCK", "p": "190", "link": "../mindmap/books-mindmap.html#02-11"}, {"b": "03 NLP", "p": "205", "link": "../mindmap/books-mindmap.html#03-7"}], "hook": "只看总分，会漏掉偏科；评价一个判断准不准，也不能只数对了几次。"}, {"id": "cv", "zh": "交叉验证", "en": "cross-validation", "c": "ml", "lvl": 3, "plain": "交叉验证（cross-validation）：把数据切成 k 份，轮流拿 k−1 份训练、剩 1 份验证，最后把 k 次结果平均。", "why": "样本只有几百天时，单次切分的好成绩很可能只是运气。", "myth": "很多人以为 KFold 万能，其实时间序列必须用 TimeSeriesSplit，否则等于用未来考过去。", "ex": "5 折交叉验证 AUC 为 0.55/0.61/0.49/0.58/0.52，均值 0.55；最高最低差 0.12，说明模型不稳。", "pre": ["split"], "refs": [{"b": "02 MLCK", "p": "190", "link": "../mindmap/books-mindmap.html#02-11"}, {"b": "07 DLF", "p": "265", "link": "../mindmap/books-mindmap.html#07-9"}], "hook": "一次模拟考可能手滑，连考五次取平均，才看得出真实水平。"}, {"id": "unsup", "zh": "无监督与聚类", "en": "clustering", "c": "ml", "lvl": 3, "plain": "无监督学习（unsupervised learning）：没有标签，只按相似度把样本归堆（聚类），或把高维数据压低维（降维、PCA）。", "why": "能分市场状态、找因子、给客户分群，也能先看清数据长什么样。", "myth": "很多人以为聚类结果就是标准答案，其实它只反映你选的距离和簇数。", "ex": "500 只股票按 60 日收益和波动聚成 4 组，K-Means 跑 10 次，有 3 次分组明显不同——结果依赖初始化和 K。", "pre": ["feat"], "refs": [{"b": "02 MLCK", "p": "293", "link": "../mindmap/books-mindmap.html#02-19"}, {"b": "03 NLP", "p": "229", "link": "../mindmap/books-mindmap.html#03-8"}], "hook": "一箱没整理的旧照片，你照样能按「海边」「生日」分成几堆。"}, {"id": "nn", "zh": "神经网络", "en": "neural network", "c": "ml", "lvl": 3, "plain": "神经网络（neural network）：很多层「加权求和 + 非线性激活」叠起来，层数多就叫深度，权重从数据里学。", "why": "它是深度学习的地基；不懂一层在干什么，调参就只能碰运气。", "myth": "很多人以为它比传统模型更聪明，其实它只是容量更大，也更容易过拟合。", "ex": "输入 20 个特征、两层各 64 个神经元，参数约 5500 个；训练 5 轮后训练损失 0.21、验证损失 0.29。", "pre": ["reg"], "refs": [{"b": "02 MLCK", "p": "312", "link": "../mindmap/books-mindmap.html#02-21"}, {"b": "07 DLF", "p": "231", "link": "../mindmap/books-mindmap.html#07-8"}], "hook": "一个人看不准，就让几十个人分层传话、逐级投票，最后给出一个判断。"}, {"id": "backprop", "zh": "反向传播", "en": "backpropagation", "c": "ml", "lvl": 3, "plain": "反向传播（backpropagation）：从输出的误差出发，用链式法则一层层往回算，每个参数该往哪调、调多少。", "why": "所有深度学习框架都在做这件事；懂它才明白学习率和梯度消失。", "myth": "很多人以为要手推所有公式，其实理解误差反向传递的直觉就够了。", "ex": "一次训练：前向算得 loss=0.83，反向得到 5500 个参数的梯度，学习率 0.001 时每个参数按梯度大小微调。", "pre": ["nn"], "refs": [{"b": "07 DLF", "p": "231", "link": "../mindmap/books-mindmap.html#07-8"}], "hook": "箭射偏了，教练从靶心倒着往回找：是手抖还是站姿歪？改哪个动作最管用。"}, {"id": "seq", "zh": "序列模型 LSTM", "en": "LSTM / RNN", "c": "ml", "lvl": 3, "plain": "序列模型（LSTM/RNN）：专门处理有先后顺序的数据，靠一个记忆单元决定记住什么、忘掉什么。", "why": "行情和文本都是序列；普通网络打乱顺序，信息就丢了。", "myth": "很多人以为 LSTM 一定比线性模型强，其实样本少时它常常更差。", "ex": "用过去 60 天收益预测次日方向，LSTM 在 8 万条样本上准确率 0.53；逻辑回归 0.52，但训练快 40 倍。", "pre": ["backprop"], "refs": [{"b": "07 DLF", "p": "231", "link": "../mindmap/books-mindmap.html#07-8"}, {"b": "03 NLP", "p": "317", "link": "../mindmap/books-mindmap.html#03-11"}], "hook": "读一句话要按顺序读，「猫追狗」和「狗追猫」完全是两回事。"}, {"id": "embed", "zh": "词向量", "en": "word embedding", "c": "ml", "lvl": 3, "plain": "词向量（word embedding）：把词变成一串数字，语义相近的词向量也挨得近，是机器理解语言的第一步。", "why": "大模型的输入就是词向量；不懂它，Transformer 只能死记硬背。", "myth": "很多人以为一个词永远对应一个向量，其实同一个词在不同句子里意思不同。", "ex": "「king」的向量 − 「man」+ 「woman」≈「queen」；常用维度 100–300，大模型一层可到 768 或 4096 维。", "pre": ["nn"], "refs": [{"b": "03 NLP", "p": "289", "link": "../mindmap/books-mindmap.html#03-10"}, {"b": "02 MLCK", "p": "344", "link": "../mindmap/books-mindmap.html#02-22"}], "hook": "给每个词发一个坐标，意思相近的词坐标也挨得近，机器就能认出近义。"}, {"id": "ret", "zh": "收益率", "en": "return", "c": "fin", "lvl": 4, "plain": "收益率就是「赚的钱 ÷ 本金」。简单收益率 =（现价 − 原价）/ 原价；对数收益率 = ln（现价 / 原价），ln 就是取对数；好处是几段收益能直接相加，建模常用后一种。", "why": "所有收益、风险、回测都从它出发；先把它算对，后面的波动率、夏普比率才有意义。", "myth": "很多人以为该盯着价格本身，其实价格一直涨、没法横向比较，收益率才大致平稳、能拿来做模型。", "ex": "100 元买、110 元卖，收益率 = 110/100 − 1 = 10%；再跌回 105，第二段 = 105/110 − 1 ≈ −4.5%，两段对数收益相加 = ln(105/100) ≈ 4.9%。", "pre": ["ts"], "refs": [{"b": "05 FTP", "p": "39", "link": "../mindmap/books-mindmap.html#05-2"}, {"b": "07 DLF", "p": "51", "link": "../mindmap/books-mindmap.html#07-3"}], "hook": "年初 10 万买入，年末 11 万卖出，赚 1 万，等于本金的 10%——赚多少，得拿本金当尺子。"}, {"id": "pv", "zh": "现值与利率", "en": "present value", "c": "fin", "lvl": 4, "plain": "现值是把未来的钱按利率折回今天值多少：PV = C /（1+r）^t，C 是未来那笔钱，r 是每期利率，t 是期数。所以明天的 100 块，不值今天的 100 块。", "why": "一切定价都是「把未来的现金流折回今天」；不懂折现，期权、债券、房贷就都只能背公式。", "myth": "很多人以为折现率是个固定数字，其实它随期限和风险变——借三年和借十年，价钱不一样。", "ex": "年利率 5%，三年后的 100 元，现值 = 100 ÷ 1.05³ ≈ 86.4 元；反过来，今天的 86.4 元按 5% 存三年，正好变成 100 元。", "pre": ["ret"], "refs": [{"b": "05 FTP", "p": "40", "link": "../mindmap/books-mindmap.html#05-2"}, {"b": "08 C++", "p": "247", "link": "../mindmap/books-mindmap.html#08-7"}], "hook": "今天拿 100 块，和三年后才拿到 100 块，不是一回事——钱存银行每年生利息，晚拿三年你就少赚了。"}, {"id": "vol", "zh": "风险与波动率", "en": "volatility", "c": "fin", "lvl": 4, "plain": "波动率就是价格上下晃的幅度，一般按年算：年化 20% ≈ 一年里多数时候在 ±20% 内晃。算法是日收益的标准差 × √252（一年约 252 个交易日）。", "why": "仓位下多少、止损设多宽、期权卖多少钱，都由它决定；它也是少数能直接买卖的风险指标。", "myth": "很多人以为波动率就等于风险，其实跳空、卖不出去才是最致命的，它们根本不体现在这个数里。", "ex": "某股日收益标准差 1.5%，年化波动率 ≈ 1.5% × √252 ≈ 24%；意思是多数年份里，涨跌幅大致在 ±24% 这个量级内。", "pre": ["moments"], "refs": [{"b": "05 FTP", "p": "33", "link": "../mindmap/books-mindmap.html#05-2"}, {"b": "07 DLF", "p": "307", "link": "../mindmap/books-mindmap.html#07-11"}], "hook": "两个摊位都赚 100：一个天天稳赚 100，一个今天赚 300、明天亏 200——赚一样多，晃得不一样。"}, {"id": "option", "zh": "期权", "en": "option", "c": "fin", "lvl": 4, "plain": "期权是「未来按约定价格买卖的权利」，不是义务。买方付一笔权利金（定金）买这个权利，卖方收了钱就必须配合。", "why": "看懂「保险」和「期权」其实是一回事，也能用它给手里的持仓上保险，或者把风险卖给别人。", "myth": "很多人以为期权就是赌博，其实它的定价理论恰恰是为了算清「这份权利值多少钱」，把赌变成算账。", "ex": "股价 100 元，行权价 105 的看涨期权，权利金 3 元。到期涨到 112：赚 112 − 105 − 3 = 4 元；跌到 98：不行权，亏光 3 元。", "pre": ["pv", "vol"], "refs": [{"b": "05 FTP", "p": "124", "link": "../mindmap/books-mindmap.html#05-4"}, {"b": "08 C++", "p": "55", "link": "../mindmap/books-mindmap.html#08-2"}], "hook": "交 2 万定金，锁定半年后按 300 万买这套房：涨了你就买，跌了你可以不要，定金不退。"}, {"id": "noarb", "zh": "无套利", "en": "no-arbitrage", "c": "fin", "lvl": 4, "plain": "无套利是说：市场上不存在「不花钱、不担风险、稳赚」的机会。一出现，所有人一拥而上，价格立刻被买到没得赚。所以「同样的东西必须同样的价」是一切定价的起点。", "why": "有了这条，才知道「这东西该值多少钱」：两个以后付钱一样的组合，今天必须同价——定价理论全从这推。", "myth": "很多人以为市场真的完全无套利，其实这只是个建模假设——真实市场有手续费和摩擦，小漏洞轮不到你捡。", "ex": "A、B 两个组合，一年后都必然付你 100 元：A 今天卖 95 元，B 卖 97 元。那就借 B 卖掉、用 95 元买 A，当下白拿 2 元，到期两边正好相抵。", "pre": ["option"], "refs": [{"b": "05 FTP", "p": "41", "link": "../mindmap/books-mindmap.html#05-2"}], "hook": "同一个西瓜，东门卖 10 块、西门卖 8 块：8 块买进、10 块卖出，白赚 2 块——这种钱没人会留给你。"}, {"id": "repl", "zh": "复制组合", "en": "replication", "c": "fin", "lvl": 4, "plain": "复制组合，就是用股票和现金按某个比例配一份组合，让它在股价涨、跌两种情况下，付的钱都和期权一模一样。结果一样，今天的成本就必须一样。", "why": "这是「期权价 = 复制它的成本」的核心，BSM 和二叉树定价都从这里来——公式不是天上掉的，是配出来的。", "myth": "很多人以为定价公式是数学家拍脑袋写出来的，其实每个公式背后都有一个「照着买多少股、借多少钱」的组合。", "ex": "股价 100，涨到 120 或跌到 90；行权价 100 的看涨期权，涨时值 20、跌时值 0。复制它要买 s* =（20 − 0）/（120 − 90）≈ 0.67 股，再借入缺口的现金。", "pre": ["noarb", "pv"], "refs": [{"b": "05 FTP", "p": "43", "link": "../mindmap/books-mindmap.html#05-2"}], "hook": "一箱可乐 = 两瓶大的 + 四罐小的。想知道这箱值多少，照配方把零件价钱加起来就行——期权也能这么「配」。"}, {"id": "mart", "zh": "鞅测度", "en": "martingale measure", "c": "fin", "lvl": 4, "plain": "鞅测度是一套「算出来的概率」：用它给各个未来结果分权重，让贴现（折回今天）后的价格变成公平赌局，平均下来正好等于今天的钱。它不是现实频率，只是让价格自洽的权重。", "why": "有了它，定价只剩一句话：把未来价格按这组概率求平均，再折回今天。所有衍生品共用这一个套路。", "myth": "很多人以为它就是真实概率（涨六成、跌四成），其实它只跟价格和利率有关，跟你看涨看跌毫无关系。", "ex": "股价 100，利率 5%，一年后要么 120、要么 90。设涨的权重为 q：q×120 +（1 − q）×90 = 100×1.05，解得 q = 0.5；看涨期权价 = 0.5×20 ÷ 1.05 ≈ 9.5 元。", "pre": ["repl"], "refs": [{"b": "05 FTP", "p": "49", "link": "../mindmap/books-mindmap.html#05-2"}], "hook": "抛硬币赌 10 元：正面你赚 10、反面你亏 10，这才叫公平；若正面只赚 8，就没人玩，庄家得把赔率调过来。"}, {"id": "bsm", "zh": "BSM 定价", "en": "Black-Scholes-Merton", "c": "fin", "lvl": 4, "plain": "BSM 给看涨期权一个公平价，只看五样：股价、行权价、波动率、利率、到期时间。股票将来是涨是跌，反而不用猜，因为「随时对冲」已经把它抵掉了。", "why": "它是全行业的基准报价：知道它，你一眼看出市场上这份期权是贵还是便宜、贵在波动率还是别处。", "myth": "很多人以为它能预测股价，其实它一个字都没预测——它只说「给定这些条件，这份权利今天值多少」。", "ex": "C = S·N(d1) − K·e^(−rT)·N(d2)：S 现价、K 行权价、r 利率、T 到期年数，N 是标准正态分布函数。股价与行权价都 100、波动率 20%、利率 3%、一年到期，约 9.4 元。", "pre": ["mart"], "refs": [{"b": "05 FTP", "p": "159", "link": "../mindmap/books-mindmap.html#05-5"}, {"b": "08 C++", "p": "55", "link": "../mindmap/books-mindmap.html#08-2"}], "hook": "同一套房，房价、首付、年限都一样，利率一动月供就变——期权价钱也由几个看得见的东西一起定。"}, {"id": "mc", "zh": "蒙特卡洛", "en": "Monte Carlo", "c": "fin", "lvl": 4, "plain": "蒙特卡洛就是「随机模拟很多种未来，再取平均」：按波动率随机生成几万条可能的价格路径，每条算一次结果，平均下来就是价格或风险。", "why": "遇到路径依赖、多资产、条款奇怪的衍生品，公式写不出来时只能靠它硬算——加路径就能加精度。", "myth": "很多人以为模拟越多越准得离谱，其实误差按 1/√N 缩：想让精度翻一倍，路径数得变成 4 倍。", "ex": "股价 100、年波动 20%、利率 3%，一年后的价格 ≈ 100×e^(0.01 + 0.2z)，z 是正态随机数。跑 1 万条取平均，误差约 0.2%（20% ÷ √10000）。", "pre": ["bsm", "numpy"], "refs": [{"b": "05 FTP", "p": "163", "link": "../mindmap/books-mindmap.html#05-6"}, {"b": "08 C++", "p": "199", "link": "../mindmap/books-mindmap.html#08-6"}], "hook": "想知道一片不规则池塘多大，不用套公式：随机往里撒一万颗豆子，数数落进水里多少颗，按比例就能估出面积。"}, {"id": "bt", "zh": "回测", "en": "backtesting", "c": "algo", "lvl": 4, "plain": "回测就是拿过去的行情，按你的规则一天天模拟买卖，算出「当时真这么做」会赚还是会亏。", "why": "上实盘前先在这关验想法；它也是新手最容易骗过自己的一关。", "myth": "很多人以为回测赚 200% 就能上实盘，其实没扣手续费和滑点，多半是假的。", "ex": "同一个策略回测年化 180%，把双边 0.1% 的手续费和滑点加进去，年化掉到 35% 左右。", "pre": ["metric", "ret"], "refs": [{"b": "07 DLF", "p": "307", "link": "../mindmap/books-mindmap.html#07-11"}, {"b": "06 RLF", "p": "99", "link": "../mindmap/books-mindmap.html#06-6"}], "hook": "考试前先拿去年的卷子模拟一遍，估估自己能考多少分。"}, {"id": "cost", "zh": "交易成本与滑点", "en": "transaction cost", "c": "algo", "lvl": 4, "plain": "交易成本（手续费、买卖价差、滑点）是每次下单都要交的过路费，滑点指成交价比你看到的差一点。", "why": "把它加进回测，很多「稳赚」策略会当场消失，这是最省钱的一层过滤器。", "myth": "很多人以为按万分之几估成本就够，其实小盘股、大资金一买就把价格推高了。", "ex": "每天换手一次、单边成本 0.1%，一年 250 个交易日，光成本就吃掉约 50 个百分点的收益。", "pre": ["bt"], "refs": [{"b": "07 DLF", "p": "307", "link": "../mindmap/books-mindmap.html#07-11"}], "hook": "双十一凑单满减算得挺美，一结账发现运费和包装费把便宜吃光了。"}, {"id": "sharpe", "zh": "夏普比率", "en": "Sharpe ratio", "c": "algo", "lvl": 4, "plain": "夏普比率（每承担一份波动，能换来多少超额收益）是给策略性价比打分的尺子。", "why": "比两个策略时它比总收益公平；加杠杆能把收益做大，但夏普不会跟着变高。", "myth": "很多人以为夏普越高越好，其实得看样本外、扣费后，还要看它能不能持续。", "ex": "两个策略年化都 15%，波动 8% 的夏普约 1.8，波动 30% 的只有约 0.5。", "pre": ["vol"], "refs": [{"b": "06 RLF", "p": "148", "link": "../mindmap/books-mindmap.html#06-8"}], "hook": "两人月薪都一万，一个旱涝保收，一个这月有下月没，你更愿意选谁？"}, {"id": "dd", "zh": "最大回撤", "en": "max drawdown", "c": "algo", "lvl": 4, "plain": "最大回撤（净值从最高点跌到最低点的最大幅度）告诉你：最惨时账户缩水了多少。", "why": "它决定你扛不扛得住；回撤 60% 的策略，多数人半路就割肉离场。", "myth": "很多人以为收益高就行，其实回撤太大的人根本拿不到那个收益。", "ex": "100 万涨到 150 万，再跌到 90 万，最大回撤 40%；想回本得再涨 67%。", "pre": ["bt"], "refs": [{"b": "07 DLF", "p": "341", "link": "../mindmap/books-mindmap.html#07-12"}], "hook": "坐过山车从最高点冲下来的那一段最吓人，问题是你跳不跳车。"}, {"id": "rl", "zh": "强化学习框架", "en": "RL / MDP", "c": "rl", "lvl": 4, "plain": "强化学习（RL）是让程序在环境里反复试错、拿奖励打分，慢慢学会什么情况该做什么动作。", "why": "它擅长连续决策：仓位怎么调、何时对冲，而不是只回答「这一刻涨还是跌」。", "myth": "很多人以为它比监督学习更强，其实奖励设计错了，它会学出你最不想要的行为。", "ex": "一个交易智能体跑 10 万步，平均奖励从每步 -0.3 升到 +0.2，才算学会不瞎买。", "pre": ["nn", "bt"], "refs": [{"b": "06 RLF", "p": "33", "link": "../mindmap/books-mindmap.html#06-2"}], "hook": "训练小狗：做对了给零食，做错了不理它，它自己就学会怎么讨你欢心。"}, {"id": "dqn", "zh": "DQN", "en": "Deep Q-Learning", "c": "rl", "lvl": 4, "plain": "DQN（深度 Q 网络）用神经网络给每个动作打分，再挑分最高的那个执行。", "why": "它是入门强化学习最实用的算法，交易、对冲、资产配置都能直接套。", "myth": "很多人以为网络越大越强，其实瓶颈常在奖励设计和样本效率上。", "ex": "4 层小网络、约 10 万次交互，就能在简单交易环境里跑出正收益；换大网络未必更好。", "pre": ["rl"], "refs": [{"b": "06 RLF", "p": "33", "link": "../mindmap/books-mindmap.html#06-2"}, {"b": "07 DLF", "p": "293", "link": "../mindmap/books-mindmap.html#07-10"}], "hook": "打游戏时你心里给每个招式估个分，永远先出当下最划算的那一招。"}, {"id": "hedge", "zh": "动态对冲", "en": "dynamic hedging", "c": "rl", "lvl": 4, "plain": "动态对冲（随价格变化不断调仓，把风险敞口压回目标水平）就是不停微调你的持仓。", "why": "它让定价理论和机器学习接上了头，也是强化学习最能发挥价值的问题。", "myth": "很多人以为对冲能消掉风险，其实它只是把风险换成模型风险和交易成本。", "ex": "持有 100 万股票，对冲比例从 0.6 掉到 0.4，就卖出约 20 万，把敞口拉回目标。", "pre": ["dqn", "bsm"], "refs": [{"b": "06 RLF", "p": "119", "link": "../mindmap/books-mindmap.html#06-7"}], "hook": "开车微调方向盘，车往左偏一点你就往右带一点，始终摁在车道里。"}, {"id": "token", "zh": "Token 与分词", "en": "tokenization", "c": "llm", "lvl": 5, "plain": "Token（模型读写文字的最小单位）是把文本切成的小块；中文一个词常被切成 1–3 个。", "why": "上下文长度、价格、速度全按 token 算，看懂它才知道「128k 上下文」有多大。", "myth": "很多人以为一个 token 就是一个字，其实它是统计出来的子词块，长短不一。", "ex": "一句 20 字的中文大约 15–25 个 token；128k 上下文约合 8 万–10 万汉字。", "pre": ["embed"], "refs": [{"b": "04 LLM", "p": "49", "link": "../mindmap/books-mindmap.html#04-2"}], "hook": "点菜时菜单按「份」算不按「克」算，你点的每样都切成一份一份。"}, {"id": "tf", "zh": "Transformer", "en": "Transformer", "c": "llm", "lvl": 5, "plain": "Transformer（靠注意力让每个词去看句子里所有其他词，决定该关注谁）是大模型的地基。", "why": "不懂注意力，就看不懂 KV cache 为什么存在，也看不懂推理为什么卡在显存。", "myth": "很多人以为它只是更深的网络，其实关键变化是用注意力换掉了循环。", "ex": "1000 个 token 的句子，每个词都要和另外 999 个词算相关，一共约 100 万次比较。", "pre": ["seq", "token"], "refs": [{"b": "04 LLM", "p": "49", "link": "../mindmap/books-mindmap.html#04-2"}, {"b": "03 NLP", "p": "317", "link": "../mindmap/books-mindmap.html#03-11"}], "hook": "开会时每个人发言前先扫一眼全场，决定该听谁的、该接谁的话。"}, {"id": "kv", "zh": "KV cache", "en": "KV cache", "c": "llm", "lvl": 5, "plain": "KV cache（把前面算过的中间结果存下来复用）能省掉重复计算，代价是吃显存。", "why": "它是推理时最大的一笔显存开销；序列越长、并发越多，占用涨得越狠。", "myth": "很多人以为它只省时间不花钱，其实是用显存换时间，长对话很容易爆显存。", "ex": "7B 模型聊到 4096 个 token，单条对话的 KV cache 约 0.5–2 GB；并发 32 条就是几十 GB。", "pre": ["tf"], "refs": [{"b": "04 LLM", "p": "175", "link": "../mindmap/books-mindmap.html#04-5"}], "hook": "仓库把常用货提前摆上货架，取起来快，但货架本身占地方。"}, {"id": "prefill", "zh": "预填充与解码", "en": "prefill / decode", "c": "llm", "lvl": 5, "plain": "推理分两段：预填充（prefill，整段输入一次算完）和解码（decode，一个词一个词往外吐）。", "why": "前者吃算力、后者吃显存带宽；先分清是慢在哪，才知道该优化什么。", "myth": "很多人以为推理慢就是模型太大，其实先要看是预填充慢还是解码慢。", "ex": "输入 2000 个 token，预填充约 0.2 秒出第一个字；之后每字约 30 毫秒，吐 200 字要 6 秒。", "pre": ["kv"], "refs": [{"b": "04 LLM", "p": "175", "link": "../mindmap/books-mindmap.html#04-5"}], "hook": "餐厅后厨先把整桌菜一起备好，再一道一道端上桌，节奏完全不同。"}, {"id": "quant", "zh": "量化", "en": "quantization", "c": "llm", "lvl": 5, "plain": "量化（把模型权重从 16 位浮点压到 8 位或 4 位）能省显存和带宽，代价是精度略降。", "why": "同一张显卡能跑更大的模型或更大的并发，是部署时最常用的第一招。", "myth": "很多人以为量化一定明显掉点，其实 8 位大多几乎无损，4 位要看任务。", "ex": "7B 模型 FP16 约 14 GB 显存，压到 INT8 约 7 GB，压到 4 位约 3.5–4 GB。", "pre": ["kv"], "refs": [{"b": "04 LLM", "p": "207", "link": "../mindmap/books-mindmap.html#04-6"}], "hook": "把手机里的大照片压小一点，肉眼几乎看不出，却能多存好几千张。"}, {"id": "serving", "zh": "推理服务", "en": "LLM serving", "c": "llm", "lvl": 5, "plain": "推理服务（把模型包成能同时接待很多人的系统）要管排队、拼批、流式输出和监控。", "why": "模型能跑通不等于能上线；吞吐和延迟怎么取舍，全在这一层解决。", "myth": "很多人以为有模型就有服务了，其实差的是调度、缓存、限流和观测。", "ex": "单卡跑 7B，做好批处理能把吞吐从每秒约 10 个请求提到约 50 个，延迟只涨一点。", "pre": ["prefill"], "refs": [{"b": "04 LLM", "p": "289", "link": "../mindmap/books-mindmap.html#04-8"}], "hook": "一家店只招呼一桌客人，和同时招呼几十桌、还不让人干等，是两回事。"}, {"id": "env", "zh": "环境与依赖", "en": "environment", "c": "eng", "lvl": 0, "plain": "环境（environment）是一套装好的 Python 版本、库版本和驱动，让某本书的代码能原样跑起来。", "why": "能一开始就用一条命令建好独立环境，不用三周后为「装不上包」重装系统。", "myth": "很多人以为所有书共用一个环境最省事，其实版本一冲突，一个都跑不起来。", "ex": "conda create -n quant python=3.12  # 一条命令，隔出一个干净环境", "pre": [], "refs": [{"b": "study/09", "p": "环境与代码"}], "hook": "同一台咖啡机，甲牌胶囊塞不进乙牌机器，型号配错了就是打不开。"}, {"id": "cpp", "zh": "C++ 与性能", "en": "C++ / performance", "c": "eng", "lvl": 5, "plain": "C++ 是编译成机器码的语言：同样一段定价或模拟代码，跑起来比 Python 快几十倍，代价是写得慢、容易出错。", "why": "能看懂生产级定价引擎的代码结构，知道这些系统为什么非要用 C++ 写。", "myth": "很多人以为要全项目重写，其实常见做法是 Python 做研究、C++ 只写最热的那段。", "ex": "蒙特卡洛 1 亿条路径：Python 分钟级，C++ 秒级。", "pre": ["func", "mc"], "refs": [{"b": "08 C++", "p": "199", "link": "../mindmap/books-mindmap.html#08-6"}], "hook": "一样搬 100 箱货，推车一次推十箱，人力一趟只搬一箱。"}]};
+const SVG = document.getElementById("map");
+const scene = document.getElementById("scene");
+const gLinks = document.getElementById("links");
+const gNodes = document.getElementById("nodes");
+const NS = "http://www.w3.org/2000/svg";
+
+const nodes = DATA.nodes.map((n, i) => Object.assign({}, n, {ix: i}));
+const byId = {}; nodes.forEach(n => byId[n.id] = n);
+const links = [];
+nodes.forEach(n => (n.pre || []).forEach(p => { if (byId[p]) links.push({ s: p, t: n.id }); }));
+nodes.forEach(n => { n.deg = 0; });
+links.forEach(l => { byId[l.s].deg++; byId[l.t].deg++; });
+const maxDeg = Math.max(...nodes.map(n => n.deg));
+
+/* ---------- layout ---------- */
+const CL = DATA.clusters, CLK = Object.keys(CL);
+const R = 430;
+const centers = {};
+CLK.forEach((k, i) => {
+  const a = -Math.PI / 2 + i * 2 * Math.PI / CLK.length;
+  centers[k] = { x: Math.cos(a) * R, y: Math.sin(a) * R };
+});
+nodes.forEach((n, i) => {
+  const c = centers[n.c] || { x: 0, y: 0 };
+  const a = Math.random() * Math.PI * 2, r = 60 + Math.random() * 120;
+  n.x = c.x + Math.cos(a) * r; n.y = c.y + Math.sin(a) * r;
+});
+
+function simulate(iters) {
+  const k = 1;
+  for (let it = 0; it < iters; it++) {
+    const alpha = 1 - it / iters;
+    // repulsion
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        let dx = b.x - a.x, dy = b.y - a.y;
+        let d2 = dx * dx + dy * dy || 1, d = Math.sqrt(d2);
+        const f = Math.min(1500 / d2, 6) * alpha * k;
+        dx /= d; dy /= d;
+        a.x -= dx * f; a.y -= dy * f; b.x += dx * f; b.y += dy * f;
+      }
+    }
+    // springs
+    links.forEach(l => {
+      const a = byId[l.s], b = byId[l.t];
+      let dx = b.x - a.x, dy = b.y - a.y;
+      let d = Math.sqrt(dx * dx + dy * dy) || 1;
+      const f = (d - 120) * 0.020 * alpha;
+      dx /= d; dy /= d;
+      a.x += dx * f; a.y += dy * f;
+      b.x -= dx * f; b.y -= dy * f;
+      a.y += 0; b.y += 0;
+    });
+    // cluster + center gravity
+    nodes.forEach(n => {
+      const c = centers[n.c] || { x: 0, y: 0 };
+      n.x += (c.x - n.x) * 0.022 * alpha;
+      n.y += (c.y - n.y) * 0.022 * alpha;
+      n.x += (0 - n.x) * 0.002 * alpha;
+      n.y += (0 - n.y) * 0.002 * alpha;
+    });
+  }
+}
+simulate(900);
+
+/* ---------- bounds (center the graph) ---------- */
+let bx0 = 1e9, by0 = 1e9, bx1 = -1e9, by1 = -1e9;
+nodes.forEach(n => { bx0 = Math.min(bx0, n.x); by0 = Math.min(by0, n.y); bx1 = Math.max(bx1, n.x); by1 = Math.max(by1, n.y); });
+const gcx = (bx0 + bx1) / 2, gcy = (by0 + by1) / 2;
+nodes.forEach(n => { n.x -= gcx; n.y -= gcy; });
+nodes.forEach(n => { n.x *= 1.85; });   // 横向拉宽，避免图偏竖
+// 归一化到目标画布，避免个别离群点把整体缩小
+const w0 = Math.max(1, bx1 - bx0), h0 = Math.max(1, by1 - by0);
+const kk = Math.min(1360 / w0, 700 / h0);
+nodes.forEach(n => { n.x *= kk; n.y *= kk; });
+let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+nodes.forEach(n => { x0 = Math.min(x0, n.x); y0 = Math.min(y0, n.y); x1 = Math.max(x1, n.x); y1 = Math.max(y1, n.y); });
+
+/* ---------- draw ---------- */
+const defs = document.createElementNS(NS, "defs");
+defs.innerHTML = '<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b7c6d8"/></marker>';
+scene.insertBefore(defs, scene.firstChild);
+
+function radius(n) { return 9 + 9 * Math.min(1, n.deg / Math.max(2, maxDeg)); }
+
+links.forEach(l => {
+  const a = byId[l.s], b = byId[l.t];
+  const line = document.createElementNS(NS, "line");
+  line.setAttribute("class", "link");
+  line.setAttribute("x1", a.x); line.setAttribute("y1", a.y);
+  line.setAttribute("x2", b.x); line.setAttribute("y2", b.y);
+  line.setAttribute("stroke", CL[a.c].color);
+  line.setAttribute("stroke-width", 1.15);
+  line.setAttribute("opacity", .30);
+  line.dataset.s = l.s; line.dataset.t = l.t;
+  gLinks.appendChild(line);
+});
+
+const nodeEls = {};
+nodes.forEach(n => {
+  const g = document.createElementNS(NS, "g");
+  g.setAttribute("class", "node");
+  g.dataset.id = n.id;
+  const c = document.createElementNS(NS, "circle");
+  c.setAttribute("cx", n.x); c.setAttribute("cy", n.y); c.setAttribute("r", radius(n));
+  c.setAttribute("fill", CL[n.c].color); c.setAttribute("fill-opacity", .92);
+  c.setAttribute("stroke", "#fff"); c.setAttribute("stroke-width", 2);
+  g.appendChild(c);
+  const t = document.createElementNS(NS, "text");
+  t.setAttribute("x", n.x); t.setAttribute("y", n.y + radius(n) + 15);
+  t.setAttribute("style", "paint-order:stroke;stroke:#f6f8fc;stroke-width:3.2px;stroke-linejoin:round");
+  t.textContent = n.zh;
+  g.appendChild(t);
+  gNodes.appendChild(g);
+  nodeEls[n.id] = g;
+  g.addEventListener("click", e => { e.stopPropagation(); openPanel(n.id); });
+  g.addEventListener("mouseenter", () => highlight(n.id));
+  g.addEventListener("mouseleave", () => highlight(null));
+});
+
+/* ---------- label collision ---------- */
+(function resolveLabels(){
+  const list = nodes.map(n => { const el = nodeEls[n.id].querySelector("text");
+    return { el, x: n.x, y: n.y + radius(n) + 15, w: n.zh.length * 12.6 + 6 }; });
+  list.sort((a, b) => a.y - b.y);
+  const placed = [];
+  list.forEach(it => {
+    let y = it.y, guard = 0;
+    while (guard++ < 60 && placed.some(p =>
+      Math.abs(p.y - y) < 15.5 && Math.abs(p.x - it.x) < (p.w + it.w) / 2 - 4)) y += 15.5;
+    it.el.setAttribute("y", y);
+    placed.push({ x: it.x, y, w: it.w });
+  });
+})();
+
+/* ---------- progress (localStorage) ---------- */
+const PKEY = "concept-progress-v1";
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem(PKEY) || "{}") || {}; } catch (e) { progress = {}; }
+(function mergeKnowParam(){
+  const raw = new URLSearchParams(location.search).get("know") ||
+              (location.hash.startsWith("#know=") ? location.hash.slice(6) : "");
+  if (!raw) return;
+  raw.split(",").map(x => x.trim()).filter(Boolean).forEach(id => { if (byId[id]) progress[id] = true; });
+  try { localStorage.setItem(PKEY, JSON.stringify(progress)); } catch (e) {}
+})();
+function saveProgress() { try { localStorage.setItem(PKEY, JSON.stringify(progress)); } catch (e) {} }
+function updateProgPill() {
+  const n = Object.keys(progress).filter(k => progress[k]).length;
+  document.getElementById("prog").textContent = "已懂 " + n + "/" + nodes.length;
+}
+function paintNode(id) {
+  const g = nodeEls[id]; if (!g) return;
+  const c = g.querySelector("circle");
+  const done = !!progress[id];
+  c.setAttribute("stroke", done ? "#10b981" : "#fff");
+  c.setAttribute("stroke-width", done ? 3.4 : 2);
+  let badge = g.querySelector(".badge");
+  if (done) {
+    if (!badge) {
+      badge = document.createElementNS(NS, "g");
+      badge.setAttribute("class", "badge");
+      badge.innerHTML = '<circle r="7.5" fill="#10b981" stroke="#fff" stroke-width="1.6"></circle>' +
+                        '<text text-anchor="middle" dy="3.6" style="font-size:9.5px;font-weight:700" fill="#fff">✓</text>';
+      g.appendChild(badge);
+    }
+    const r = +c.getAttribute("r");
+    const cx = +c.getAttribute("cx"), cy = +c.getAttribute("cy");
+    badge.setAttribute("transform", `translate(${cx + r * 0.78 + 3.5},${cy - r * 0.78 - 3.5})`);
+  } else if (badge) badge.remove();
+}
+function toggleKnow(id) {
+  progress[id] = !progress[id];
+  if (!progress[id]) delete progress[id];
+  saveProgress(); paintNode(id); updateProgPill();
+}
+
+nodes.forEach(n => paintNode(n.id));
+updateProgPill();
+
+/* ---------- interaction ---------- */
+let scale = 1, tx = 0, ty = 0, dragging = false, lx = 0, ly = 0;
+function apply() { scene.setAttribute("transform", `translate(${tx},${ty}) scale(${scale})`); }
+function fit() {
+  const w = innerWidth - 90, h = innerHeight - 190;
+  const bw = (x1 - x0) + 180, bh = (y1 - y0) + 170;
+  scale = Math.min(w / bw, h / bh, 1.6);
+  tx = innerWidth / 2 - ((x0 + x1) / 2) * scale;
+  ty = 58 + (innerHeight - 58) / 2 - ((y0 + y1) / 2) * scale;
+  apply();
+}
+fit();
+SVG.addEventListener("wheel", e => {
+  e.preventDefault();
+  const f = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+  const r = SVG.getBoundingClientRect();
+  const mx = e.clientX - r.left, my = e.clientY - r.top;
+  tx = mx - (mx - tx) * f; ty = my - (my - ty) * f; scale *= f; apply();
+}, { passive: false });
+SVG.addEventListener("mousedown", e => { dragging = true; lx = e.clientX; ly = e.clientY; SVG.classList.add("drag"); });
+addEventListener("mousemove", e => { if (!dragging) return; tx += e.clientX - lx; ty += e.clientY - ly; lx = e.clientX; ly = e.clientY; apply(); });
+addEventListener("mouseup", () => { dragging = false; SVG.classList.remove("drag"); });
+document.getElementById("fit").onclick = fit;
+function focusNode(id){
+  const n = byId[id]; if(!n) return;
+  tx = innerWidth/2 - (n.x*scale) - (panel.classList.contains("open")?196:0);
+  ty = (innerHeight+58)/2 - n.y*scale;
+  apply(); highlight(id);
+}
+document.getElementById("start").onclick = () => { openPanel("py"); focusNode("py"); };
+
+function highlight(id) {
+  document.querySelectorAll(".node").forEach(el => el.classList.remove("dim", "hot"));
+  document.querySelectorAll(".link").forEach(el => el.classList.remove("dim"));
+  if (!id) return;
+  const nb = new Set([id]);
+  links.forEach(l => { if (l.s === id) nb.add(l.t); if (l.t === id) nb.add(l.s); });
+  document.querySelectorAll(".node").forEach(el => {
+    if (!nb.has(el.dataset.id)) el.classList.add("dim");
+  });
+  document.querySelectorAll(".link").forEach(el => {
+    if (el.dataset.s !== id && el.dataset.t !== id) el.classList.add("dim");
+  });
+  nodeEls[id].classList.add("hot");
+}
+
+/* ---------- panel ---------- */
+const panel = document.getElementById("panel");
+document.getElementById("close").onclick = () => { panel.classList.remove("open"); shiftForPanel(false); };
+function stageName(lv) { const s = DATA.stages.find(x => x.id === lv); return s ? s.zh : ""; }
+let panelShifted = false;
+function shiftForPanel(on) {
+  if (on === panelShifted) return;
+  if (innerWidth < 1150) return;
+  tx += on ? -210 : 210;
+  panelShifted = on;
+  apply();
+}
+function openPanel(id) {
+  const n = byId[id];
+  panel.querySelector(".cz").textContent = n.zh;
+  panel.querySelector(".en").textContent = n.en;
+  const knowLabel = () => progress[id] ? "✓ 已懂" : "标记已懂";
+  panel.querySelector(".tags").innerHTML =
+    `<span class="tag" style="background:${CL[n.c].color}1a;color:${CL[n.c].color}">${CL[n.c].zh}</span>` +
+    `<span class="tag">阶段 ${n.lvl} · ${stageName(n.lvl)}</span>` +
+    `<button class="tag knowtag" id="knowhead">${knowLabel()}</button>`;
+  const body = panel.querySelector(".body");
+  const next = links.filter(l => l.s === id).map(l => byId[l.t]);
+  const pre = (n.pre || []).map(p => byId[p]).filter(Boolean);
+  const refs = (n.refs || []).map(r => {
+    if (r.link) return `<a class="reflink" href="${r.link}" target="_blank" rel="noopener"><span>《${r.b}》 ${r.p}</span><b>打开导图 →</b></a>`;
+    return `<div class="reflink disabled"><span>《${r.b}》 ${r.p}</span><b>无图表</b></div>`;
+  }).join("");
+  body.innerHTML = `
+    ${n.hook ? `<h4>先说人话</h4><div class="hook">${n.hook}</div>` : ""}
+    <h4>正经定义</h4><p>${n.plain}</p>
+    <h4>为什么重要</h4><p>${n.why}</p>
+    <h4>常见误解</h4><div class="myth">${n.myth}</div>
+    ${n.ex ? `<h4>最小例子</h4><div class="ex">${n.ex.replace(/</g, "&lt;")}</div>` : ""}
+    <h4>先学</h4><div class="rel">${pre.length ? pre.map(p => `<span data-go="${p.id}">${p.zh}</span>`).join("") : "<span style='background:#f8fafc;color:#94a3b8'>无（可以从这里开始）</span>"}</div>
+    <h4>学完可以看</h4><div class="rel">${next.length ? next.map(p => `<span data-go="${p.id}">${p.zh}</span>`).join("") : "<span style='background:#f8fafc;color:#94a3b8'>暂无</span>"}</div>
+    <h4>在哪本书（点一下跳到导图）</h4>${refs || "<p>· 见 09-环境与代码.md</p>"}
+    <button class="knowbtn" id="knowbtn">标记为已懂</button>`;
+  body.querySelectorAll("[data-go]").forEach(s => s.onclick = () => openPanel(s.dataset.go));
+  const kh = panel.querySelector("#knowhead");
+  if (kh) kh.onclick = () => { toggleKnow(id); kh.textContent = knowLabel();
+    const kb2 = body.querySelector("#knowbtn");
+    if (kb2) { kb2.classList.toggle("on", !!progress[id]);
+      kb2.textContent = progress[id] ? "✓ 已懂（点一下取消）" : "标记为已懂"; } };
+  const kb = body.querySelector("#knowbtn");
+  if (kb) {
+    kb.classList.toggle("on", !!progress[id]);
+    kb.textContent = progress[id] ? "✓ 已懂（点一下取消）" : "标记为已懂";
+    kb.onclick = () => { toggleKnow(id); kb.classList.toggle("on", !!progress[id]);
+      kb.textContent = progress[id] ? "✓ 已懂（点一下取消）" : "标记为已懂"; };
+  }
+  panel.classList.add("open");
+  shiftForPanel(true);
+}
+
+/* ---------- chips ---------- */
+const chips = document.getElementById("chips");
+CLK.forEach(k => {
+  const el = document.createElement("div");
+  el.className = "chip";
+  el.innerHTML = `<i style="background:${CL[k].color}"></i>${CL[k].zh}`;
+  el.onclick = () => { el.classList.toggle("off"); applyFilter(); };
+  chips.appendChild(el);
+});
+function applyFilter() {
+  const off = [...document.querySelectorAll(".chip.off")].map(c => c.textContent.trim());
+  const map = {}; CLK.forEach(k => map[CL[k].zh] = true);
+  off.forEach(nm => { map[nm] = false; });
+  let anyHidden = false;
+  document.querySelectorAll(".node").forEach(el => {
+    const n = byId[el.dataset.id];
+    const on = map[CL[n.c].zh] !== false;
+    if (!on) anyHidden = true;
+    el.style.display = on ? "" : "none";
+  });
+  document.querySelectorAll(".link").forEach(el => {
+    const a = byId[el.dataset.s];
+    el.style.display = map[CL[a.c].zh] === false ? "none" : "";
+  });
+}
+
+/* ---------- stage mode ---------- */
+let stageMode = false;
+const STAGE_COLORS = ["#94a3b8", "#0ea5e9", "#0891b2", "#7c3aed", "#059669", "#9333ea"];
+document.getElementById("path").onclick = e => {
+  stageMode = !stageMode;
+  e.target.classList.toggle("on", stageMode);
+  const legend = document.getElementById("legend");
+  if (!stageMode) {
+    legend.style.display = "none";
+    document.querySelectorAll(".node circle").forEach(c => { const n = byId[c.parentNode.dataset.id]; c.setAttribute("fill", CL[n.c].color); });
+    document.querySelectorAll(".node text").forEach(t => t.setAttribute("opacity", 1));
+  } else {
+    legend.style.display = "block";
+    legend.innerHTML = DATA.stages.map(s => `<div><i style="background:${STAGE_COLORS[s.id]}"></i>阶段 ${s.id} · ${s.zh}</div>`).join("");
+    document.querySelectorAll(".node circle").forEach(c => { const n = byId[c.parentNode.dataset.id]; c.setAttribute("fill", STAGE_COLORS[n.lvl]); });
+  }
+};
+
+/* ---------- search ---------- */
+document.getElementById("q").addEventListener("input", e => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll(".node").forEach(el => {
+    const n = byId[el.dataset.id];
+    const hit = !q || n.zh.includes(q) || n.en.toLowerCase().includes(q) || (n.plain || "").includes(q);
+    el.classList.toggle("dim", !hit);
+  });
+});
+
+document.getElementById("prog").onclick = () => {
+  if (!Object.keys(progress).length) return;
+  if (!confirm("清除全部「已懂」标记？")) return;
+  progress = {}; saveProgress(); nodes.forEach(n => paintNode(n.id)); updateProgPill();
+};
+
+/* ---------- reset ---------- */
+document.getElementById("reset").onclick = () => {
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("off"));
+  applyFilter();
+  if (stageMode) document.getElementById("path").click();
+  document.getElementById("q").value = "";
+  document.querySelectorAll(".node").forEach(el => el.classList.remove("dim"));
+  panel.classList.remove("open");
+  fit();
+};
+addEventListener("resize", () => setTimeout(fit, 80));
+if (location.hash.startsWith("#know=")) { /* 仅标记进度 */ }
+else if (location.hash && byId[location.hash.slice(1)]) setTimeout(() => openPanel(location.hash.slice(1)), 120);
+</script></body></html>

@@ -1,0 +1,13 @@
+{
+  "2.1": ["用 sklearn 的 make_blobs 造聚类数据", "还有 make_regression 与 make_classification", "可用 plt.scatter 画散点验证"],
+  "2.2": ["用 pandas 的 read_csv 载入 CSV", "载入前先扫一眼文件结构", "read_csv 有 30 多个参数适配各种格式"],
+  "2.3": ["用 read_excel 读 Excel 文件", "sheet_name 可传表名或零基序号", "要多个工作表就传列表"],
+  "2.4": ["read_json 用 orient 指明 JSON 结构", "orient 可选 split/records/index/columns/values", "json_normalize 可展开半结构 JSON"],
+  "2.5": ["用 read_parquet 读 Parquet 文件", "Parquet 是大数据常用高效存储格式", "常与 Hadoop、Spark 搭配"],
+  "2.6": ["用 pandavro 的 read_avro 读 Avro", "Avro 是靠 schema 的二进制格式", "不如 Parquet 常见但使用在增长"],
+  "2.7": ["用 read_sql_query 执行 SQL 并载入", "SELECT * FROM data 取表全部列", "create_engine 需 SQLite 库已存在"],
+  "2.8": ["用 pymysql 建远程 SQL 连接", "再用 pandas 读成 DataFrame", "企业环境常需主机、端口与账密"],
+  "2.9": ["可直接用 URL 读 Google 表格", "URL 末尾加 /export?format=csv 即 CSV", "省去先下载再读的中间步骤"],
+  "2.10": ["给 pandas 加 storage_options 读 S3", "s3:// 路径读 CSV 仍需 AWS 凭证", "公有对象也有 HTTP 直链可下载"],
+  "2.11": ["用内置 open() 读取非结构化数据", "文本、图像这类数据没有固定行列结构"]
+}

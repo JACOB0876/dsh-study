@@ -1,0 +1,143 @@
+{
+  "track": "nlp",
+  "name": "文本 / NLP 线",
+  "sub": "5 关 · 对应《Blueprints for Text Analytics》",
+  "stages": [
+    {
+      "id": "n1",
+      "name": "第 1 阶段 · 看清文本",
+      "hint": "先知道手里有什么，再谈分析",
+      "lessons": [
+        {
+          "id": "nlp1",
+          "title": "一堆文本，先看清有什么",
+          "min": 20,
+          "hook": "运营发来一张表：两千多条工单，最长那条 800 字，最短的只有一个「好」。你第一件事不是分析，是数清它。",
+          "goals": ["会用几行代码数清条数、空值、重复", "会看长度分布，认出异常长和异常短的文本", "会先扫一遍高频片段，再决定后面怎么切词"],
+          "concepts": [
+            {"t": "语料", "en": "corpus", "d": "你手里那堆待分析的文本本身。开工前先数清它有多少条、有没有空值，再谈任何结论。"},
+            {"t": "文档长度分布", "en": "length distribution", "d": "每条文本的字数（或词数）分布。均值会被一两条超长文本拉偏，中位数（median）更稳。"},
+            {"t": "词频", "en": "term frequency", "d": "某个词或片段出现的次数。排最前的常常是「的」「了」这类虚词，不是真正的主题。"}
+          ],
+          "steps": [
+            {"text": "先把文本装进一张表，数清三件事：多少条、多少空值、多少重复。", "code": "import pandas as pd\n\ntexts = [\n    '快递三天了还没到，能帮我查一下吗',\n    '退款申请两次了，一直没到账',\n    '包装破了，里面杯子碎了',\n    '客服电话一直打不通',\n    '好',\n    None,\n    '优惠券用不了，下单时提示已过期',\n    '物流信息三天没更新，是不是丢了',\n    '退款到账很快，谢谢',\n    '快递员没打电话就放门口了',\n    '商品和图片不一样，颜色差很多',\n    '想改收货地址，还能改吗',\n    '尺码偏小，想换大一码',\n    '发票什么时候能开',\n    None,\n    '收到货了，质量不错',\n    '客服态度很好，问题解决了',\n    'app 一直闪退，打不开',\n    '快递三天了还没到，能帮我查一下吗',\n    '退款到账很快，谢谢',\n    '下单两天了还没发货',\n    '赠品漏发了',\n    '价格比昨天贵了二十块',\n    '能不能开发票',\n    '包裹显示签收但我没收到',\n    '面膜味道有点怪',\n    '会员到期了还能续吗',\n    '售后处理太慢，等了一周',\n    '颜色比想象中好看',\n    '快递员态度很差',\n    None,\n    '保修期内坏了，怎么修',\n    '分期还款怎么还',\n    '优惠券叠加不了',\n    '东西不错，就是有点贵',\n    '换货寄回去三天了没消息',\n    'app 里找不到订单',\n    '物流一直显示已揽收',\n    '客服机器人答非所问',\n    '快递太慢了，等了一周还没到，中间问过两次客服都没解决，希望能给个说法',\n]\ndf = pd.DataFrame({'text': texts})\n\nprint(len(df), df['text'].isna().sum(), df['text'].dropna().duplicated().sum())", "out": "40 3 2 —— 40 条、3 条空、2 条完全重复。先记下来，别急着删：重复可能是同一个人投诉两次"},
+            {"text": "再看长度：平均值是最容易被一两条长文本带偏的那个数。", "code": "df['n'] = df['text'].str.len().fillna(0).astype(int)\nprint(df['n'].describe().round(1).to_string())\nprint('最短一条:', int(df.loc[df['text'].notna(), 'n'].min()))", "out": "count 40 / mean 9.8 / 50% 9.5 / max 34.0；最短一条: 1 —— 大多数在 8–11 字，最长那条 34 字（min 0.0 是那 3 条空值撑出来的）"},
+            {"text": "最后扫高频片段：没有分词工具时，先用「两个字一组」看个大概。", "code": "import re\nfrom collections import Counter\n\ngrams = Counter()\nfor t in df['text'].dropna():\n    t2 = re.sub(r'[^\\u4e00-\\u9fa5]', '', t)      # 只留汉字，去掉标点和空格\n    for i in range(len(t2) - 1):\n        grams[t2[i:i + 2]] += 1\n\nprint(grams.most_common(8))", "out": "[('快递', 5), ('三天', 4), ('天了', 4), ('了还', 4), ('还没', 4), ('没到', 4), ('一直', 4), ('客服', 4)] —— 「快递/没到/客服」是主题，「天了」「了还」是切错位置的碎片"}
+          ],
+          "quiz": [
+            {"q": "40 条数据里有 3 条空值、2 条重复，你会先删掉再分析吗？", "a": "先别删，先数清。空值删掉会让占比失真；重复可能是同一个人反复投诉，那本身就是信息。记下数量，再决定怎么处理。"},
+            {"q": "平均 9.8 字、中位数 9.5 字，两个数差不多。那什么时候必须看中位数？", "a": "有极端长句或条数少的时候。这条 34 字就把均值往上拽；分布偏斜、样本又小，中位数才代表「典型的一条」。"},
+            {"q": "高频第一是「快递」、第二是「三天」，第三却是「天了」。说明什么？", "a": "「天了」跨了词边界，是两字切片切出来的假词。所以这种看法只能定方向，真要统计词频得先正经分词。"}
+          ],
+          "can": "拿到一份陌生的文本表，十分钟内就能说清它有多少条、多长、主要在讲什么。"
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "name": "第 2 阶段 · 把文本变成数字",
+      "hint": "切词、加权、比相似：后面所有模型都踩在这三块砖上",
+      "lessons": [
+        {
+          "id": "nlp2",
+          "title": "清洗与分词：把句子切成词",
+          "min": 25,
+          "hook": "同一句 12 个词的评论，两个人切出两种结果：一个 12 个词，一个只有 4 块。后面所有统计都建在这堆「词」上。",
+          "goals": ["会用正则洗掉网址、数字、表情和多余空格", "会把句子切成词，并对照去停用词前后的词表", "知道规则砍后缀哪里会出错，什么时候该上 spaCy"],
+          "concepts": [
+            {"t": "正则表达式", "en": "regex", "d": "描述「要删掉什么」的模式。`re.sub(r'http\\S+', '', t)` 一次删光所有网址。"},
+            {"t": "分词", "en": "tokenization", "d": "把一整句切成词的列表。英文靠空格和标点就够，中文必须先分词，否则整句算一个词。"},
+            {"t": "词形还原", "en": "lemmatization", "d": "把 runs、running 还原成原形 run。比 stemming（只砍后缀）准，但需要知道词性。"}
+          ],
+          "steps": [
+            {"text": "先洗：网址、数字、标点、表情全换成空格，大小写也统一。", "code": "import re\n\nraw = [\n    'Great battery life!!! I charge it once every 3 days 😀 http://t.cn/x1',\n    'Shipping was fast and the box arrived in perfect condition.',\n    'The screen cracked after one week, very disappointed.',\n    'Refund took 10 days and two support calls, still waiting...',\n    'Battery dies in 2 hours, useless for travel.',\n    'Love the color and the weight, feels premium.',\n    'Customer service replied within an hour, impressive.',\n    'It stopped charging after a month. Not happy at all.',\n    'Cheap price for a decent laptop, good value.',\n    'The app keeps crashing on my phone.',\n    'Arrived 4 days late, but the product is fine.',\n    'Packaging was damaged, the mug inside was broken.',\n    'Battery life is amazing, I only charge on weekends.',\n    'Worst purchase this year, returning it tomorrow.',\n    'Setup took 5 minutes, very easy.',\n    'The fan is loud and the battery drains fast.',\n    'Refunds are processed quickly, no complaints.',\n    'Screen quality is great for watching movies.',\n    'Delivery was late by a week and nobody told me.',\n    'It works as advertised, happy with the price.',\n    'Charging cable broke after two weeks.',\n    'Support sent a replacement in 2 days, great service.',\n    'The battery does not last a full day anymore.',\n    'Love it! Light, fast, and the screen is bright.',\n]\n\ndef clean(t):\n    t = t.lower()\n    t = re.sub(r'http\\S+|www\\.\\S+', ' ', t)   # 网址\n    t = re.sub(r'\\d+', ' ', t)                # 数字\n    t = re.sub(r'[^a-z\\s]', ' ', t)           # 标点、表情（中文语料改成 [^\\u4e00-\\u9fa5a-z\\s]）\n    return re.sub(r'\\s+', ' ', t).strip()\n\ncleaned = [clean(t) for t in raw]\nprint(len(cleaned), cleaned[0])", "out": "24 great battery life i charge it once every days —— 网址、数字、三个感叹号、表情全没了；'3 days' 里的 3 也没了，只剩 days"},
+            {"text": "切词只要一行：按空格切。先别急着去停用词，先看最常出现的是什么。", "code": "from collections import Counter\n\ntokens = [w for t in cleaned for w in t.split()]\nprint(len(tokens))\nprint(Counter(tokens).most_common(6))", "out": "192 / [('the', 12), ('and', 6), ('battery', 5), ('it', 5), ('a', 5), ('is', 5)] —— 192 个词里，前几名几乎全是虚词"},
+            {"text": "去停用词 + 词形还原，一起做；最后两行注释是中文语料的替换方案。", "code": "STOP = {'the', 'a', 'an', 'and', 'is', 'was', 'it', 'to', 'of', 'for', 'on',\n        'in', 'with', 'this', 'but', 'at', 'by', 'my', 'me', 'i', 'not', 'no'}\n\ndef lemma(w):\n    for suf, cut in [('ing', 3), ('ed', 2), ('es', 2), ('s', 1)]:\n        if len(w) > 4 and w.endswith(suf):\n            return w[:-cut]\n    return w\n\nkept = [lemma(w) for w in tokens if w not in STOP]\nprint(len(tokens), '->', len(kept))\nprint(Counter(kept).most_common(6))\n\n# 中文语料这一步换成（可选）：\n# python -m spacy download zh_core_web_sm\n# nlp = spacy.load('zh_core_web_sm')   # 先分词，再取 token.lemma_", "out": "192 -> 134 / [('battery', 5), ('days', 4), ('great', 3), ('fast', 3), ('screen', 3), ('after', 3)] —— 但 charge 和 charg 被砍成了两个词：规则砍后缀会过度，正式项目用 spaCy 的 lemma（`python -m spacy download en_core_web_sm`）"}
+          ],
+          "quiz": [
+            {"q": "把文本里所有数字都删掉，会不会删掉有用的东西？", "a": "会。「等了 10 天」「4 星」里的数字是抱怨强度和评分。更稳的做法是把数字换成 <num> 占位符，或者干脆保留。"},
+            {"q": "去停用词时把 not、no、never 也一起删了，会有什么后果？", "a": "情感直接反转：'not good' 变成 'good'。否定词必须留在停用词表外面，或者单独处理。"},
+            {"q": "为什么不能只靠砍后缀来做词形还原？", "a": "arrived 会变成 arriv，这不是一个词；charge 和 charging 还可能被砍成两半。要么查词典/词性，要么用 spaCy。"}
+          ],
+          "can": "拿到一批原始文本，能洗成干净的词列表，并说清每一步删掉了什么、可能丢了什么。"
+        },
+        {
+          "id": "nlp3",
+          "title": "词袋与 TF-IDF：让机器能比较两段话",
+          "min": 25,
+          "hook": "一条写「等了 4 天还没发货」，另一条写「4 天没发」。人一眼就知道是同一件事，机器看到的是两串完全不同的字。",
+          "goals": ["会把 30 条评论变成一张「文档 × 词」的数字表", "能说清 IDF 在压什么词、为什么", "会用余弦相似度给一句话找出最像的评论"],
+          "concepts": [
+            {"t": "词袋", "en": "bag of words", "d": "只数每个词出现几次，不管顺序。一句文本变成一行数字，列是整份词表。"},
+            {"t": "TF-IDF", "en": "TF-IDF", "d": "词频（TF）乘逆文档频率（IDF）：词在这条里多、在别的条里少见，权重就高；'the' 到处都有，权重接近 0。"},
+            {"t": "余弦相似度", "en": "cosine similarity", "d": "把文本看成向量（一串数字），比两个向量的夹角。1 = 用词几乎一样，0 = 没有共同词，只比方向不比长短。"}
+          ],
+          "steps": [
+            {"text": "先数数：每条评论变成一行，每个词变成一列，格子里是出现次数。", "code": "import pandas as pd\nfrom sklearn.feature_extraction.text import CountVectorizer\n\ndocs = [\n    'the battery dies after two hours of use',\n    'battery life is great i charge it once a week',\n    'it stopped charging after one month',\n    'charging is slow and the battery drains fast',\n    'the charger broke after two weeks',\n    'battery drains overnight even when the phone is idle',\n    'i have to charge it twice a day now',\n    'fast charging works well and the battery lasts all day',\n    'the battery died completely and will not charge',\n    'battery is fine but the charger gets very hot',\n    'shipping took ten days and the tracking never updated',\n    'the package arrived four days late',\n    'delivery was fast and the box was in perfect condition',\n    'my package says delivered but i never received it',\n    'shipping is slow it took a week to arrive',\n    'the box arrived damaged and the screen was broken',\n    'tracking shows it is still in transit after nine days',\n    'delivered one day early and well packed',\n    'the shipping label was wrong and it went to another city',\n    'two weeks late and nobody told me why',\n    'i returned it and the refund never came',\n    'refund was processed in three days thank you',\n    'support did not answer my email for a week',\n    'i want my money back the refund is late',\n    'customer service called me back and fixed it',\n    'returned the item ten days ago still no refund',\n    'they refunded the money after two phone calls',\n    'support sends the same reply every time useless',\n    'the refund arrived quickly good service',\n    'i am still waiting for the return label',\n]\n\ncv = CountVectorizer(stop_words='english')\nX = cv.fit_transform(docs)\nprint('形状:', X.shape)\n\nnames = cv.get_feature_names_out()\nrow = X[0].toarray()[0]\nprint({names[i]: int(v) for i, v in enumerate(row) if v})", "out": "形状: (30, 84) / {'battery': 1, 'dies': 1, 'hours': 1, 'use': 1} —— 30 条 × 84 个词，第 1 条只点亮了 4 个格子，其余全是 0"},
+            {"text": "换成 TF-IDF：同样的表，每个格子的数字再乘一个「稀有度」。", "code": "import numpy as np\nfrom sklearn.feature_extraction.text import TfidfVectorizer\n\ntf = TfidfVectorizer(stop_words='english')\nT = tf.fit_transform(docs)\nfeat = tf.get_feature_names_out()\nidf = dict(zip(feat, tf.idf_))\ndfreq = np.asarray((T > 0).sum(axis=0)).ravel()\n\nfor w in ['battery', 'charge', 'label']:\n    print(w, int(dfreq[list(feat).index(w)]), round(float(idf[w]), 2))\n\ntf2 = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))\ntf2.fit(docs)\nprint([w for w in tf2.get_feature_names_out() if ' ' in w][:5])", "out": "battery 7 2.35 / charge 3 3.05 / label 2 3.34 —— 越少见的词 IDF 越高，权重越大；最后一行是两词短语：['ago refund', 'answer email', 'arrived damaged', 'arrived days', 'arrived quickly']，有真短语也有 'ago refund' 这种碎片"},
+            {"text": "拿一句新评论，按同样的规则变成向量，再和 30 条逐一比夹角。", "code": "from sklearn.metrics.pairwise import cosine_similarity\n\nq = 'the delivery is late and the tracking shows nothing'\nsim = cosine_similarity(tf.transform([q]), T)[0]\n\nfor i in sim.argsort()[::-1][:3]:\n    print(round(float(sim[i]), 2), docs[i])", "out": "0.53 tracking shows it is still in transit after nine days / 0.25 delivery was fast and the box was in perfect condition / 0.23 two weeks late and nobody told me why —— 第一名对；第二三名只是共享了 delivery、late 这类词，0.2 出头基本算巧合"}
+          ],
+          "quiz": [
+            {"q": "两条评论用词完全一样、只是顺序相反（「发货慢但质量好」/「质量好但发货慢」），词袋能区分吗？", "a": "不能。词袋只数次数，顺序被丢掉了。要顺序就得用 n-gram（两词短语）或序列模型，代价是维度暴涨。"},
+            {"q": "一个词在每条评论里都出现，它的 IDF 会怎样？这对检索意味着什么？", "a": "IDF 接近 0，权重被压到几乎没用。这类词应该进停用词表，不然它们会淹没真正有区分度的词。"},
+            {"q": "余弦相似度 0.9，是不是说明两段话意思一样？", "a": "只能说用词高度重合。「不推荐」和「推荐」也能到 0.9，否定词、反义词它看不出来。"}
+          ],
+          "can": "给一段新文本，能在旧文本里找出「用词最像」的几条，并说清它为什么像、什么时候会失效。"
+        }
+      ]
+    },
+    {
+      "id": "n3",
+      "name": "第 3 阶段 · 能判、能讲",
+      "hint": "先拿到一个结论，再把结论翻译成人话",
+      "lessons": [
+        {
+          "id": "nlp4",
+          "title": "文本分类：把邮件分成两类",
+          "min": 30,
+          "hook": "一批邮件里三成是垃圾邮件。一个把全部邮件都判成「正常」的程序，准确率 70%，一封也没拦住——这和你的结果一样。",
+          "goals": ["会用 Pipeline 把向量化和分类器串成一条线", "会读混淆矩阵，分清漏报和误报", "能解释为什么「准确率高」不等于「有用」"],
+          "concepts": [
+            {"t": "流水线", "en": "pipeline", "d": "把向量化和分类器打包成一个对象。fit 一次、predict 一次，训练和预测不会漏步骤。"},
+            {"t": "混淆矩阵", "en": "confusion matrix", "d": "2×2 的表：真正、真负、假正（正常邮件被拦）、假负（垃圾邮件被放过）。"},
+            {"t": "类别不平衡", "en": "class imbalance", "d": "两类样本数差很多（这里是 28 : 12）。全判成多数类也能拿高分，所以准确率不能单独看。"}
+          ],
+          "steps": [
+            {"text": "先分训练集和测试集，再用 Pipeline 把两步串起来训一遍。", "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\n\nemails = [\n    'can we move the review meeting to thursday afternoon',\n    'the q3 report is attached please review before friday',\n    'lunch with the client is at noon tomorrow',\n    'i will be out of office until monday',\n    'please approve the budget for the new hire',\n    'the design file is in the shared folder',\n    'thanks for joining the call yesterday',\n    'our team shipped the release on time',\n    'reminder standup at nine thirty',\n    'the invoice from the vendor needs your signature',\n    'let us discuss the roadmap next week',\n    'i updated the slides for the presentation',\n    'could you share the numbers from last month',\n    'the new hire starts on monday',\n    'we need two more days for testing',\n    'the office will be closed on friday',\n    'please add me to the mailing list',\n    'i fixed the bug in the login page',\n    'the client asked for a smaller scope',\n    'can you send the contract to legal',\n    'the conference call is rescheduled to tuesday',\n    'she will present the plan tomorrow',\n    'the vendor confirmed the delivery date',\n    'we finished the migration over the weekend',\n    'the budget spreadsheet is ready for review',\n    'his feedback was very helpful',\n    'let us book a room for the workshop',\n    'the test results look good so far',\n    'congratulations you won a lottery prize claim now',\n    'win a free iphone today click this link',\n    'limited offer buy one get one free click here',\n    'cheap loan approved in minutes apply now',\n    'urgent your account will be closed verify password',\n    'earn money fast from home no experience needed',\n    'exclusive deal ninety percent off today only',\n    'claim your free gift card now',\n    'your parcel is held pay a small fee to release it',\n    'lowest price guaranteed order now and save',\n    'final notice unpaid invoice click to avoid penalty',\n    'free trial membership cancel anytime join today',\n]\nlabels = ['ham'] * 28 + ['spam'] * 12\n\nX_tr, X_te, y_tr, y_te = train_test_split(\n    emails, labels, test_size=0.3, random_state=7, stratify=labels)\n\npipe = Pipeline([('tfidf', TfidfVectorizer(stop_words='english')),\n                 ('clf', LogisticRegression(max_iter=1000))])\npipe.fit(X_tr, y_tr)\nprint(len(y_te), round(pipe.score(X_te, y_te), 3))", "out": "12 0.667 —— 12 条测试里对了 8 条，看着还行；但先别收工"},
+            {"text": "看混淆矩阵：它把「对了几个」拆成「哪一类错」。", "code": "from sklearn.metrics import confusion_matrix, classification_report\n\npred = pipe.predict(X_te)\nprint(confusion_matrix(y_te, pred))\nprint(classification_report(y_te, pred, zero_division=0))", "out": "[[8 0] [4 0]] —— 8 封正常全对，4 封垃圾邮件一封都没抓到；报告里 spam 的 precision 和 recall 都是 0.00"},
+            {"text": "对比一下：全判「正常」的程序能拿多少分？再把类别权重调平。", "code": "import numpy as np\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import recall_score\n\ndummy = np.array(['ham'] * len(y_te))\nprint('全判正常:', round((dummy == y_te).mean(), 3))\n\npipe2 = Pipeline([('tfidf', TfidfVectorizer(stop_words='english')),\n                  ('clf', LogisticRegression(max_iter=1000, class_weight='balanced'))])\npipe2.fit(X_tr, y_tr)\nprint('调平后:', round(pipe2.score(X_te, y_te), 3),\n      recall_score(y_te, pipe2.predict(X_te), pos_label='spam'))", "out": "全判正常: 0.667（和模型一模一样）/ 调平后: 0.917 0.75 —— 准确率只多对了 1 条，但垃圾邮件从抓到 0 封变成抓到 3 封"}
+          ],
+          "quiz": [
+            {"q": "一个垃圾邮件模型准确率 92%，能不能直接上线？", "a": "不能。先看混淆矩阵和召回率。92% 可能是靠多数类撑起来的，漏掉的垃圾邮件也许有一半，还得看假正会不会拦掉正常邮件。"},
+            {"q": "为什么测试集必须在训练之前就分出来？", "a": "先看测试集再调参数，等于提前看了答案；报出来的分数会虚高，上线就掉。"},
+            {"q": "假正（正常邮件被判垃圾）和假负（垃圾邮件被判正常），哪个代价高？", "a": "看业务。正常邮件被拦可能丢客户，通常更贵；所以这两类错误要分开数，而不是合并成一个准确率。"}
+          ],
+          "can": "训练一个基线分类器，并用混淆矩阵说清它错在哪一类、错了几条。"
+        },
+        {
+          "id": "nlp5",
+          "title": "主题模型与可解释性：这批评论在说什么",
+          "min": 30,
+          "hook": "3000 条评论，老板只问一句：客户主要在抱怨什么。你不可能一条条看完，也不甘心只挑自己熟悉的词。",
+          "goals": ["会用 NMF 从一批评论里自动分出主题", "会用 coherence 比较两套主题的好坏", "能把「这条为什么归到这个主题」讲成一句人话"],
+          "concepts": [
+            {"t": "主题模型", "en": "topic model", "d": "假设每条文档是若干主题的混合，每个主题是一组常一起出现的词。NMF 和 LDA 是两条实现路线。"},
+            {"t": "主题一致性", "en": "topic coherence", "d": "一个主题里前几个词彼此有多常一起出现。分数高，说明这些词真在讲同一件事。"},
+            {"t": "可解释性", "en": "explainability", "d": "能指着具体的词说「因为它，所以这么判」。只给一个概率、说不出词，不算解释。"}
+          ],
+          "steps": [
+            {"text": "还是第 3 关那 30 条评论，这次让它自己分组。", "code": "from sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.decomposition import NMF\n\nreviews = [\n    'the battery dies after two hours of use',\n    'battery life is great i charge it once a week',\n    'it stopped charging after one month',\n    'charging is slow and the battery drains fast',\n    'the charger broke after two weeks',\n    'battery drains overnight even when the phone is idle',\n    'i have to charge it twice a day now',\n    'fast charging works well and the battery lasts all day',\n    'the battery died completely and will not charge',\n    'battery is fine but the charger gets very hot',\n    'shipping took ten days and the tracking never updated',\n    'the package arrived four days late',\n    'delivery was fast and the box was in perfect condition',\n    'my package says delivered but i never received it',\n    'shipping is slow it took a week to arrive',\n    'the box arrived damaged and the screen was broken',\n    'tracking shows it is still in transit after nine days',\n    'delivered one day early and well packed',\n    'the shipping label was wrong and it went to another city',\n    'two weeks late and nobody told me why',\n    'i returned it and the refund never came',\n    'refund was processed in three days thank you',\n    'support did not answer my email for a week',\n    'i want my money back the refund is late',\n    'customer service called me back and fixed it',\n    'returned the item ten days ago still no refund',\n    'they refunded the money after two phone calls',\n    'support sends the same reply every time useless',\n    'the refund arrived quickly good service',\n    'i am still waiting for the return label',\n]\n\ntf = TfidfVectorizer(stop_words='english')\nT = tf.fit_transform(reviews)\nwords = tf.get_feature_names_out()\n\nnmf = NMF(n_components=3, init='nndsvda', random_state=0).fit(T)\nfor k, comp in enumerate(nmf.components_):\n    print(k, [words[i] for i in comp.argsort()[::-1][:5]])", "out": "0 ['refund', 'late', 'days', 'returned', 'arrived'] / 1 ['battery', 'charging', 'fast', 'charge', 'day'] / 2 ['shipping', 'took', 'tracking', 'days', 'updated'] —— 退款、续航、物流，三件事自己分开了"},
+            {"text": "换 LDA 再跑一次，然后用 coherence 判谁的主题更「像个主题」。", "code": "import numpy as np\nfrom sklearn.decomposition import LatentDirichletAllocation\nfrom sklearn.metrics.pairwise import cosine_similarity\n\ndef coherence(comp, T, n=6):\n    idx = comp.argsort()[-n:]\n    sim = cosine_similarity(T[:, idx].toarray().T)\n    return float(sim[np.triu_indices(n, 1)].mean())\n\nlda = LatentDirichletAllocation(n_components=3, random_state=0).fit(T)\nprint('NMF', [round(coherence(c, T), 3) for c in nmf.components_])\nprint('LDA', [round(coherence(c, T), 3) for c in lda.components_])", "out": "NMF [0.272, 0.298, 0.403] / LDA [0.278, 0.258, 0.142] —— 平均 0.32 对 0.23，这批数据 NMF 的主题更聚；LDA 低到 0.14 那个主题是混的"},
+            {"text": "最后一步：拿一条新评论，说出它属于哪个主题、凭什么。", "code": "q = 'the battery dies after two hours'\nw = nmf.transform(tf.transform([q]))[0]\nk = int(w.argmax())\nprint('topic', k, 'weight', round(float(w[k]), 2))\nprint([words[i] for i in nmf.components_[k].argsort()[::-1][:5]])", "out": "topic 1 weight 0.3 / ['battery', 'charging', 'fast', 'charge', 'day'] —— 翻成人话：这条里有 battery、charging、charge，所以落在「续航/充电」主题上"}
+          ],
+          "quiz": [
+            {"q": "NMF 跑出 3 个主题，怎么判断它靠不靠谱？", "a": "先人眼看每个主题前 5–8 个词是否在讲同一件事，再算 coherence 和别的模型或主题数比。只看重建误差不够。"},
+            {"q": "主题 2 的词是 days、took、week、updated、tracking，你会给它起什么名字，业务方拿它干嘛？", "a": "物流时效。可以按月统计各主题的占比，看投诉是不是集中在配送，而不是笼统地说「体验不好」。"},
+            {"q": "老板问「这条为什么被判成抱怨」，什么回答才算解释？", "a": "给出词级证据：因为出现 refund、late、waiting，而且这些词在这类文本里权重最高。只答「模型算出来的」不算。"}
+          ],
+          "can": "把一批评论文本自动分成几个能说出名字的主题，并用具体的词向业务方解释每一条的去向。"
+        }
+      ]
+    }
+  ]
+}

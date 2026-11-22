@@ -1,0 +1,14 @@
+{
+  "10.1": ["模块可在单文件里同时写声明与实现，用 export 暴露", "import 取代 #include，避免重复解析头文件"],
+  "10.2": ["import <vector>; 导入标准库头单元，末尾要分号", "未 export 的内部函数在模块外不可见", "<cmath> 等源自 C 的头文件暂不宜做头单元"],
+  "10.3": ["模板也要 export，否则模块外无法实例化", "export 写在 template 之前，整体导出模板"],
+  "10.4": ["module; 开全局模块片段，其中只能放 #include", "Boost、Eigen 等外部库目前只能 #include 引入"],
+  "10.5": ["export import 把导入的模块再导出，使用者无需二次导入", "模块接口只暴露 export 出去的名字"],
+  "10.6": ["模块接口预编译一次，消除重复解析，构建更快", "预编译头依赖平台，模块则是标准做法", "模块会削弱构建并行度，提速并非绝对"],
+  "10.7": ["export namespace 一次导出整个命名空间", "也可只导出个别类或函数，控制可见范围"],
+  "10.8": ["实现分区仅供模块内部使用，不能导出名字", "接口分区可 export，但须由主接口再 export import"],
+  "10.9": ["concept 用 requires 表达式声明类型必须支持的操作", "concepts 把冗长模板报错压成一句约束不满足"],
+  "10.10": ["template<can_square T> 把 concept 直接写进模板参数", "不满足约束时报 constraints not satisfied"],
+  "10.11": ["多个 concept 用 && 组合成复合约束", "requires 子句也可以写在函数模板的尾部"],
+  "10.12": ["标准库预置 integral、floating_point 等常用 concepts", "复用标准 concepts 比自己写更统一"]
+}

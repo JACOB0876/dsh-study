@@ -1,0 +1,16 @@
+{
+  "2.1": ["看清 Transformer 内部，才能推断其瓶颈与优化点", "理解行为与限制，是后续批处理与缓存优化的前提"],
+  "2.2": ["本章打基础：先建直觉，再谈系统设计与调优", "生产中流式（streaming）与批处理（batching）必备"],
+  "2.3": ["token 由分词器（tokenizer）切分，可为词、子词或标点", "英文平均 1 token ≈ 0.75 个词"],
+  "2.4": ["自回归逐 token 生成，遇最大长度或停止词（stop token）止", "主流 LLM 采用纯解码器（decoder-only）架构"],
+  "2.5": ["注意力（attention）依上下文消解指代歧义", "解码层含 Q/K/V 投影、MLP 与 RMSNorm", "注意力密集层宜用融合内核（fused attention kernel）"],
+  "2.6": ["本书刻意简化张量形状细节，聚焦服务与优化", "一次生成＝嵌入→注意力→MLP→输出，逐 token 循环"],
+  "2.7": ["单请求单序列示例仅作演示，生产需批流与优化", "沿时间看执行：逐 token、prefill/decode、缓存状态"],
+  "2.8": ["无缓存时每生成一个 token 都要重算整段序列", "KV cache 存各层历史 key/value，只算新增 token"],
+  "2.9": ["预填充（prefill）处理整段提示并建立 KV cache", "解码（decode）每步仅算新 token，速度更稳定"],
+  "2.10": ["生产应用依赖服务框架，而非自建推理管线", "框架以 REST 或 gRPC API 提供实时、批量推理"],
+  "2.11": ["vLLM 加载预训练模型并直接对外提供 API", "训练框架重开发，服务框架重高效低延迟推理"],
+  "2.12": ["vLLM 吞吐可达 Hugging Face Transformers 的 10–20 倍", "vLLM 沿用 OpenAI 文本补全 API 的参数约定"],
+  "2.13": ["同步 generate 要等整段输出，首字延迟长", "流式（streaming）逐 token 返回，改善聊天体验"],
+  "2.14": ["AsyncLLMEngine 返回异步流，async for 逐个取 token", "批处理合并多请求推理，以提高吞吐"]
+}

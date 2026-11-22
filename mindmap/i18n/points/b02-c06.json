@@ -1,0 +1,13 @@
+{
+  "6.1": ["用 BeautifulSoup 解析 HTML 并提取文本", "用 find() 按标签定位内容", "抓取网页与静态 HTML 都能用"],
+  "6.2": ["用 translate 加标点字典删标点", "写法偏 hack 但比替代方案快", "标点本身含信息，删前要想清"],
+  "6.3": ["把文本切成词元（token）", "词级分词是提取词特征前的常见步骤"],
+  "6.4": ["用 NLTK 的 stopwords 移除停用词", "首次使用要先下载停用词表", "stopwords 假定词元已转小写"],
+  "6.5": ["用 PorterStemmer 做词干提取", "去掉词缀保留词根，如 humbled→humbl"],
+  "6.6": ["用 nltk.pos_tag 给每个词标词性", "再用 MultiLabelBinarizer 独热编码"],
+  "6.7": ["用 spaCy 预训练模型做命名实体识别", "doc.ents 给出实体及其类型标签", "类型如 PERSON、ORG、MONEY"],
+  "6.8": ["把文本编码成词袋（bag of words）向量", "只统计词频，丢弃词序"],
+  "6.9": ["用 TF-IDF 按重要性给词加权", "TfidfVectorizer 直接产出特征矩阵", "本文件常见、他文件少见的词权重高"],
+  "6.10": ["用文本向量计算文本之间的相似度", "相似度常用余弦相似度（cosine similarity）"],
+  "6.11": ["用 transformers 的 pipeline 做情感分析", "pipeline('sentiment-analysis') 直接分类", "首次运行会下载模型"]
+}

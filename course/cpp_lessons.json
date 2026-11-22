@@ -1,0 +1,166 @@
+{
+  "track": "cpp",
+  "name": "C++ 线",
+  "sub": "6 关 · 对应《Learning Modern C++ for Finance》",
+  "stages": [
+    {
+      "id": "c1",
+      "name": "第 1 阶段 · 能编译",
+      "hint": "先把 hello 跑起来，再让数字跑得比 Python 快",
+      "lessons": [
+        {
+          "id": "cpp1",
+          "title": "为什么金融还在用 C++",
+          "min": 20,
+          "hook": "同一笔期权，同事在笔记本上跑 8 小时，你 4 分钟就出结果——公式一个字都没改。",
+          "goals": ["把 hello 从源码编译成 exe 并跑起来", "说清编译命令里每一段参数在做什么", "跑同一段蒙特卡洛，量出和 Python 的时间差"],
+          "concepts": [
+            {"t": "编译", "en": "compile", "d": "把源码翻成机器码，一次译好、多次运行；改一个字就要重来一遍。"},
+            {"t": "优化等级", "en": "-O2", "d": "让编译器重排循环、内联函数、向量化。不开优化就测速度，结论一定是错的。"},
+            {"t": "未定义行为", "en": "undefined behavior", "d": "越界、空指针、未初始化，C++ 不报错，结果不可预期；Python 会当场抛异常。"}
+          ],
+          "steps": [
+            {"text": "先让程序跑起来。存成 `main.cpp`，两条命令二选一——`-std=c++20` 和 `-O2` 都不能省。Windows 上装 MSVC（Visual Studio 里勾「使用 C++ 的桌面开发」）或 MSYS2 的 g++ 都行。全书不假设你装了 Boost 或 Eigen，只有第 6 关有一步用到 Eigen，那里也给了纯手写替代。", "code": "// 存成 main.cpp，然后二选一编译：\n//   MSVC: cl /std:c++20 /EHsc /O2 main.cpp\n//   g++ : g++ -std=c++20 -O2 main.cpp -o main\n// 运行：main.exe 或 ./main\n#include <iostream>\n\nint main() {\n    std::cout << \"hello, finance\" << std::endl;\n    return 0;\n}", "out": "hello, finance"},
+            {"text": "把同一段蒙特卡洛用 C++ 写一遍：随机路径算出期末价，超过行权价才算收益。记下这个秒数，一会儿和 Python 版对一下。", "code": "#include <chrono>\n#include <cmath>\n#include <cstdio>\n#include <random>\n\nint main() {\n    const double S0 = 100.0, K = 100.0, r = 0.05, sigma = 0.2, T = 1.0;\n    const int n = 10'000'000;                 // 一千万条路径\n\n    std::mt19937_64 rng(42);\n    std::normal_distribution<double> norm(0.0, 1.0);\n\n    const auto t0 = std::chrono::steady_clock::now();\n    double sum = 0.0;\n    for (int i = 0; i < n; ++i) {\n        const double z = norm(rng);\n        const double ST = S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * std::sqrt(T) * z);\n        if (ST > K) sum += ST - K;\n    }\n    const double price = std::exp(-r * T) * sum / n;\n    const double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();\n\n    std::printf(\"price = %.4f  (%.2f s)\\n\", price, secs);\n    return 0;\n}", "out": "price = 10.45xx，约 0.5–1 秒。把同样的一千万条用 numpy 写一遍，同一台机器上通常是几十秒——差一到两个数量级。"},
+            {"text": "别只记「快」，量出「每条路径多少纳秒」，再乘上真实规模。这是本书里最便宜的一课：先知道贵不贵，再决定怎么写。", "code": "#include <algorithm>\n#include <chrono>\n#include <cmath>\n#include <cstdio>\n#include <random>\n\nint main() {\n    const int n = 2'000'000;\n    const double S0 = 100.0, K = 100.0, r = 0.05, sigma = 0.2, T = 1.0;\n    const double sT = std::sqrt(T), df = std::exp(-r * T);\n\n    std::mt19937_64 rng(42);\n    std::normal_distribution<double> norm(0.0, 1.0);\n\n    const auto t0 = std::chrono::steady_clock::now();\n    double sum = 0.0;\n    for (int i = 0; i < n; ++i)\n        sum += std::max(S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * sT * norm(rng)) - K, 0.0);\n    const double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();\n\n    const double ns_per_path = secs * 1e9 / n;\n    const double hours = 2e10 * ns_per_path / 1e9 / 3600.0;   // 10 亿条路径 x 20 个标的\n\n    std::printf(\"price = %.4f\\n\", df * sum / n);\n    std::printf(\"%.1f ns/path, %d paths in %.2f s\\n\", ns_per_path, n, secs);\n    std::printf(\"20 assets, 1e9 paths = %.1f hours\\n\", hours);\n    return 0;\n}", "out": "示例（i5 级笔记本）：`price = 10.4xxx` / `60.0 ns/path, 2000000 paths in 0.12 s` / `20 assets, 1e9 paths = 0.3 hours`。你的数字会不同，结构就是这个结构。"}
+          ],
+          "quiz": [
+            {"q": "同样是 1000 万条路径，为什么 C++ 通常快 10–100 倍？", "a": "先编译成机器码，循环里没有解释器和包装对象；随机数、乘法、指数都在寄存器里直接算，编译器还能做向量化和内联。"},
+            {"q": "为什么跑基准一定要开 `-O2`？", "a": "不开优化时循环不向量化、函数不内联，慢几倍到十几倍。拿 Debug 版比速度，比出来的结论是假的。"},
+            {"q": "C++ 快，代价是什么？", "a": "编译要等、内存要自己管、越界和空指针不报错（未定义行为）；同一份代码换个编译器或平台可能要小改。"}
+          ],
+          "can": "能在自己机器上编译运行 hello 和一段蒙特卡洛，并报出耗时数字。"
+        },
+        {
+          "id": "cpp2",
+          "title": "写第一个类：Black-Scholes 定价器",
+          "min": 30,
+          "hook": "同一个期权，你算 10.4506，同事算出 10.4521；追到最后只是第 6 位小数上的一个常数不同。",
+          "goals": ["会写带字段和成员函数的 struct", "用构造函数把参数校验放进对象里", "让 const 成员函数替你挡住「定价时改数据」"],
+          "concepts": [
+            {"t": "类与结构体", "en": "class / struct", "d": "把数据和操作它的函数打包成一个类型；struct 默认 public，class 默认 private。"},
+            {"t": "构造函数", "en": "constructor", "d": "对象出生时唯一跑一次的代码，负责赋值和校验；参数非法就 throw。"},
+            {"t": "const 成员函数", "en": "const member function", "d": "函数名后加 const，承诺不改成员；只有它能被 const 对象调用。"}
+          ],
+          "steps": [
+            {"text": "先用 struct 把参数和公式放在一起，注意 `price()` 后面的 const——它承诺「算价格不改数据」。正态分布函数用 `std::erf` 一行写完，常数来自 C++20 的 `std::numbers`。", "code": "#include <cmath>\n#include <cstdio>\n#include <numbers>\n\nstruct BlackScholes {\n    double S, K, r, sigma, T;\n\n    static double cdf(double x) {\n        return 0.5 * (1.0 + std::erf(x / std::numbers::sqrt2));\n    }\n\n    double price() const {\n        const double sigT = sigma * std::sqrt(T);\n        const double d1 = (std::log(S / K) + (r + 0.5 * sigma * sigma) * T) / sigT;\n        const double d2 = d1 - sigT;\n        return S * cdf(d1) - K * std::exp(-r * T) * cdf(d2);\n    }\n};\n\nint main() {\n    const BlackScholes bs{100.0, 100.0, 0.05, 0.2, 1.0};\n    std::printf(\"call = %.4f\\n\", bs.price());\n    return 0;\n}", "out": "call = 10.4506"},
+            {"text": "换成 class：字段私有、构造函数校验参数。`sigma <= 0` 这种错误应该在对象出生时就炸掉，而不是算出一个负价格。注意 `price()` 和 `delta()` 都写了 const。", "code": "#include <cmath>\n#include <cstdio>\n#include <numbers>\n#include <stdexcept>\n\nclass BlackScholes {\npublic:\n    BlackScholes(double spot, double strike, double rate, double vol, double maturity)\n        : S_(spot), K_(strike), r_(rate), sigma_(vol), T_(maturity) {\n        if (S_ <= 0.0 || K_ <= 0.0) throw std::invalid_argument(\"spot/strike must be > 0\");\n        if (sigma_ <= 0.0)          throw std::invalid_argument(\"vol must be > 0\");\n        if (T_ <= 0.0)              throw std::invalid_argument(\"maturity must be > 0\");\n    }\n\n    double price() const {\n        return S_ * cdf(d1()) - K_ * std::exp(-r_ * T_) * cdf(d2());\n    }\n\n    double delta() const { return cdf(d1()); }      // call 的 delta\n\nprivate:\n    static double cdf(double x) { return 0.5 * (1.0 + std::erf(x / std::numbers::sqrt2)); }\n\n    double d1() const {\n        const double sigT = sigma_ * std::sqrt(T_);\n        return (std::log(S_ / K_) + (r_ + 0.5 * sigma_ * sigma_) * T_) / sigT;\n    }\n    double d2() const { return d1() - sigma_ * std::sqrt(T_); }\n\n    double S_, K_, r_, sigma_, T_;\n};\n\nint main() {\n    const BlackScholes bs(100.0, 100.0, 0.05, 0.2, 1.0);\n    std::printf(\"call  = %.4f\\n\", bs.price());\n    std::printf(\"delta = %.4f\\n\", bs.delta());\n\n    try {\n        const BlackScholes bad(100.0, 100.0, 0.05, -0.2, 1.0);   // 波动率不能是负的\n        std::printf(\"not reached: %.4f\\n\", bad.price());\n    } catch (const std::exception& e) {\n        std::printf(\"rejected: %s\\n\", e.what());\n    }\n    return 0;\n}", "out": "call  = 10.4506 / delta = 0.6368 / rejected: vol must be > 0"},
+            {"text": "一个能复用的定价器要能一次算一条曲线。加上 Greeks，循环扫一遍波动率——交易台上真的在跑的就是这种东西，只是参数从行情里来。", "code": "#include <cmath>\n#include <cstdio>\n#include <numbers>\n#include <stdexcept>\n\nclass BlackScholes {\npublic:\n    BlackScholes(double spot, double strike, double rate, double vol, double maturity)\n        : S_(spot), K_(strike), r_(rate), sigma_(vol), T_(maturity) {\n        if (S_ <= 0.0 || K_ <= 0.0) throw std::invalid_argument(\"spot/strike must be > 0\");\n        if (sigma_ <= 0.0)          throw std::invalid_argument(\"vol must be > 0\");\n        if (T_ <= 0.0)              throw std::invalid_argument(\"maturity must be > 0\");\n    }\n\n    double price() const { return S_ * cdf(d1()) - K_ * std::exp(-r_ * T_) * cdf(d2()); }\n    double delta() const { return cdf(d1()); }\n    double gamma() const { return pdf(d1()) / (S_ * sigma_ * std::sqrt(T_)); }\n    double vega()  const { return S_ * std::sqrt(T_) * pdf(d1()); }\n\nprivate:\n    static double cdf(double x) { return 0.5 * (1.0 + std::erf(x / std::numbers::sqrt2)); }\n    static double pdf(double x) { return std::exp(-0.5 * x * x) / std::sqrt(2.0 * std::numbers::pi); }\n\n    double d1() const {\n        const double sigT = sigma_ * std::sqrt(T_);\n        return (std::log(S_ / K_) + (r_ + 0.5 * sigma_ * sigma_) * T_) / sigT;\n    }\n    double d2() const { return d1() - sigma_ * std::sqrt(T_); }\n\n    double S_, K_, r_, sigma_, T_;\n};\n\nint main() {\n    const double S = 100.0, K = 100.0, r = 0.05, T = 1.0;\n\n    std::printf(\"%6s %9s %8s %8s %8s\\n\", \"vol\", \"price\", \"delta\", \"gamma\", \"vega\");\n    for (double vol = 0.10; vol < 0.51; vol += 0.10) {\n        const BlackScholes bs(S, K, r, vol, T);\n        std::printf(\"%6.2f %9.4f %8.4f %8.4f %8.2f\\n\",\n                    vol, bs.price(), bs.delta(), bs.gamma(), bs.vega());\n    }\n    return 0;\n}", "out": "vol 每涨 0.10，价格 6.8050 → 10.4506 → 14.2313 → 18.0230 → 21.7926；delta 在 0.62–0.71 之间，vega 一直在 37.5 上下（波动率翻倍，vega 几乎不动）。"}
+          ],
+          "quiz": [
+            {"q": "struct 和 class 到底差在哪？", "a": "默认访问权限：struct 是 public，class 是 private。其余完全一样，选哪个是风格问题。"},
+            {"q": "为什么 `price()` 后面要写 const？", "a": "承诺不改成员，这样才能在 const 对象或 const 引用上调用；漏写会让 const 对象连价格都算不出来。"},
+            {"q": "硬编码 3.14159，而不是用 `std::numbers::pi`，问题在哪？", "a": "精度被截断，而且没有类型、没有命名空间。宏更糟，那是文本替换；`std::numbers` 是 C++20 的 constexpr 常量。"}
+          ],
+          "can": "能写出带构造、带校验、const 正确的定价类，并扫出一条波动率曲线。"
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "name": "第 2 阶段 · 会组织",
+      "hint": "类、继承、容器——把 300 行的 main 拆成能长大的代码",
+      "lessons": [
+        {
+          "id": "cpp3",
+          "title": "继承与智能指针：Payoff 体系",
+          "min": 30,
+          "hook": "40 种期权，40 套收益算法。同事写了一个两百行的分支；你加第 41 种，只新写一个类。",
+          "goals": ["用虚函数让基类指针调用子类实现", "用 unique_ptr 管生命周期，不再手写 delete", "加新收益类型时不碰已有代码"],
+          "concepts": [
+            {"t": "虚函数", "en": "virtual", "d": "通过基类指针调用时执行子类版本；子类写 override，签名写错会直接报错。"},
+            {"t": "虚析构", "en": "virtual destructor", "d": "基类析构不是 virtual，通过基类指针 delete 时子类析构不执行，资源泄漏。"},
+            {"t": "独占指针", "en": "unique_ptr", "d": "对象只有一个主人，离开作用域自动 delete；不能拷贝，只能 move。"}
+          ],
+          "steps": [
+            {"text": "先只做继承。`Payoff` 是基类，收益算法由子类给；`operator()` 加 virtual，通过基类指针调用就会走到子类——不加 virtual 就永远走基类。", "code": "#include <algorithm>\n#include <cstdio>\n\nclass Payoff {\npublic:\n    virtual ~Payoff() = default;\n    virtual double operator()(double spot) const = 0;\n};\n\nclass CallPayoff : public Payoff {\npublic:\n    explicit CallPayoff(double strike) : strike_(strike) {}\n    double operator()(double spot) const override { return std::max(spot - strike_, 0.0); }\nprivate:\n    double strike_;\n};\n\nclass PutPayoff : public Payoff {\npublic:\n    explicit PutPayoff(double strike) : strike_(strike) {}\n    double operator()(double spot) const override { return std::max(strike_ - spot, 0.0); }\nprivate:\n    double strike_;\n};\n\nint main() {\n    const CallPayoff call(100.0);\n    const PutPayoff  put(100.0);\n\n    const Payoff* a = &call;      // 基类指针，指向子类对象\n    const Payoff* b = &put;\n    std::printf(\"call at 110 = %5.2f\\n\", (*a)(110.0));\n    std::printf(\"put  at  90 = %5.2f\\n\", (*b)(90.0));\n    return 0;\n}", "out": "call at 110 = 10.00 / put  at  90 = 10.00"},
+            {"text": "把收益结构装进组合。用 `unique_ptr` 持有、`make_unique` 创建——没有 new，也没有 delete，离开作用域自动回收。估值时照样当 `Payoff&` 用，虚函数不受影响。", "code": "#include <algorithm>\n#include <cmath>\n#include <cstdio>\n#include <memory>\n#include <random>\n#include <vector>\n\nclass Payoff {\npublic:\n    virtual ~Payoff() = default;\n    virtual double operator()(double spot) const = 0;\n};\n\nclass CallPayoff : public Payoff {\npublic:\n    explicit CallPayoff(double strike) : strike_(strike) {}\n    double operator()(double spot) const override { return std::max(spot - strike_, 0.0); }\nprivate:\n    double strike_;\n};\n\nclass PutPayoff : public Payoff {\npublic:\n    explicit PutPayoff(double strike) : strike_(strike) {}\n    double operator()(double spot) const override { return std::max(strike_ - spot, 0.0); }\nprivate:\n    double strike_;\n};\n\nint main() {\n    std::vector<std::unique_ptr<Payoff>> book;\n    book.push_back(std::make_unique<CallPayoff>(100.0));\n    book.push_back(std::make_unique<PutPayoff>(90.0));\n\n    std::mt19937_64 rng(7);\n    std::normal_distribution<double> norm(0.0, 1.0);\n    const int n = 200'000;\n    const double S0 = 100.0, r = 0.05, sigma = 0.2, T = 1.0;\n\n    std::vector<double> sum(book.size(), 0.0);\n    for (int i = 0; i < n; ++i) {\n        const double ST = S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * std::sqrt(T) * norm(rng));\n        for (std::size_t k = 0; k < book.size(); ++k) sum[k] += (*book[k])(ST);\n    }\n\n    const double df = std::exp(-r * T);\n    for (std::size_t k = 0; k < book.size(); ++k)\n        std::printf(\"book[%zu] = %7.4f\\n\", k, df * sum[k] / n);\n    return 0;\n}", "out": "book[0] = 10.4x（call）/ book[1] = 2.3x（put K=90）。20 万条路径的抽样误差大约 ±0.05，换成别的 seed 会变。"},
+            {"text": "加一个工厂函数：字符串进来，对象出去。返回 `unique_ptr` 意味着所有权移交给调用方；不认识的类型返回空指针，由调用方检查。`std::move` 那行说明所有权被搬走了，原位置变空。", "code": "#include <algorithm>\n#include <cstdio>\n#include <memory>\n#include <string>\n#include <utility>\n#include <vector>\n\nclass Payoff {\npublic:\n    virtual ~Payoff() = default;\n    virtual double operator()(double spot) const = 0;\n};\n\nclass CallPayoff : public Payoff {\npublic:\n    explicit CallPayoff(double strike) : strike_(strike) {}\n    double operator()(double spot) const override { return std::max(spot - strike_, 0.0); }\nprivate:\n    double strike_;\n};\n\nclass PutPayoff : public Payoff {\npublic:\n    explicit PutPayoff(double strike) : strike_(strike) {}\n    double operator()(double spot) const override { return std::max(strike_ - spot, 0.0); }\nprivate:\n    double strike_;\n};\n\nstd::unique_ptr<Payoff> make_payoff(const std::string& kind, double strike) {\n    if (kind == \"call\") return std::make_unique<CallPayoff>(strike);\n    if (kind == \"put\")  return std::make_unique<PutPayoff>(strike);\n    return nullptr;                       // 不认识的类型\n}\n\nint main() {\n    std::vector<std::unique_ptr<Payoff>> book;\n    book.push_back(make_payoff(\"call\", 100.0));\n    book.push_back(make_payoff(\"put\", 90.0));\n\n    auto unknown = make_payoff(\"straddle\", 100.0);\n    if (!unknown) std::printf(\"rejected: unknown payoff\\n\");\n\n    std::unique_ptr<Payoff> moved = std::move(book[0]);   // 移交所有权，不是拷贝\n    if (!book[0]) std::printf(\"book[0] is now empty\\n\");\n\n    std::printf(\"moved(105)  = %.2f\\n\", (*moved)(105.0));\n    std::printf(\"book[1](85) = %.2f\\n\", (*book[1])(85.0));\n    return 0;\n}", "out": "rejected: unknown payoff / book[0] is now empty / moved(105)  = 5.00 / book[1](85) = 5.00"}
+          ],
+          "quiz": [
+            {"q": "基类析构函数不写 virtual 会怎样？", "a": "通过基类指针 delete 子类对象是未定义行为；通常子类析构不执行，子类申请的资源泄漏。"},
+            {"q": "明明能 new/delete，为什么用 unique_ptr？", "a": "提前 return 或抛异常都会漏 delete；unique_ptr 析构时自动释放，而且不能拷贝，不会出现两个指针共有一个对象、delete 两次。运行时开销为零。"},
+            {"q": "`override` 只是装饰吗？", "a": "不是。它让编译器检查签名确实覆盖了基类虚函数；漏写 const、参数类型不对会当场报错，而不是悄悄变成一个新函数。"}
+          ],
+          "can": "能用「基类 + unique_ptr」搭一套可扩展的收益结构，加新类型不碰老代码。"
+        },
+        {
+          "id": "cpp4",
+          "title": "STL 与算法：把数据装进容器",
+          "min": 25,
+          "hook": "一张 12 万行的成交表，老板只问三个问题：谁最亏、每个台子赚多少、大额亏损是谁。",
+          "goals": ["把一批记录装进 vector 并按字段排序", "用 map 一次遍历完成分组汇总", "用 lambda 和 views 管道替掉手写循环"],
+          "concepts": [
+            {"t": "动态数组", "en": "vector", "d": "连续内存、按下标 O(1)、尾插摊还 O(1)；数值计算默认从它开始。"},
+            {"t": "有序映射", "en": "map", "d": "按键自动排序、查找 O(log n)；`m[k] += x` 一行完成分组累加。"},
+            {"t": "lambda 与视图", "en": "lambda / views", "d": "就地写的匿名函数；filter | transform 串成管道，不复制数据、遍历才算。"}
+          ],
+          "steps": [
+            {"text": "一批成交先装进 `vector`，用 `std::sort` 加一个 lambda 按盈亏排序。lambda 就是「就地写一个比较规则」，不用为它单独起个函数名。", "code": "#include <algorithm>\n#include <cstdio>\n#include <string>\n#include <vector>\n\nstruct Trade {\n    std::string desk;\n    double pnl;\n};\n\nint main() {\n    std::vector<Trade> trades = {              // 要排序，就不能是 const\n        {\"rates\",  -120.5},  {\"fx\",     64.0},  {\"equity\", -310.25},\n        {\"rates\",    88.0},  {\"credit\",-12.5},  {\"equity\",  140.0},\n    };\n\n    std::sort(trades.begin(), trades.end(),\n              [](const Trade& a, const Trade& b) { return a.pnl > b.pnl; });\n\n    std::printf(\"worst three:\\n\");\n    for (std::size_t i = trades.size() - 3; i < trades.size(); ++i)\n        std::printf(\"  %-8s %8.2f\\n\", trades[i].desk.c_str(), trades[i].pnl);\n    return 0;\n}", "out": "worst three: credit -12.50 / rates -120.50 / equity -310.25（从最亏往上三位）"},
+            {"text": "分组汇总不该手写两重循环：`map[键] += 值` 一行搞定（这一步不排序，容器可以是 const）。C++20 的 `ranges::sort` 还能把「按哪个字段排」写成最后一个参数——投影，不用再手写比较 lambda。", "code": "#include <algorithm>\n#include <cstdio>\n#include <functional>\n#include <map>\n#include <string>\n#include <vector>\n\nstruct Trade  { std::string desk; double pnl; };\nstruct DeskPnl{ std::string desk; double pnl; };\n\nint main() {\n    const std::vector<Trade> trades = {\n        {\"rates\",  -120.5},  {\"fx\",     64.0},  {\"equity\", -310.25},\n        {\"rates\",    88.0},  {\"credit\",-12.5},  {\"equity\",  140.0},\n    };\n\n    std::map<std::string, double> by_desk;\n    for (const auto& t : trades) by_desk[t.desk] += t.pnl;   // 一行完成分组累加\n\n    std::vector<DeskPnl> rows;\n    for (const auto& [desk, pnl] : by_desk) rows.push_back({desk, pnl});\n\n    std::ranges::sort(rows, std::greater<>{}, &DeskPnl::pnl);   // 最后一个参数是「投影」\n\n    for (const auto& r : rows)\n        std::printf(\"%-8s %8.2f\\n\", r.desk.c_str(), r.pnl);\n    return 0;\n}", "out": "equity -170.25 / rates -32.50 / credit -12.50 / fx 64.00（按合计从大到小，map 这一层是按字母序聚合的）"},
+            {"text": "最后一步：把条件和变形串成管道。`filter | transform` 是惰性的——数据不复制，遍历到哪算到哪，所以它比「先建一个临时 vector」便宜得多。", "code": "#include <cmath>\n#include <cstdio>\n#include <ranges>\n#include <string>\n#include <vector>\n\nstruct Trade {\n    std::string desk;\n    double pnl;\n};\n\nint main() {\n    const std::vector<Trade> trades = {\n        {\"rates\",  -120.5},  {\"fx\",     64.0},  {\"equity\", -310.25},\n        {\"rates\",    88.0},  {\"credit\",-12.5},  {\"equity\",  140.0},\n    };\n    const double limit = 50.0;\n\n    auto losers = trades | std::views::filter([limit](const Trade& t) { return t.pnl < -limit; });\n\n    std::printf(\"big losers:\\n\");\n    for (const auto& t : losers)\n        std::printf(\"  %-8s %8.2f\\n\", t.desk.c_str(), t.pnl);\n\n    double total = 0.0;\n    for (double v : losers | std::views::transform([](const Trade& t) { return std::abs(t.pnl); }))\n        total += v;\n\n    std::printf(\"abs total = %.2f\\n\", total);\n    return 0;\n}", "out": "big losers: rates -120.50 / equity -310.25；abs total = 430.75"}
+          ],
+          "quiz": [
+            {"q": "什么时候用 map，什么时候用 vector？", "a": "要按键查、要自动有序 → map；按下标、要连续内存、要遍历快 → vector。数值计算先想 vector。"},
+            {"q": "`[&]` 和 `[=]` 差在哪？", "a": "引用捕获（改的是外面那个变量）和值捕获（拿到副本）。累加结果用 [&]；跨线程或长生命周期上别用 [&]，会悬垂。"},
+            {"q": "`views::filter` 会复制一份数据吗？", "a": "不会。它是惰性视图，遍历时才调用谓词；所以别让它比底层容器活得久，容器一改它就悬空。"}
+          ],
+          "can": "能把一张成交表装进容器，用一次排序、一次汇总、一条 views 管道回答业务问题。"
+        }
+      ]
+    },
+    {
+      "id": "c3",
+      "name": "第 3 阶段 · 会计算",
+      "hint": "随机数、多线程、线性代数——把模型变成能报价的东西",
+      "lessons": [
+        {
+          "id": "cpp5",
+          "title": "随机数与并发：蒙特卡洛障碍期权",
+          "min": 30,
+          "hook": "你算出一个价格 8.9 元，老板只问一句「误差多少」；答不出来，这个数就不能拿出去报价。",
+          "goals": ["用引擎 + 分布在多线程里生成随机数", "把路径拆块交给 std::async 并行", "给结果配上标准误和置信区间"],
+          "concepts": [
+            {"t": "随机引擎", "en": "engine / seed", "d": "`std::mt19937_64` 产生伪随机整数，同 seed 同序列；它只管整数不管分布。"},
+            {"t": "分布", "en": "distribution", "d": "把整数映射成正态数；极坐标法会缓存一个值，所以它也有状态、不能共享。"},
+            {"t": "异步任务", "en": "std::async", "d": "把一块计算丢给其他线程并返回 future；`get()` 取结果，launch 策略要写死。"}
+          ],
+          "steps": [
+            {"text": "先算一条障碍期权：每天走一步 GBM，中途跌破障碍价就直接作废——break 掉，后面的步不用再抽。顺势把均值、平方和、敲出次数都记下来，误差下面要用。", "code": "#include <algorithm>\n#include <cmath>\n#include <cstdio>\n#include <random>\n\nint main() {\n    const int    n_paths = 1'000'000;\n    const int    n_steps = 252;\n    const double S0 = 100.0, K = 100.0, B = 90.0, r = 0.05, sigma = 0.2, T = 1.0;\n    const double dt = T / n_steps;\n    const double drift = (r - 0.5 * sigma * sigma) * dt;\n    const double diff  = sigma * std::sqrt(dt);\n\n    std::mt19937_64 rng(7);\n    std::normal_distribution<double> norm(0.0, 1.0);\n\n    double sum = 0.0, sum_sq = 0.0;\n    int knocked = 0;\n    for (int i = 0; i < n_paths; ++i) {\n        double s = S0;\n        bool out = false;\n        for (int t = 0; t < n_steps; ++t) {\n            s *= std::exp(drift + diff * norm(rng));\n            if (s <= B) { out = true; break; }     // 敲出\n        }\n        const double payoff = out ? 0.0 : std::max(s - K, 0.0);\n        sum    += payoff;\n        sum_sq += payoff * payoff;\n        if (out) ++knocked;\n    }\n\n    const double df   = std::exp(-r * T);\n    const double mean = sum / n_paths;\n    const double var  = sum_sq / n_paths - mean * mean;\n    const double se   = df * std::sqrt(var / n_paths);\n\n    std::printf(\"price = %.4f  +/-%.4f (1 se)\\n\", df * mean, se);\n    std::printf(\"knock-out rate = %.1f%%\\n\", 100.0 * knocked / n_paths);\n    return 0;\n}", "out": "price = 8.89 +/-0.015 (1 se) / knock-out rate = 52.5%。换成 MSVC 或 libstdc++ 会差在小数点后第 2 位——normal_distribution 的实现不同，序列就不同。"},
+            {"text": "把路径拆成 8 块，每块一个不同 seed，用 `std::async` 并行跑。Linux / MinGW 编译要加 `-pthread`。`f.get()` 既取回结果，也负责把异常重新抛出来。", "code": "#include <chrono>\n#include <cmath>\n#include <cstdio>\n#include <future>\n#include <random>\n#include <vector>\n\nconstexpr double S0 = 100.0, K = 100.0, B = 90.0, r = 0.05, sigma = 0.2, T = 1.0;\n\n// 只算「未折现的 payoff 之和」；seed 从外面传，保证每块独立、可复现\ndouble mc_sum(int n_paths, int n_steps, unsigned seed) {\n    const double dt    = T / n_steps;\n    const double drift = (r - 0.5 * sigma * sigma) * dt;\n    const double diff  = sigma * std::sqrt(dt);\n\n    std::mt19937_64 rng(seed);\n    std::normal_distribution<double> norm(0.0, 1.0);\n\n    double sum = 0.0;\n    for (int i = 0; i < n_paths; ++i) {\n        double s = S0;\n        bool out = false;\n        for (int t = 0; t < n_steps; ++t) {\n            s *= std::exp(drift + diff * norm(rng));\n            if (s <= B) { out = true; break; }\n        }\n        if (!out && s > K) sum += s - K;\n    }\n    return sum;\n}\n\nint main() {\n    const int n_steps   = 252;\n    const int n_threads = 8;\n    const int per       = 200'000;                 // 每块 20 万条\n    const double df     = std::exp(-r * T);\n\n    const auto t0 = std::chrono::steady_clock::now();\n    std::vector<std::future<double>> jobs;\n    for (int k = 0; k < n_threads; ++k)\n        jobs.push_back(std::async(std::launch::async, mc_sum, per, n_steps, 2024u + k));\n\n    double sum = 0.0;\n    for (auto& f : jobs) sum += f.get();\n    const double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();\n\n    const int total = per * n_threads;\n    std::printf(\"price = %.4f\\n\", df * sum / total);\n    std::printf(\"%.2f s for %d paths on %d threads (%.1f M paths/s)\\n\",\n                secs, total, n_threads, total / secs / 1e6);\n    return 0;\n}", "out": "price ≈ 8.89（和单线程版差在小数点后第 2 位，这是抽样噪声不是 bug）；160 万条约 0.1–0.3 秒。把 n_threads 改成 1 再跑一次，两次耗时之比就是加速比。"},
+            {"text": "补上老板要的那个数：标准误。监测改成每周一次（52 步）省时间，同时把样本量放大十倍——误差只除以 3.16，不是 10。注意价格会比上一步高一点：每周只看一次，敲出的路径变少，这是离散监测的真实差异，不是写错了。", "code": "#include <algorithm>\n#include <cmath>\n#include <cstdio>\n#include <random>\n\nint main() {\n    const int    n_steps = 52;                     // 每周监测一次\n    const double S0 = 100.0, K = 100.0, B = 90.0, r = 0.05, sigma = 0.2, T = 1.0;\n    const double dt    = T / n_steps;\n    const double drift = (r - 0.5 * sigma * sigma) * dt;\n    const double diff  = sigma * std::sqrt(dt);\n    const double df    = std::exp(-r * T);\n\n    const int sizes[] = {20000, 200000, 2000000};\n    std::printf(\"%9s %8s %9s %18s\\n\", \"paths\", \"price\", \"1 se\", \"95%% CI\");\n\n    for (int n : sizes) {\n        std::mt19937_64 rng(11);\n        std::normal_distribution<double> norm(0.0, 1.0);\n        double sum = 0.0, sum_sq = 0.0;\n\n        for (int i = 0; i < n; ++i) {\n            double s = S0;\n            bool out = false;\n            for (int t = 0; t < n_steps; ++t) {\n                s *= std::exp(drift + diff * norm(rng));\n                if (s <= B) { out = true; break; }\n            }\n            const double p = out ? 0.0 : std::max(s - K, 0.0);\n            sum    += p;\n            sum_sq += p * p;\n        }\n\n        const double mean = sum / n;\n        const double se   = df * std::sqrt((sum_sq / n - mean * mean) / n);\n        const double px   = df * mean;\n        std::printf(\"%9d %8.4f %9.4f  [%.3f, %.3f]\\n\",\n                    n, px, se, px - 1.96 * se, px + 1.96 * se);\n    }\n    return 0;\n}", "out": "paths 20000 → 9.13 ±0.10；200000 → 9.20 ±0.033；2000000 → 9.17 ±0.010。样本 ×10，误差 ÷3.16（√10）。三条置信区间都盖住 9.17 —— 但没人敢拿 ±0.10 去报价。"}
+          ],
+          "quiz": [
+            {"q": "为什么不能让 8 个线程共用一个随机引擎？", "a": "引擎内部状态被同时改写是数据竞争（未定义行为）；要么每线程一个、seed 不同，要么加锁——而锁正好把并行变回串行。"},
+            {"q": "8 线程能把价格误差降到 1/8 吗？", "a": "不能。误差 ∝ 1/√路径数；并行只缩短时间。想让误差减半，样本量要乘 4。"},
+            {"q": "`std::async` 不写 `std::launch::async` 有什么风险？", "a": "默认策略可能是 deferred：任务推迟到 get() 时才在调用线程跑，并行变串行，future 析构时还可能阻塞。"}
+          ],
+          "can": "能写出可复现、可并行、带误差条的蒙特卡洛，并说清线程数和精度各自解决什么。"
+        },
+        {
+          "id": "cpp6",
+          "title": "线性代数与 Eigen",
+          "min": 30,
+          "hook": "10 个资产的相关性，排成 100 个格子；你手算完，发现有两个格子死活对不上。",
+          "goals": ["手写一次矩阵乘和 Cholesky 分解", "用 Eigen 把同一份输入算一遍并对上", "从收益率算出协方差矩阵和 beta"],
+          "concepts": [
+            {"t": "矩阵乘法", "en": "matrix product", "d": "m×n 乘 n×p 要 m·n·p 次乘加；组合方差 wᵀΣw 也是一次矩阵乘。"},
+            {"t": "Cholesky 分解", "en": "Cholesky", "d": "对称正定 A = L·Lᵀ，L 下三角；解方程 O(n²)，还能生成相关随机数。"},
+            {"t": "正定性", "en": "positive definite", "d": "协方差矩阵必须半正定；两个资产完全线性相关时，开根号前就变负。"}
+          ],
+          "steps": [
+            {"text": "先不装任何库：手写 2×2 矩阵乘和 Cholesky，再用 L·Lᵀ 验算回去。Cholesky 每一步只有开根号和除法，写两遍就会背了。注意验算那步第二项是 `L[j][k]`——这里写反是新手最常见的错。", "code": "#include <cmath>\n#include <cstdio>\n\nint main() {\n    const double A[2][2] = {{4.0, 2.0}, {2.0, 3.0}};\n\n    // 1. 矩阵乘 C = A * A\n    double C[2][2] = {};\n    for (int i = 0; i < 2; ++i)\n        for (int j = 0; j < 2; ++j)\n            for (int k = 0; k < 2; ++k)\n                C[i][j] += A[i][k] * A[k][j];\n    std::printf(\"A*A = [%g %g; %g %g]\\n\", C[0][0], C[0][1], C[1][0], C[1][1]);\n\n    // 2. Cholesky 分解：A = L * L^T，L 是下三角\n    double L[2][2] = {};\n    L[0][0] = std::sqrt(A[0][0]);\n    L[1][0] = A[1][0] / L[0][0];\n    L[1][1] = std::sqrt(A[1][1] - L[1][0] * L[1][0]);\n    std::printf(\"L   = [%g 0; %g %g]\\n\", L[0][0], L[1][0], L[1][1]);\n\n    // 3. 验算 L * L^T 是否回到 A\n    double D[2][2] = {};\n    for (int i = 0; i < 2; ++i)\n        for (int j = 0; j < 2; ++j)\n            for (int k = 0; k < 2; ++k)\n                D[i][j] += L[i][k] * L[j][k];\n    std::printf(\"max |L*L^T - A| = %g\\n\",\n                std::fabs(D[0][0] - A[0][0]) + std::fabs(D[1][1] - A[1][1]));\n    return 0;\n}", "out": "A*A = [20 14; 14 13] / L = [2 0; 1 1.41421] / max |L*L^T - A| = 4.44089e-16 —— 打印出来不是 0，因为 √2 的平方在浮点里是 2.0000000000000004。"},
+            {"text": "同一件事交给 Eigen。Eigen 是外部依赖（头文件库，下载解压即可，不用编译），用 `-I` 把头文件目录指过去。没装就跳过这一步，第 1、3 步是纯标准库，一样能跑。", "code": "// 需先装 Eigen 头文件（外部依赖，不用编译，只要解压）：\n//   g++ -std=c++20 -I /path/to/eigen main.cpp -O2\n#include <Eigen/Dense>\n#include <iostream>\n\nint main() {\n    Eigen::MatrixXd A(2, 2);\n    A << 4.0, 2.0,\n         2.0, 3.0;\n\n    Eigen::VectorXd x(2);\n    x << 1.0, 2.0;\n\n    std::cout << \"A * x =\\n\" << A * x << std::endl;\n\n    Eigen::LLT<Eigen::MatrixXd> llt(A);\n    if (llt.info() != Eigen::Success) {\n        std::cout << \"A is not positive definite\" << std::endl;\n    } else {\n        Eigen::MatrixXd L = llt.matrixL();\n        std::cout << \"L =\\n\" << L << std::endl;\n        std::cout << \"|L*L^T - A| = \" << (L * L.transpose() - A).norm() << std::endl;\n    }\n    return 0;\n}", "out": "A * x = 8 8 / L 打印成两行：2 0 与 1 1.41421 / |L*L^T - A| = 4.44089e-16（浮点误差，就是 0）。矩阵部分和手写版逐位一致。"},
+            {"text": "回到业务：从收益率算协方差矩阵，再算 beta。beta 就是「与市场的协方差 ÷ 市场的方差」——一元回归不需要求逆；多因子才需要 (XᵀX)⁻¹Xᵀy，那时候直接交给 Eigen 的 `ldlt().solve()`。", "code": "#include <array>\n#include <cstdio>\n\nint main() {\n    constexpr int n = 6, k = 3;      // 6 天收益率，3 个品种：0=市场 1=A 2=B\n    const std::array<double, k * n> ret = {\n         1.0, -2.0,  3.0,  0.0,  1.5, -0.5,   // 市场（单位 %）\n         2.0, -1.0,  4.0,  1.0,  2.0,  1.0,   // A\n        -1.0, -4.0,  2.0, -2.0, -1.0, -2.0,   // B\n    };\n\n    std::array<double, k> mean{};\n    for (int i = 0; i < k; ++i) {\n        for (int t = 0; t < n; ++t) mean[i] += ret[i * n + t];\n        mean[i] /= n;\n    }\n\n    std::array<std::array<double, k>, k> cov{};\n    for (int i = 0; i < k; ++i)\n        for (int j = 0; j < k; ++j) {\n            double s = 0.0;\n            for (int t = 0; t < n; ++t)\n                s += (ret[i * n + t] - mean[i]) * (ret[j * n + t] - mean[j]);\n            cov[i][j] = s / (n - 1);      // 样本协方差\n        }\n\n    std::printf(\"cov matrix:\\n\");\n    for (int i = 0; i < k; ++i)\n        std::printf(\"  %7.3f %7.3f %7.3f\\n\", cov[i][0], cov[i][1], cov[i][2]);\n\n    for (int i = 1; i < k; ++i)\n        std::printf(\"beta[%d] = %.3f\\n\", i, cov[i][0] / cov[0][0]);\n    return 0;\n}", "out": "对角 3.000 / 2.700 / 3.867（各自方差）；beta[1] = 0.933，beta[2] = 1.100。检查一下：2.800 / 3.000 = 0.933，和打印出来的完全一致。"}
+          ],
+          "quiz": [
+            {"q": "为什么用 Cholesky 而不是直接求逆？", "a": "求逆是 O(n³) 且数值不稳；分解后前代/后代 O(n²) 就能解方程，L 还能直接用来把一列独立正态数变成相关的。"},
+            {"q": "协方差矩阵的对角线是什么？", "a": "每个资产自己的方差 σ²。对它开根号就是波动率，也就是你把收益率换成百分比时该盯的那个数。"},
+            {"q": "一元回归的 beta 和协方差什么关系？", "a": "beta = Cov(rᵢ, rₘ) / Var(rₘ)，所以不用求逆。多因子才要 (XᵀX)⁻¹Xᵀy，用 Eigen 的 ldlt().solve() 解，不要真的去求逆。"}
+          ],
+          "can": "能把手写版和 Eigen 版的矩阵运算对上，并从收益率算出协方差矩阵与 beta。"
+        }
+      ]
+    }
+  ]
+}

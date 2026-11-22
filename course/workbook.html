@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>学习工作簿</title>
+<style>
+  @page{size:A4;margin:16mm 14mm}
+  body{font-family:"Microsoft YaHei","PingFang SC",serif;color:#0f172a;line-height:1.75;font-size:11.5pt;margin:0}
+  .page{page-break-after:always;padding:0 0 6mm}
+  .page:last-child{page-break-after:auto}
+  @media screen{.page{border-bottom:2px dashed #dbe3ee;margin-bottom:14mm;padding-bottom:10mm}
+    body{max-width:820px;margin:0 auto;padding:16mm 10mm}}
+  h1{font-size:22pt;margin:0 0 6mm}
+  .cover{padding-top:34mm}
+  .cover .rule{width:40mm;height:3px;background:#2563eb;margin:8mm 0}
+  .cover .sub{color:#64748b;font-size:12pt}
+  h2{font-size:14pt;margin:0 0 3mm;padding-bottom:2mm;border-bottom:1px solid #e2e8f0}
+  .kicker{font-size:9pt;color:#2563eb;letter-spacing:1px;margin-bottom:2mm}
+  .q{background:#f8fafc;border-left:3px solid #93c5fd;padding:3mm 4mm;font-size:10.8pt;margin-bottom:4mm}
+  .label{font-size:9pt;color:#94a3b8;letter-spacing:.5px;margin:5mm 0 2mm}
+  .lines div{border-bottom:1px dashed #cbd5e1;height:9mm}
+  .codebox{border:1px solid #dbe3ee;border-radius:2mm;padding:3mm;margin:3mm 0;background:#fcfdff}
+  .codebox .cap{font-size:9pt;color:#64748b;margin-bottom:1.5mm}
+  pre{font-family:Consolas,monospace;font-size:9.4pt;line-height:1.55;margin:0;white-space:pre-wrap}
+  .quiz{margin:2mm 0 3mm}.quiz .qq{font-size:11pt}.quiz .ans{border-bottom:1px dashed #cbd5e1;height:9mm}
+  .toc td{padding:1.2mm 0;font-size:10.5pt}.toc td.n{color:#94a3b8;width:16mm}
+  .trackhead{font-size:16pt;margin:0 0 6mm;padding:6mm 0;border-bottom:2px solid #0f172a}
+  .anspage h3{font-size:11pt;margin:4mm 0 1mm;color:#047857}
+  .anspage p{margin:0 0 2mm;font-size:10.5pt}
+</style></head><body>
+<div class="page cover">
+  <h1>学习工作簿</h1>
+  <div class="rule"></div>
+  <div class="sub">4 条路线 · 共 41 关 · 每关 20–30 分钟</div>
+  <p style="margin-top:8mm;color:#475569">每关一页：先写「我的问题」→ 跑代码 → 写「我的结果」→ 合上材料做自测。<br>
+  答案在最后。</p>
+  <div class="label">目录</div>
+  <table class="toc"><tr><td class="n">LL-1</td><td>从打开终端开始 · 20 分钟</td></tr><tr><td class="n">LL-2</td><td>变量与运算：让电脑替你算数 · 20 分钟</td></tr><tr><td class="n">LL-3</td><td>条件与重复：让电脑做判断 · 20 分钟</td></tr><tr><td class="n">LL-4</td><td>Python 只学够用的 · 20 分钟</td></tr><tr><td class="n">LL-5</td><td>调第一个 API · 25 分钟</td></tr><tr><td class="n">LL-6</td><td>数一数 token · 25 分钟</td></tr><tr><td class="n">LL-7</td><td>把文本变成可检索的向量 · 30 分钟</td></tr><tr><td class="n">LL-8</td><td>让它稳定输出 JSON · 30 分钟</td></tr><tr><td class="n">LL-9</td><td>推理为什么慢 · 25 分钟</td></tr><tr><td class="n">LL-10</td><td>用纸笔算清显存 · 25 分钟</td></tr><tr><td class="n">LL-11</td><td>本地跑起来并压测 · 30 分钟</td></tr><tr><td class="n">量化-1</td><td>从打开终端开始 · 20 分钟</td></tr><tr><td class="n">量化-2</td><td>变量与运算：让电脑替你算数 · 20 分钟</td></tr><tr><td class="n">量化-3</td><td>条件与重复：让电脑做判断 · 20 分钟</td></tr><tr><td class="n">量化-4</td><td>让电脑替你算钱 · 20 分钟</td></tr><tr><td class="n">量化-5</td><td>把一年的行情装进表格 · 25 分钟</td></tr><tr><td class="n">量化-6</td><td>第一张图：看见波动 · 25 分钟</td></tr><tr><td class="n">量化-7</td><td>平均数会骗人 · 25 分钟</td></tr><tr><td class="n">量化-8</td><td>用历史赌明天 · 30 分钟</td></tr><tr><td class="n">量化-9</td><td>第一次回测 · 30 分钟</td></tr><tr><td class="n">量化-10</td><td>什么叫「公平的价格」 · 30 分钟</td></tr><tr><td class="n">量化-11</td><td>用随机模拟给期权定价 · 30 分钟</td></tr><tr><td class="n">量化-12</td><td>把交易变成一场游戏 · 25 分钟</td></tr><tr><td class="n">量化-13</td><td>让智能体学对冲 · 30 分钟</td></tr><tr><td class="n">文本-1</td><td>从打开终端开始 · 20 分钟</td></tr><tr><td class="n">文本-2</td><td>变量与运算：让电脑替你算数 · 20 分钟</td></tr><tr><td class="n">文本-3</td><td>条件与重复：让电脑做判断 · 20 分钟</td></tr><tr><td class="n">文本-4</td><td>一堆文本，先看清有什么 · 20 分钟</td></tr><tr><td class="n">文本-5</td><td>清洗与分词：把句子切成词 · 25 分钟</td></tr><tr><td class="n">文本-6</td><td>词袋与 TF-IDF：让机器能比较两段话 · 25 分钟</td></tr><tr><td class="n">文本-7</td><td>文本分类：把邮件分成两类 · 30 分钟</td></tr><tr><td class="n">文本-8</td><td>主题模型与可解释性：这批评论在说什么 · 30 分钟</td></tr><tr><td class="n">C+-1</td><td>从打开终端开始 · 20 分钟</td></tr><tr><td class="n">C+-2</td><td>变量与运算：让电脑替你算数 · 20 分钟</td></tr><tr><td class="n">C+-3</td><td>条件与重复：让电脑做判断 · 20 分钟</td></tr><tr><td class="n">C+-4</td><td>为什么金融还在用 C++ · 20 分钟</td></tr><tr><td class="n">C+-5</td><td>写第一个类：Black-Scholes 定价器 · 30 分钟</td></tr><tr><td class="n">C+-6</td><td>继承与智能指针：Payoff 体系 · 30 分钟</td></tr><tr><td class="n">C+-7</td><td>STL 与算法：把数据装进容器 · 25 分钟</td></tr><tr><td class="n">C+-8</td><td>随机数与并发：蒙特卡洛障碍期权 · 30 分钟</td></tr><tr><td class="n">C+-9</td><td>线性代数与 Eigen · 30 分钟</td></tr></table>
+</div>
+<div class="page"><div class="trackhead">LLM 线</div><div style="color:#64748b;margin-bottom:6mm">8 关 · 前 4 关调 API，后 4 关本地部署</div><div class="q">把大模型从「在网页上聊天」，变成「接进你自己程序里、能部署、能算账」。</div><div class="label">学完能做的三件事</div><ul><li>用 API 做出自己的小工具：抽取字段、分类、问答</li><li>在一个需求开始前，算清它要花多少钱、要什么卡</li><li>在本机跑起 7B，并给出吞吐和延迟的数字</li></ul><div class="label">适合谁 / 需要什么 / 多久</div><p>想转 AI 工程 / 想给产品加 AI 能力 / 不需要数学背景<br>完全零基础可以：前 3 关从装 Python 开始；一个 DeepSeek key；后 4 关需要 8GB 显卡<br>8 关 + 3 关起步，约 5 小时；每天一关，三周</p><div class="label">不包含</div><p>不训练模型、不推公式、不做微调</p><div style="margin-top:6mm;color:#2563eb">只想看一句话结论：这条线教的是「怎么把模型用起来」，不是「怎么造模型」。</div></div>
+<div class="page">
+  <div class="kicker">LLM 线 · 起点 · 零基础三关 · 第 1 关</div>
+  <h2>从打开终端开始</h2>
+  <div class="q">双击一个文件，它就打开了——但写程序不是双击。你要先学会「在终端里命令电脑做事」，这一步过了，后面才谈得上代码。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：按 Win 键，输入 powershell，回车。出现一个可以打字的窗口，光标在闪，就对了。</div><pre>powershell</pre></div><div class="codebox"><div class="cap">练习 2：确认电脑里有没有 Python。没有就用下面第一行装（需要联网几分钟）。</div><pre>python --version
+# 若提示找不到命令：
+winget install -e --id Python.Python.3.12</pre></div><div class="codebox"><div class="cap">练习 3：新建一个文件 hello.py（记事本另存为，注意后缀是 .py），写一行，然后在终端里运行它。</div><pre>print(&quot;你好&quot;)
+
+# 终端里，先 cd 到文件所在目录，再：
+python hello.py</pre></div><div class="codebox"><div class="cap">练习 4：故意写错一次，看报错长什么样——这比跑对更重要。</div><pre>print(nihao)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么不能双击 .py 文件来运行？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. SyntaxError 和 NameError 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 报错信息那么长，先看哪一行？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 起点 · 零基础三关 · 第 2 关</div>
+  <h2>变量与运算：让电脑替你算数</h2>
+  <div class="q">你心算 100 块按 5% 涨一年是多少，大概要三秒；电脑要你先告诉它「100 是多少」，然后它一毫秒给你答案，而且永远不错。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先验证一件事：电脑按数学顺序算，不是从左往右。</div><pre>print(2 + 3 * 4)      # 14
+print((2 + 3) * 4)    # 20</pre></div><div class="codebox"><div class="cap">练习 2：用变量算一次复利，改数字再跑一次。</div><pre>x = 100
+x = x * 1.05
+print(x)              # 105.0
+
+x = x * 1.05
+print(x)              # 110.25</pre></div><div class="codebox"><div class="cap">练习 3：把文字和数字拼在一起，做成一句人话。</div><pre>money = 100 * 1.05 ** 20
+print(&quot;20 年后：&quot; + str(round(money, 2)) + &quot; 元&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `2 + 3 * 4` 为什么不是 20？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `x = x * 1.05` 这一句在干嘛？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `&quot;100&quot;` 和 `100` 有什么区别？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 起点 · 零基础三关 · 第 3 关</div>
+  <h2>条件与重复：让电脑做判断</h2>
+  <div class="q">「涨了就买、跌了就卖」——这句话电脑听不懂，除非你把它翻成「如果…就…」。同理，连续 20 年复利，你不该手写 20 行。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先用比较得到 True/False，再用 if 决定做什么。</div><pre>r = 0.05
+if r &gt; 0:
+    print(&quot;上涨&quot;)
+else:
+    print(&quot;下跌或持平&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：重复 3 次，看看 range 给的到底是什么。</div><pre>for i in range(3):
+    print(i)</pre></div><div class="codebox"><div class="cap">练习 3：把复利写进循环：想算 50 年，只改一个数字。</div><pre>money = 100
+for year in range(20):
+    money = money * 1.05
+print(money)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `range(3)` 会跑几次？分别是几？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `=` 和 `==` 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么 if 下面的代码要缩进？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 起点 · 零基础三关 · 第 4 关</div>
+  <h2>Python 只学够用的</h2>
+  <div class="q">模型返回的是一段像这样的东西：`{&quot;content&quot;: &quot;你好&quot;}`。你要从里面把「你好」取出来——这只需要字典、取值、和一个小函数。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：建一个最像 API 返回的字典，练取值。</div><pre>resp = {&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;你好&quot;, &quot;tokens&quot;: 12}
+print(resp[&quot;content&quot;])          # 你好
+print(resp.get(&quot;finish&quot;, &quot;无&quot;))  # 无（不报错）</pre></div><div class="codebox"><div class="cap">练习 2：写一个函数，专门从这种结构里取正文。</div><pre>def get_text(resp):
+    return resp.get(&quot;content&quot;, &quot;&quot;)
+
+get_text({&quot;content&quot;: &quot;第一段&quot;})</pre></div><div class="codebox"><div class="cap">练习 3：故意取一个不存在的键，看报错长什么样。</div><pre>resp[&quot;abc&quot;]</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `resp.get(&quot;content&quot;)` 和 `resp[&quot;content&quot;]` 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 如果返回的是 `[{...}, {...}]` 这样的列表，怎么取第一条的正文？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么要把取字段写成函数，而不是每次都手写？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：查漏 —— 变量与作用域这些细节，课程只讲到「能取字段」为止</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 起点 · 零基础三关 · 第 5 关</div>
+  <h2>调第一个 API</h2>
+  <div class="q">你不需要训练模型，也不需要显卡——只要一个 API key，二十行代码就能让模型替你干活。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：装 SDK（一条命令），key 放环境变量，不要硬编码。</div><pre>pip install openai
+
+# Windows PowerShell：
+$env:DEEPSEEK_API_KEY = &quot;sk-你的key&quot;</pre></div><div class="codebox"><div class="cap">练习 2：发第一个请求。`base_url` 是关键——同一个 SDK 可以接不同厂商。</div><pre>import os
+from openai import OpenAI
+
+client = OpenAI(api_key=os.environ[&quot;DEEPSEEK_API_KEY&quot;],
+                base_url=&quot;https://api.deepseek.com&quot;)
+
+r = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;用一句话解释什么是 token&quot;}],
+)
+print(r.choices[0].message.content)</pre></div><div class="codebox"><div class="cap">练习 3：加上 system 约束，让回答变成「只给结论，不超过 20 字」。</div><pre>messages = [
+    {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你只给结论，不超过 20 字，不解释。&quot;},
+    {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;什么是 token？&quot;},
+]
+r = client.chat.completions.create(model=&quot;deepseek-chat&quot;, messages=messages)
+print(r.choices[0].message.content)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么 API key 不能写死在代码里？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. system 和 user 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `r.choices[0].message.content` 里每一层是什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— 服务形态、部署拓扑与鉴权方式，书里才有完整讨论</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 第 1 阶段 · 会用它 · 第 6 关</div>
+  <h2>数一数 token</h2>
+  <div class="q">同一句话，中文账单比英文贵；同样 1000 字，有的模型算 800 token，有的算 1200。钱是按 token 收的，不是按字。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：同一段意思，分别用中英文问一次，比较用量。</div><pre>def ask(text):
+    r = client.chat.completions.create(
+        model=&quot;deepseek-chat&quot;,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: text}])
+    u = r.usage
+    return u.prompt_tokens, u.completion_tokens
+
+ask(&quot;用一句话解释什么是折现&quot;)
+ask(&quot;Explain discounting in one sentence.&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：按单价算这笔请求花了多少钱（单位：元 / 百万 token）。</div><pre>IN_PRICE, OUT_PRICE = 2.0, 8.0   # 以官网定价为准，随时会变
+cost = (pin * IN_PRICE + pout * OUT_PRICE) / 1_000_000
+print(f&quot;{cost:.6f} 元&quot;)</pre></div><div class="codebox"><div class="cap">练习 3：估一个真实任务：1000 条文本分类，每条 300 字输入、20 字输出。</div><pre>n = 1000
+pin, pout = 600, 30        # 粗估：中文一字≈1.5 token
+print((pin*n*IN_PRICE + pout*n*OUT_PRICE) / 1_000_000, &quot;元&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么中文通常比英文贵？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 上下文窗口 128k 是指什么？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 跑批任务前，第一件事该算什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— KV cache 与 prefill/decode 的原理图和数字，用来验证你测出来的结果</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 第 1 阶段 · 会用它 · 第 7 关</div>
+  <h2>把文本变成可检索的向量</h2>
+  <div class="q">你有 1000 条笔记，想找出「和这句话最像的 3 条」。搜关键词会漏，因为「折现」和「现值」一个字都不同。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先用最土的办法：TF-IDF + 余弦，不下载任何模型。</div><pre>from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+docs = [&quot;折现是把未来的钱换算成今天的价值&quot;,
+        &quot;复利是利息也生利息&quot;,
+        &quot;期权是未来买卖的权利&quot;]
+v = TfidfVectorizer().fit_transform(docs + [&quot;现值怎么算&quot;])
+sim = cosine_similarity(v[-1], v[:-1])
+print(sim, docs[sim.argmax()])</pre></div><div class="codebox"><div class="cap">练习 2：看它的局限：换一批词完全不同的同义句。</div><pre>docs2 = [&quot;discount future cash flows&quot;, &quot;compound interest&quot;]
+v2 = TfidfVectorizer().fit_transform(docs2 + [&quot;现值怎么算&quot;])
+cosine_similarity(v2[-1], v2[:-1])</pre></div><div class="codebox"><div class="cap">练习 3：工业界的做法：把 TF-IDF 换成 embedding 模型，其余流程一模一样。</div><pre># 换成 embedding 后，只需替换这一行：
+# vec = embed(text)
+# 余弦、top-k、拼提示 全都不变</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么用余弦而不用欧氏距离？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. TF-IDF 在什么情况下会失效？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. RAG 的三步是什么？为什么要有第一步「切块」？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— 词向量怎么训练、怎么可视化，想自己做 embedding 时看</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 第 1 阶段 · 会用它 · 第 8 关</div>
+  <h2>让它稳定输出 JSON</h2>
+  <div class="q">你让模型输出结构化数据，它有时带解释、有时用单引号、有时干脆多说一句「好的」——你的程序当场崩。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先写清字段，再开 JSON 模式。</div><pre>prompt = &quot;&quot;&quot;从下面这句话里抽取信息，输出 JSON：
+{&quot;company&quot;: &quot;公司名&quot;, &quot;amount&quot;: 数字或 null, &quot;date&quot;: &quot;YYYY-MM-DD 或 null&quot;}
+句子：{&quot;我们在 2024 年 3 月向某某公司投资了 5000 万元&quot;}&quot;&quot;&quot;
+r = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+    response_format={&quot;type&quot;: &quot;json_object&quot;},
+)
+print(r.choices[0].message.content)</pre></div><div class="codebox"><div class="cap">练习 2：加保护：解析失败就重试，两次还不行就记失败。</div><pre>import json
+
+def extract(text, tries=2):
+    for _ in range(tries):
+        r = client.chat.completions.create(
+            model=&quot;deepseek-chat&quot;,
+            messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt.replace(&quot;{句子}&quot;, text)}],
+            response_format={&quot;type&quot;: &quot;json_object&quot;})
+        try:
+            return json.loads(r.choices[0].message.content)
+        except json.JSONDecodeError:
+            continue
+    return None</pre></div><div class="codebox"><div class="cap">练习 3：用 20 条样本算通过率——这是最容易被忽略、也最能说明问题的一步。</div><pre>ok = sum(1 for s in samples if extract(s) is not None)
+print(f&quot;{ok}/{len(samples)} = {ok/len(samples):.0%}&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 开了 JSON 模式，为什么还需要重试？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 怎么提高结构化抽取的通过率？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么一定要有 20 条以上的人工标注样本？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— 分类流程、调参与评估的完整例子，对照你的通过率</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 第 2 阶段 · 会算账、会部署 · 第 9 关</div>
+  <h2>推理为什么慢</h2>
+  <div class="q">同一个问题，有人等 0.5 秒看到第一个字，有人等 8 秒才出字。差别不在模型大小，在「两段式推理」。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：用流式输出，测「多久看到第一个字」和「总共多久」。</div><pre>import time
+
+t0 = time.time(); first = None; text = &quot;&quot;
+for chunk in client.chat.completions.create(
+        model=&quot;deepseek-chat&quot;,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;写一段 200 字的产品介绍&quot;}],
+        stream=True):
+    delta = chunk.choices[0].delta.content or &quot;&quot;
+    if delta and first is None:
+        first = time.time() - t0
+    text += delta
+print(f&quot;首字 {first:.2f}s，总 {time.time()-t0:.2f}s，{len(text)} 字&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：换个长输入（比如 3000 字文档），看首字时间怎么变。</div><pre>long_doc = &quot;...&quot; * 1000
+# 只问「这段讲了什么」，输入很长、输出很短
+t0 = time.time()
+client.chat.completions.create(model=&quot;deepseek-chat&quot;,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: long_doc + &quot;\n用一句话总结&quot;}])
+print(time.time()-t0)</pre></div><div class="codebox"><div class="cap">练习 3：记住一个判据：首字慢 = 输入太长；出字慢 = 输出太长。</div><pre># 优化方向完全不同：
+# 首字慢 → 截断/检索/缓存输入
+# 出字慢 → 减少输出、换更快的模型、流式展示</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 用户抱怨「很慢」，你该先问什么？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么 decode 阶段 GPU 用不满？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. KV cache 为什么能加速？代价是什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：推导 —— 显存与吞吐的估算公式怎么来的，课程只给了结论</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 第 2 阶段 · 会算账、会部署 · 第 10 关</div>
+  <h2>用纸笔算清显存</h2>
+  <div class="q">「我这 8GB 显存能跑 7B 吗？」——先别下载，三分钟就能算出来，省下两小时。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先算权重，三种精度对比。</div><pre>params = 7e9
+for name, bytes_per in [(&quot;FP16&quot;, 2), (&quot;INT8&quot;, 1), (&quot;Q4&quot;, 0.5)]:
+    print(f&quot;{name}: {params * bytes_per / 1e9:.1f} GB&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：再算 KV cache：模型参数从官方配置里查（这里用典型值）。</div><pre>layers, heads, dim, seq, batch, bytes_per = 32, 8, 128, 4096, 1, 2
+kv = 2 * layers * heads * dim * seq * batch * bytes_per / 1e9
+print(f&quot;KV cache ≈ {kv:.2f} GB&quot;)</pre></div><div class="codebox"><div class="cap">练习 3：加起来判断：8GB 卡能跑什么。</div><pre>print(3.5 + 0.54)   # Q4 + 单条 4k：约 4 GB → 能跑，还剩 4GB 给批处理和开销
+print(14 + 0.54)    # FP16：14.5 GB → 跑不动</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 同样是 7B，为什么 Q4 只要 3.5GB？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么长对话越来越吃显存？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 8GB 卡想提高并发，优先做什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— 量化与 PagedAttention 的实测数据，对照你算出来的显存</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">LLM 线 · 第 2 阶段 · 会算账、会部署 · 第 11 关</div>
+  <h2>本地跑起来并压测</h2>
+  <div class="q">模型文件 4GB，双击打不开。你需要一个「推理引擎」，就像视频文件需要播放器。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：装 Ollama，一条命令拉一个 4 位量化的 7B。</div><pre>winget install Ollama.Ollama
+ollama run qwen2.5:7b-instruct-q4_K_M</pre></div><div class="codebox"><div class="cap">练习 2：用 HTTP 接口测单次延迟（Ollama 默认监听 11434）。</div><pre>import time, requests
+
+t0 = time.time()
+r = requests.post(&quot;http://localhost:11434/api/generate&quot;, json={
+    &quot;model&quot;: &quot;qwen2.5:7b-instruct-q4_K_M&quot;, &quot;prompt&quot;: &quot;用一句话解释复利&quot;, &quot;stream&quot;: False})
+print(f&quot;{time.time()-t0:.2f}s&quot;, r.json()[&quot;response&quot;][:30])</pre></div><div class="codebox"><div class="cap">练习 3：发 20 个并发请求，算每秒完成数（吞吐）。</div><pre>from concurrent.futures import ThreadPoolExecutor
+import time, requests
+
+def one(_):
+    return requests.post(&quot;http://localhost:11434/api/generate&quot;, json={
+        &quot;model&quot;: &quot;qwen2.5:7b-instruct-q4_K_M&quot;, &quot;prompt&quot;: &quot;说一句短话&quot;, &quot;stream&quot;: False}).status_code
+
+t0 = time.time()
+with ThreadPoolExecutor(max_workers=8) as ex:
+    list(ex.map(one, range(20)))
+dt = time.time() - t0
+print(f&quot;20 个请求 {dt:.1f}s，吞吐 {20/dt:.2f} req/s&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么并发开到 8 反而可能更慢？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. Ollama 和 vLLM 该怎么选？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 「模型能跑」和「服务能用」差在哪？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— 端到端优化的完整步骤与踩坑记录</p><div class="lines"><div></div><div></div></div>
+</div><div class="page"><div class="trackhead">量化线</div><div style="color:#64748b;margin-bottom:6mm">10 关 · 算账 → 判断 → 回测 → 定价 → 决策</div><div class="q">用数据判断一个交易想法，是真本事，还是运气和幻觉。</div><div class="label">学完能做的三件事</div><ul><li>拿到一份行情 CSV，十分钟内算出收益、波动、回撤</li><li>看穿一个「回测年化 180%」的骗局，知道钱被什么吃掉了</li><li>给一份合约定出可解释的价格，并说清它为什么是这个数</li></ul><div class="label">适合谁 / 需要什么 / 多久</div><p>对市场好奇 / 想自己验证策略 / 想补金融理论<br>完全零基础可以：前 3 关补 Python；高中数学够用<br>10 关 + 3 关起步，约 6 小时</p><div class="label">不包含</div><p>不教高频交易、不教盘口和订单簿、不保证能赚钱</p><div style="margin-top:6mm;color:#2563eb">这条线最重要的一句：先学会分辨「假的好」，再谈找「真的好」。</div></div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 1 · 会算账 · 第 1 关</div>
+  <h2>从打开终端开始</h2>
+  <div class="q">双击一个文件，它就打开了——但写程序不是双击。你要先学会「在终端里命令电脑做事」，这一步过了，后面才谈得上代码。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：按 Win 键，输入 powershell，回车。出现一个可以打字的窗口，光标在闪，就对了。</div><pre>powershell</pre></div><div class="codebox"><div class="cap">练习 2：确认电脑里有没有 Python。没有就用下面第一行装（需要联网几分钟）。</div><pre>python --version
+# 若提示找不到命令：
+winget install -e --id Python.Python.3.12</pre></div><div class="codebox"><div class="cap">练习 3：新建一个文件 hello.py（记事本另存为，注意后缀是 .py），写一行，然后在终端里运行它。</div><pre>print(&quot;你好&quot;)
+
+# 终端里，先 cd 到文件所在目录，再：
+python hello.py</pre></div><div class="codebox"><div class="cap">练习 4：故意写错一次，看报错长什么样——这比跑对更重要。</div><pre>print(nihao)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么不能双击 .py 文件来运行？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. SyntaxError 和 NameError 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 报错信息那么长，先看哪一行？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 1 · 会算账 · 第 2 关</div>
+  <h2>变量与运算：让电脑替你算数</h2>
+  <div class="q">你心算 100 块按 5% 涨一年是多少，大概要三秒；电脑要你先告诉它「100 是多少」，然后它一毫秒给你答案，而且永远不错。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先验证一件事：电脑按数学顺序算，不是从左往右。</div><pre>print(2 + 3 * 4)      # 14
+print((2 + 3) * 4)    # 20</pre></div><div class="codebox"><div class="cap">练习 2：用变量算一次复利，改数字再跑一次。</div><pre>x = 100
+x = x * 1.05
+print(x)              # 105.0
+
+x = x * 1.05
+print(x)              # 110.25</pre></div><div class="codebox"><div class="cap">练习 3：把文字和数字拼在一起，做成一句人话。</div><pre>money = 100 * 1.05 ** 20
+print(&quot;20 年后：&quot; + str(round(money, 2)) + &quot; 元&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `2 + 3 * 4` 为什么不是 20？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `x = x * 1.05` 这一句在干嘛？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `&quot;100&quot;` 和 `100` 有什么区别？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 1 · 会算账 · 第 3 关</div>
+  <h2>条件与重复：让电脑做判断</h2>
+  <div class="q">「涨了就买、跌了就卖」——这句话电脑听不懂，除非你把它翻成「如果…就…」。同理，连续 20 年复利，你不该手写 20 行。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先用比较得到 True/False，再用 if 决定做什么。</div><pre>r = 0.05
+if r &gt; 0:
+    print(&quot;上涨&quot;)
+else:
+    print(&quot;下跌或持平&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：重复 3 次，看看 range 给的到底是什么。</div><pre>for i in range(3):
+    print(i)</pre></div><div class="codebox"><div class="cap">练习 3：把复利写进循环：想算 50 年，只改一个数字。</div><pre>money = 100
+for year in range(20):
+    money = money * 1.05
+print(money)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `range(3)` 会跑几次？分别是几？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `=` 和 `==` 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么 if 下面的代码要缩进？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 1 · 会算账 · 第 4 关</div>
+  <h2>让电脑替你算钱</h2>
+  <div class="q">你有 10 万块，年化 5%，放 20 年是多少？手算会错，Excel 会忘公式，写三行代码一辈子都能重算。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：打开 Jupyter（或任何 Python 环境），敲下面三行。</div><pre>money = 100000
+for year in range(20):
+    money = money * 1.05
+print(money)</pre></div><div class="codebox"><div class="cap">练习 2：用公式验证同一个结果，确认你没算错。</div><pre>100000 * 1.05 ** 20</pre></div><div class="codebox"><div class="cap">练习 3：把「每年乘一次」写成一个函数，以后换本金、换利率都能用。</div><pre>def compound(principal, rate, years):
+    for _ in range(years):
+        principal = principal * (1 + rate)
+    return principal
+
+compound(100000, 0.08, 30)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `1.05` 这个数字代表什么？如果年化 8%，该改成多少？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么不能用 `100000 * (1 + 0.05 * 20)`？算出来差多少？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 如果要算「每月复利」，循环里应该乘什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：查漏 —— 变量、函数、作用域的细节，课程只讲了「能算出结果」</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 1 · 会算账 · 第 5 关</div>
+  <h2>把一年的行情装进表格</h2>
+  <div class="q">交易所给你一个 CSV：日期、开盘、收盘、成交量。你想知道「哪三个月跌得最惨」，用眼睛翻 250 行是不现实的。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：读入文件，把日期列变成索引（这一步不做，后面按时间筛选全废）。</div><pre>import pandas as pd
+
+df = pd.read_csv(&quot;prices.csv&quot;, parse_dates=[&quot;date&quot;], index_col=&quot;date&quot;)
+df.head()</pre></div><div class="codebox"><div class="cap">练习 2：算每日收益率。注意第一行一定是 NaN——因为第一天没有「昨天」。</div><pre>df[&quot;ret&quot;] = df[&quot;close&quot;].pct_change()
+df[[&quot;close&quot;, &quot;ret&quot;]].head()</pre></div><div class="codebox"><div class="cap">练习 3：按月加总，再从小到大排，最差的那几个月就在最上面。</div><pre>monthly = df[&quot;ret&quot;].resample(&quot;ME&quot;).sum()
+monthly.sort_values().head(3)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么 `pct_change()` 的第一行是 NaN？该删掉还是保留？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `resample(&quot;ME&quot;)` 里的 ME 是什么意思？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 如果数据不是按日期排序的，`pct_change()` 会怎样？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— pandas 的索引、分组、时间重采样，用来核对你的月度收益</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 1 · 会算账 · 第 6 关</div>
+  <h2>第一张图：看见波动</h2>
+  <div class="q">只看数字，2008 年和 2017 年都是「有涨有跌」。画出来你才看得见：一个是悬崖，一个是楼梯。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：画净值曲线：两条线就够了，横轴日期、纵轴净值。</div><pre>import matplotlib.pyplot as plt
+
+equity = (1 + df[&quot;ret&quot;].fillna(0)).cumprod()
+plt.plot(equity.index, equity)
+plt.title(&quot;1 元钱的去向&quot;)
+plt.show()</pre></div><div class="codebox"><div class="cap">练习 2：把每日收益画成直方图，看它是不是「中间高两边低」。</div><pre>plt.hist(df[&quot;ret&quot;].dropna(), bins=100)
+plt.title(&quot;每日收益率分布&quot;)
+plt.show()</pre></div><div class="codebox"><div class="cap">练习 3：算年化波动率和最大回撤。</div><pre>vol = df[&quot;ret&quot;].std() * (252 ** 0.5)
+dd = (equity / equity.cummax() - 1).min()
+print(f&quot;年化波动 {vol:.1%}，最大回撤 {dd:.1%}&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 年化波动 20% 大概是什么感觉？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 回撤 -50% 之后，要涨多少才回本？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么波动率要乘 √252，而不是 ×252？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— 该用什么图、怎么配色、子图怎么排，课程只画了三条线</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 2 · 会判断 · 第 7 关</div>
+  <h2>平均数会骗人</h2>
+  <div class="q">两个策略年化都是 10%。一个每天小涨小跌，一个时不时腰斩再翻倍。只看年化，你会选错。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：把夏普算出来，和年化收益放一起看。</div><pre>r = df[&quot;ret&quot;].dropna()
+sharpe = r.mean() / r.std() * (252 ** 0.5)
+print(f&quot;年化 {r.mean()*252:.1%}，夏普 {sharpe:.2f}&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：看尾部：有没有单日跌幅超过 5 个标准差的？</div><pre>z = (r - r.mean()) / r.std()
+(z &lt; -5).sum()</pre></div><div class="codebox"><div class="cap">练习 3：再做一件事：按年拆开，看收益是不是集中在某一年。</div><pre>yearly = (1 + r).groupby(r.index.year).prod() - 1
+yearly.sort_values(ascending=False).head(3)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 夏普 1 意味着什么？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么说「回测只有半年」的夏普没有意义？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 两个策略夏普相同，怎么选？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— 分布与平稳性的描述统计，验证「波动 20% 是什么感觉」</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 2 · 会判断 · 第 8 关</div>
+  <h2>用历史赌明天</h2>
+  <div class="q">你有个想法：「连涨三天就买」。怎么用数据判断它行不行，而不是靠感觉？</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：造特征和标签。注意 `shift(-1)` 把「明天」挪到今天这一行。</div><pre>df[&quot;f1&quot;] = df[&quot;ret&quot;].shift(1)
+df[&quot;f2&quot;] = df[&quot;ret&quot;].rolling(3).mean()
+df[&quot;y&quot;] = (df[&quot;ret&quot;].shift(-1) &gt; 0).astype(int)
+d = df.dropna()</pre></div><div class="codebox"><div class="cap">练习 2：按时间切分，前 70% 训练。</div><pre>cut = int(len(d) * 0.7)
+train, test = d.iloc[:cut], d.iloc[cut:]
+X, y = [&quot;f1&quot;, &quot;f2&quot;], &quot;y&quot;</pre></div><div class="codebox"><div class="cap">练习 3：训练一个最简单的模型，比较两边准确率。</div><pre>from sklearn.linear_model import LogisticRegression
+m = LogisticRegression().fit(train[X], train[y])
+print(m.score(train[X], train[y]), m.score(test[X], test[y]))</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么不能 `train_test_split(shuffle=True)`？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 测试集准确率 0.49，说明什么？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 训练 0.9、测试 0.5，第一步该动什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— 特征缩放、编码、异常值处理的完整配方</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 2 · 会判断 · 第 9 关</div>
+  <h2>第一次回测</h2>
+  <div class="q">信号有了，钱怎么算？很多人第一步就错：用今天的信号赚今天的钱。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：信号变成持仓（延迟一天），再算策略收益。</div><pre>d[&quot;pos&quot;] = d[&quot;signal&quot;].shift(1).fillna(0)
+d[&quot;strat&quot;] = d[&quot;pos&quot;] * d[&quot;ret&quot;]</pre></div><div class="codebox"><div class="cap">练习 2：加上成本：每次换仓都要付钱。</div><pre>turnover = d[&quot;pos&quot;].diff().abs().fillna(0)
+cost = turnover * 0.001          # 单边 0.1%
+d[&quot;net&quot;] = d[&quot;strat&quot;] - cost</pre></div><div class="codebox"><div class="cap">练习 3：把扣费前后的净值画在一起。</div><pre>plt.plot((1+d[&quot;strat&quot;]).cumprod(), label=&quot;毛&quot;)
+plt.plot((1+d[&quot;net&quot;]).cumprod(), label=&quot;净&quot;)
+plt.legend(); plt.show()</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么持仓要 `shift(1)`？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 单边 0.1% 的成本，每天换手一次，一年大概吃掉多少？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 回测年化 180%，扣费后 35%，说明什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— 时序特征工程与回测细节，对照你的扣费前后差异</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 3 · 会定价 · 第 10 关</div>
+  <h2>什么叫「公平的价格」</h2>
+  <div class="q">一份合约：一年后股价高于 100 就付你差价，低于 100 就一分不给。你愿意今天出多少钱买它？</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：设一个只有两种未来的世界：涨到 120 或跌到 90，利率 5%。</div><pre>S0, Su, Sd, r = 100, 120, 90, 0.05
+q = (S0 * (1 + r) - Sd) / (Su - Sd)
+q</pre></div><div class="codebox"><div class="cap">练习 2：用 q 给看涨期权（行权价 100）定价。</div><pre>K = 100
+Cu, Cd = max(Su - K, 0), max(Sd - K, 0)
+price = (q * Cu + (1 - q) * Cd) / (1 + r)
+price</pre></div><div class="codebox"><div class="cap">练习 3：换个思路验算：直接买 0.667 股 + 借钱，看成本是不是同一个数。</div><pre>delta = (Cu - Cd) / (Su - Sd)
+bond = (Cd - delta * Sd) / (1 + r)
+delta * S0 + bond</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 如果看涨期权市场价 7 元（低于算出来的 9.52），怎么套利？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么价格和你「觉得会涨」无关？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 真实市场价格常常偏离 BSM，为什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：推导 —— 复制组合、鞅测度、1FTAP/2FTAP 的完整推导——课程只给结论</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 3 · 会定价 · 第 11 关</div>
+  <h2>用随机模拟给期权定价</h2>
+  <div class="q">三条路算同一个期权：公式、二叉树、随机模拟。如果三者一致，你才算真的懂了。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：模拟 10 万条一年后的价格。</div><pre>import numpy as np
+S0, r, sigma, T, N = 100, 0.03, 0.2, 1.0, 100000
+z = np.random.standard_normal(N)
+ST = S0 * np.exp((r - 0.5 * sigma**2) * T + sigma * np.sqrt(T) * z)</pre></div><div class="codebox"><div class="cap">练习 2：给看涨期权定价，并和 BSM 公式对比。</div><pre>K = 100
+payoff = np.maximum(ST - K, 0)
+price = np.exp(-r * T) * payoff.mean()
+print(price, payoff.std() / np.sqrt(N) * np.exp(-r * T))</pre></div><div class="codebox"><div class="cap">练习 3：把 N 从 1 万加到 100 万，看误差怎么变。</div><pre>for n in [10_000, 100_000, 1_000_000]:
+    z = np.random.standard_normal(n)
+    s = S0 * np.exp((r - .5*sigma**2)*T + sigma*np.sqrt(T)*z)
+    print(n, np.exp(-r*T) * np.maximum(s-K, 0).mean())</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么公式里是 `(r - 0.5σ²)` 而不是 `r`？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 模拟 1 万条路径，价格误差大概多少？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 什么情况下必须用蒙特卡洛，而不能用 BSM？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：推导 —— BSM 与蒙特卡洛的数学来路，以及 LSM 美式期权</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 4 · 会决策 · 第 12 关</div>
+  <h2>把交易变成一场游戏</h2>
+  <div class="q">预测明天涨跌，和「明天买多少」，是两个问题。前者答对了也未必赚钱，后者才决定盈亏。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先写一个最小环境：只有三种状态（空仓/半仓/满仓）和两种动作。</div><pre>class Env:
+    def __init__(self, rets):
+        self.rets, self.i, self.pos = rets, 0, 0
+    def reset(self):
+        self.i, self.pos = 0, 0
+        return self._obs()
+    def _obs(self):
+        return [self.pos, self.rets[self.i]]
+    def step(self, a):          # a: -1 减仓 / 0 不动 / 1 加仓
+        self.pos = max(0, min(1, self.pos + 0.5 * a))
+        r = self.pos * self.rets[self.i]     # 奖励 = 仓位 × 当日收益
+        self.i += 1
+        done = self.i &gt;= len(self.rets) - 1
+        return self._obs(), r, done</pre></div><div class="codebox"><div class="cap">练习 2：跑一遍随机策略，看累计奖励是多少。</div><pre>import numpy as np
+rets = np.random.normal(0.0003, 0.01, 250)
+env = Env(rets); env.reset(); total = 0
+while True:
+    _, r, done = env.step(np.random.choice([-1, 0, 1]))
+    total += r
+    if done: break
+print(round(total, 4))</pre></div><div class="codebox"><div class="cap">练习 3：换一个奖励：不只看收益，还罚波动（更接近真实目标）。</div><pre>r = self.pos * self.rets[self.i] - 0.5 * (self.pos ** 2) * (0.01 ** 2)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 把「明天涨跌」当奖励会有什么问题？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么状态里要放持仓？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 奖励里罚波动，相当于改变了什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— MDP、Bellman 方程与 Q 学习的推导，验证你写的环境</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">量化线 · 阶段 4 · 会决策 · 第 13 关</div>
+  <h2>让智能体学对冲</h2>
+  <div class="q">教科书说「按 delta 对冲」，但真实市场有交易成本、有跳空。能不能让机器自己学一个「什么时候调多少」？</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：把对冲写成一个环境：状态含 delta 偏离，动作是调整量。</div><pre>state = [abs(delta_target - delta_now), cost_level, vol_est]
+action = 0 / 1 / 2      # 不调 / 调一半 / 调到位
+reward = -abs(hedge_error) - cost * traded</pre></div><div class="codebox"><div class="cap">练习 2：训练：每回合跑 250 天，存经验、抽批次更新网络。</div><pre>for ep in range(200):
+    s = env.reset()
+    while True:
+        a = eps_greedy(q_net, s, eps=0.1)
+        s2, r, done = env.step(a)
+        buf.push(s, a, r, s2, done)
+        q_net.fit(*buf.sample(64))
+        s = s2
+        if done: break</pre></div><div class="codebox"><div class="cap">练习 3：对比：把学到的策略和「每天调一次」放在同一条曲线上。</div><pre>plt.plot(test_rl, label=&#x27;RL&#x27;)
+plt.plot(test_fixed, label=&#x27;固定间隔&#x27;)
+plt.legend()</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么不直接用监督学习预测「最优调整量」？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 回放池太小会怎样？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 怎么判断「学出来了」而不是「碰巧」？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— DQN 的网络结构、经验回放与训练技巧的完整实现</p><div class="lines"><div></div><div></div></div>
+</div><div class="page"><div class="trackhead">文本线</div><div style="color:#64748b;margin-bottom:6mm">5 关 · 对应《Blueprints for Text Analytics》</div><div class="q">把一堆文本（评论、工单、新闻）变成能统计、能分类、能解释的东西。</div><div class="label">学完能做的三件事</div><ul><li>在 500 条评论里，五分钟看出大家在抱怨什么</li><li>搭一个分类器，并给出一个可信的准确率</li><li>把「模型为什么这么判」讲给不写代码的同事听</li></ul><div class="label">适合谁 / 需要什么 / 多久</div><p>手里有文本数据 / 做运营分析 / 想入门 NLP<br>完全零基础可以：前 3 关补 Python，第 1 关只用到 count 和 plot<br>5 关 + 3 关起步，约 3.5 小时</p><div class="label">不包含</div><p>不训练大模型、不深入 Transformer 结构</p><div style="margin-top:6mm;color:#2563eb">文本分析 80% 的工作在第 1、2 关：看清数据和清洗；模型只占 20%。</div></div>
+<div class="page">
+  <div class="kicker">文本线 · 第 1 阶段 · 看清文本 · 第 1 关</div>
+  <h2>从打开终端开始</h2>
+  <div class="q">双击一个文件，它就打开了——但写程序不是双击。你要先学会「在终端里命令电脑做事」，这一步过了，后面才谈得上代码。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：按 Win 键，输入 powershell，回车。出现一个可以打字的窗口，光标在闪，就对了。</div><pre>powershell</pre></div><div class="codebox"><div class="cap">练习 2：确认电脑里有没有 Python。没有就用下面第一行装（需要联网几分钟）。</div><pre>python --version
+# 若提示找不到命令：
+winget install -e --id Python.Python.3.12</pre></div><div class="codebox"><div class="cap">练习 3：新建一个文件 hello.py（记事本另存为，注意后缀是 .py），写一行，然后在终端里运行它。</div><pre>print(&quot;你好&quot;)
+
+# 终端里，先 cd 到文件所在目录，再：
+python hello.py</pre></div><div class="codebox"><div class="cap">练习 4：故意写错一次，看报错长什么样——这比跑对更重要。</div><pre>print(nihao)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么不能双击 .py 文件来运行？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. SyntaxError 和 NameError 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 报错信息那么长，先看哪一行？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">文本线 · 第 1 阶段 · 看清文本 · 第 2 关</div>
+  <h2>变量与运算：让电脑替你算数</h2>
+  <div class="q">你心算 100 块按 5% 涨一年是多少，大概要三秒；电脑要你先告诉它「100 是多少」，然后它一毫秒给你答案，而且永远不错。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先验证一件事：电脑按数学顺序算，不是从左往右。</div><pre>print(2 + 3 * 4)      # 14
+print((2 + 3) * 4)    # 20</pre></div><div class="codebox"><div class="cap">练习 2：用变量算一次复利，改数字再跑一次。</div><pre>x = 100
+x = x * 1.05
+print(x)              # 105.0
+
+x = x * 1.05
+print(x)              # 110.25</pre></div><div class="codebox"><div class="cap">练习 3：把文字和数字拼在一起，做成一句人话。</div><pre>money = 100 * 1.05 ** 20
+print(&quot;20 年后：&quot; + str(round(money, 2)) + &quot; 元&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `2 + 3 * 4` 为什么不是 20？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `x = x * 1.05` 这一句在干嘛？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `&quot;100&quot;` 和 `100` 有什么区别？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">文本线 · 第 1 阶段 · 看清文本 · 第 3 关</div>
+  <h2>条件与重复：让电脑做判断</h2>
+  <div class="q">「涨了就买、跌了就卖」——这句话电脑听不懂，除非你把它翻成「如果…就…」。同理，连续 20 年复利，你不该手写 20 行。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先用比较得到 True/False，再用 if 决定做什么。</div><pre>r = 0.05
+if r &gt; 0:
+    print(&quot;上涨&quot;)
+else:
+    print(&quot;下跌或持平&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：重复 3 次，看看 range 给的到底是什么。</div><pre>for i in range(3):
+    print(i)</pre></div><div class="codebox"><div class="cap">练习 3：把复利写进循环：想算 50 年，只改一个数字。</div><pre>money = 100
+for year in range(20):
+    money = money * 1.05
+print(money)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `range(3)` 会跑几次？分别是几？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `=` 和 `==` 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么 if 下面的代码要缩进？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">文本线 · 第 1 阶段 · 看清文本 · 第 4 关</div>
+  <h2>一堆文本，先看清有什么</h2>
+  <div class="q">运营发来一张表：两千多条工单，最长那条 800 字，最短的只有一个「好」。你第一件事不是分析，是数清它。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先把文本装进一张表，数清三件事：多少条、多少空值、多少重复。</div><pre>import pandas as pd
+
+texts = [
+    &#x27;快递三天了还没到，能帮我查一下吗&#x27;,
+    &#x27;退款申请两次了，一直没到账&#x27;,
+    &#x27;包装破了，里面杯子碎了&#x27;,
+    &#x27;客服电话一直打不通&#x27;,
+    &#x27;好&#x27;,
+    None,
+    &#x27;优惠券用不了，下单时提示已过期&#x27;,
+    &#x27;物流信息三天没更新，是不是丢了&#x27;,
+    &#x27;退款到账很快，谢谢&#x27;,
+    &#x27;快递员没打电话就放门口了&#x27;,
+    &#x27;商品和图片不一样，颜色差很多&#x27;,
+    &#x27;想改收货地址，还能改吗&#x27;,
+    &#x27;尺码偏小，想换大一码&#x27;,
+    &#x27;发票什么时候能开&#x27;,
+    None,
+    &#x27;收到货了，质量不错&#x27;,
+    &#x27;客服态度很好，问题解决了&#x27;,
+    &#x27;app 一直闪退，打不开&#x27;,
+    &#x27;快递三天了还没到，能帮我查一下吗&#x27;,
+    &#x27;退款到账很快，谢谢&#x27;,
+    &#x27;下单两天了还没发货&#x27;,
+    &#x27;赠品漏发了&#x27;,
+    &#x27;价格比昨天贵了二十块&#x27;,
+    &#x27;能不能开发票&#x27;,
+    &#x27;包裹显示签收但我没收到&#x27;,
+    &#x27;面膜味道有点怪&#x27;,
+    &#x27;会员到期了还能续吗&#x27;,
+    &#x27;售后处理太慢，等了一周&#x27;,
+    &#x27;颜色比想象中好看&#x27;,
+    &#x27;快递员态度很差&#x27;,
+    None,
+    &#x27;保修期内坏了，怎么修&#x27;,
+    &#x27;分期还款怎么还&#x27;,
+    &#x27;优惠券叠加不了&#x27;,
+    &#x27;东西不错，就是有点贵&#x27;,
+    &#x27;换货寄回去三天了没消息&#x27;,
+    &#x27;app 里找不到订单&#x27;,
+    &#x27;物流一直显示已揽收&#x27;,
+    &#x27;客服机器人答非所问&#x27;,
+    &#x27;快递太慢了，等了一周还没到，中间问过两次客服都没解决，希望能给个说法&#x27;,
+]
+df = pd.DataFrame({&#x27;text&#x27;: texts})
+
+print(len(df), df[&#x27;text&#x27;].isna().sum(), df[&#x27;text&#x27;].dropna().duplicated().sum())</pre></div><div class="codebox"><div class="cap">练习 2：再看长度：平均值是最容易被一两条长文本带偏的那个数。</div><pre>df[&#x27;n&#x27;] = df[&#x27;text&#x27;].str.len().fillna(0).astype(int)
+print(df[&#x27;n&#x27;].describe().round(1).to_string())
+print(&#x27;最短一条:&#x27;, int(df.loc[df[&#x27;text&#x27;].notna(), &#x27;n&#x27;].min()))</pre></div><div class="codebox"><div class="cap">练习 3：最后扫高频片段：没有分词工具时，先用「两个字一组」看个大概。</div><pre>import re
+from collections import Counter
+
+grams = Counter()
+for t in df[&#x27;text&#x27;].dropna():
+    t2 = re.sub(r&#x27;[^\u4e00-\u9fa5]&#x27;, &#x27;&#x27;, t)      # 只留汉字，去掉标点和空格
+    for i in range(len(t2) - 1):
+        grams[t2[i:i + 2]] += 1
+
+print(grams.most_common(8))</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 40 条数据里有 3 条空值、2 条重复，你会先删掉再分析吗？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 平均 9.8 字、中位数 9.5 字，两个数差不多。那什么时候必须看中位数？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 高频第一是「快递」、第二是「三天」，第三却是「天了」。说明什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— EDA 的更多切面：KWIC、n-gram、词云</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">文本线 · 第 2 阶段 · 把文本变成数字 · 第 5 关</div>
+  <h2>清洗与分词：把句子切成词</h2>
+  <div class="q">同一句 12 个词的评论，两个人切出两种结果：一个 12 个词，一个只有 4 块。后面所有统计都建在这堆「词」上。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先洗：网址、数字、标点、表情全换成空格，大小写也统一。</div><pre>import re
+
+raw = [
+    &#x27;Great battery life!!! I charge it once every 3 days 😀 http://t.cn/x1&#x27;,
+    &#x27;Shipping was fast and the box arrived in perfect condition.&#x27;,
+    &#x27;The screen cracked after one week, very disappointed.&#x27;,
+    &#x27;Refund took 10 days and two support calls, still waiting...&#x27;,
+    &#x27;Battery dies in 2 hours, useless for travel.&#x27;,
+    &#x27;Love the color and the weight, feels premium.&#x27;,
+    &#x27;Customer service replied within an hour, impressive.&#x27;,
+    &#x27;It stopped charging after a month. Not happy at all.&#x27;,
+    &#x27;Cheap price for a decent laptop, good value.&#x27;,
+    &#x27;The app keeps crashing on my phone.&#x27;,
+    &#x27;Arrived 4 days late, but the product is fine.&#x27;,
+    &#x27;Packaging was damaged, the mug inside was broken.&#x27;,
+    &#x27;Battery life is amazing, I only charge on weekends.&#x27;,
+    &#x27;Worst purchase this year, returning it tomorrow.&#x27;,
+    &#x27;Setup took 5 minutes, very easy.&#x27;,
+    &#x27;The fan is loud and the battery drains fast.&#x27;,
+    &#x27;Refunds are processed quickly, no complaints.&#x27;,
+    &#x27;Screen quality is great for watching movies.&#x27;,
+    &#x27;Delivery was late by a week and nobody told me.&#x27;,
+    &#x27;It works as advertised, happy with the price.&#x27;,
+    &#x27;Charging cable broke after two weeks.&#x27;,
+    &#x27;Support sent a replacement in 2 days, great service.&#x27;,
+    &#x27;The battery does not last a full day anymore.&#x27;,
+    &#x27;Love it! Light, fast, and the screen is bright.&#x27;,
+]
+
+def clean(t):
+    t = t.lower()
+    t = re.sub(r&#x27;http\S+|www\.\S+&#x27;, &#x27; &#x27;, t)   # 网址
+    t = re.sub(r&#x27;\d+&#x27;, &#x27; &#x27;, t)                # 数字
+    t = re.sub(r&#x27;[^a-z\s]&#x27;, &#x27; &#x27;, t)           # 标点、表情（中文语料改成 [^\u4e00-\u9fa5a-z\s]）
+    return re.sub(r&#x27;\s+&#x27;, &#x27; &#x27;, t).strip()
+
+cleaned = [clean(t) for t in raw]
+print(len(cleaned), cleaned[0])</pre></div><div class="codebox"><div class="cap">练习 2：切词只要一行：按空格切。先别急着去停用词，先看最常出现的是什么。</div><pre>from collections import Counter
+
+tokens = [w for t in cleaned for w in t.split()]
+print(len(tokens))
+print(Counter(tokens).most_common(6))</pre></div><div class="codebox"><div class="cap">练习 3：去停用词 + 词形还原，一起做；最后两行注释是中文语料的替换方案。</div><pre>STOP = {&#x27;the&#x27;, &#x27;a&#x27;, &#x27;an&#x27;, &#x27;and&#x27;, &#x27;is&#x27;, &#x27;was&#x27;, &#x27;it&#x27;, &#x27;to&#x27;, &#x27;of&#x27;, &#x27;for&#x27;, &#x27;on&#x27;,
+        &#x27;in&#x27;, &#x27;with&#x27;, &#x27;this&#x27;, &#x27;but&#x27;, &#x27;at&#x27;, &#x27;by&#x27;, &#x27;my&#x27;, &#x27;me&#x27;, &#x27;i&#x27;, &#x27;not&#x27;, &#x27;no&#x27;}
+
+def lemma(w):
+    for suf, cut in [(&#x27;ing&#x27;, 3), (&#x27;ed&#x27;, 2), (&#x27;es&#x27;, 2), (&#x27;s&#x27;, 1)]:
+        if len(w) &gt; 4 and w.endswith(suf):
+            return w[:-cut]
+    return w
+
+kept = [lemma(w) for w in tokens if w not in STOP]
+print(len(tokens), &#x27;-&gt;&#x27;, len(kept))
+print(Counter(kept).most_common(6))
+
+# 中文语料这一步换成（可选）：
+# python -m spacy download zh_core_web_sm
+# nlp = spacy.load(&#x27;zh_core_web_sm&#x27;)   # 先分词，再取 token.lemma_</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 把文本里所有数字都删掉，会不会删掉有用的东西？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 去停用词时把 not、no、never 也一起删了，会有什么后果？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么不能只靠砍后缀来做词形还原？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— spaCy 的词形还原、NER、依存句法，课程只用了正则</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">文本线 · 第 2 阶段 · 把文本变成数字 · 第 6 关</div>
+  <h2>词袋与 TF-IDF：让机器能比较两段话</h2>
+  <div class="q">一条写「等了 4 天还没发货」，另一条写「4 天没发」。人一眼就知道是同一件事，机器看到的是两串完全不同的字。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先数数：每条评论变成一行，每个词变成一列，格子里是出现次数。</div><pre>import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+
+docs = [
+    &#x27;the battery dies after two hours of use&#x27;,
+    &#x27;battery life is great i charge it once a week&#x27;,
+    &#x27;it stopped charging after one month&#x27;,
+    &#x27;charging is slow and the battery drains fast&#x27;,
+    &#x27;the charger broke after two weeks&#x27;,
+    &#x27;battery drains overnight even when the phone is idle&#x27;,
+    &#x27;i have to charge it twice a day now&#x27;,
+    &#x27;fast charging works well and the battery lasts all day&#x27;,
+    &#x27;the battery died completely and will not charge&#x27;,
+    &#x27;battery is fine but the charger gets very hot&#x27;,
+    &#x27;shipping took ten days and the tracking never updated&#x27;,
+    &#x27;the package arrived four days late&#x27;,
+    &#x27;delivery was fast and the box was in perfect condition&#x27;,
+    &#x27;my package says delivered but i never received it&#x27;,
+    &#x27;shipping is slow it took a week to arrive&#x27;,
+    &#x27;the box arrived damaged and the screen was broken&#x27;,
+    &#x27;tracking shows it is still in transit after nine days&#x27;,
+    &#x27;delivered one day early and well packed&#x27;,
+    &#x27;the shipping label was wrong and it went to another city&#x27;,
+    &#x27;two weeks late and nobody told me why&#x27;,
+    &#x27;i returned it and the refund never came&#x27;,
+    &#x27;refund was processed in three days thank you&#x27;,
+    &#x27;support did not answer my email for a week&#x27;,
+    &#x27;i want my money back the refund is late&#x27;,
+    &#x27;customer service called me back and fixed it&#x27;,
+    &#x27;returned the item ten days ago still no refund&#x27;,
+    &#x27;they refunded the money after two phone calls&#x27;,
+    &#x27;support sends the same reply every time useless&#x27;,
+    &#x27;the refund arrived quickly good service&#x27;,
+    &#x27;i am still waiting for the return label&#x27;,
+]
+
+cv = CountVectorizer(stop_words=&#x27;english&#x27;)
+X = cv.fit_transform(docs)
+print(&#x27;形状:&#x27;, X.shape)
+
+names = cv.get_feature_names_out()
+row = X[0].toarray()[0]
+print({names[i]: int(v) for i, v in enumerate(row) if v})</pre></div><div class="codebox"><div class="cap">练习 2：换成 TF-IDF：同样的表，每个格子的数字再乘一个「稀有度」。</div><pre>import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+tf = TfidfVectorizer(stop_words=&#x27;english&#x27;)
+T = tf.fit_transform(docs)
+feat = tf.get_feature_names_out()
+idf = dict(zip(feat, tf.idf_))
+dfreq = np.asarray((T &gt; 0).sum(axis=0)).ravel()
+
+for w in [&#x27;battery&#x27;, &#x27;charge&#x27;, &#x27;label&#x27;]:
+    print(w, int(dfreq[list(feat).index(w)]), round(float(idf[w]), 2))
+
+tf2 = TfidfVectorizer(stop_words=&#x27;english&#x27;, ngram_range=(1, 2))
+tf2.fit(docs)
+print([w for w in tf2.get_feature_names_out() if &#x27; &#x27; in w][:5])</pre></div><div class="codebox"><div class="cap">练习 3：拿一句新评论，按同样的规则变成向量，再和 30 条逐一比夹角。</div><pre>from sklearn.metrics.pairwise import cosine_similarity
+
+q = &#x27;the delivery is late and the tracking shows nothing&#x27;
+sim = cosine_similarity(tf.transform([q]), T)[0]
+
+for i in sim.argsort()[::-1][:3]:
+    print(round(float(sim[i]), 2), docs[i])</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 两条评论用词完全一样、只是顺序相反（「发货慢但质量好」/「质量好但发货慢」），词袋能区分吗？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 一个词在每条评论里都出现，它的 IDF 会怎样？这对检索意味着什么？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 余弦相似度 0.9，是不是说明两段话意思一样？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：推导 —— TF-IDF 的权重公式与 n-gram 的取舍</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">文本线 · 第 3 阶段 · 能判、能讲 · 第 7 关</div>
+  <h2>文本分类：把邮件分成两类</h2>
+  <div class="q">一批邮件里三成是垃圾邮件。一个把全部邮件都判成「正常」的程序，准确率 70%，一封也没拦住——这和你的结果一样。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先分训练集和测试集，再用 Pipeline 把两步串起来训一遍。</div><pre>from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+emails = [
+    &#x27;can we move the review meeting to thursday afternoon&#x27;,
+    &#x27;the q3 report is attached please review before friday&#x27;,
+    &#x27;lunch with the client is at noon tomorrow&#x27;,
+    &#x27;i will be out of office until monday&#x27;,
+    &#x27;please approve the budget for the new hire&#x27;,
+    &#x27;the design file is in the shared folder&#x27;,
+    &#x27;thanks for joining the call yesterday&#x27;,
+    &#x27;our team shipped the release on time&#x27;,
+    &#x27;reminder standup at nine thirty&#x27;,
+    &#x27;the invoice from the vendor needs your signature&#x27;,
+    &#x27;let us discuss the roadmap next week&#x27;,
+    &#x27;i updated the slides for the presentation&#x27;,
+    &#x27;could you share the numbers from last month&#x27;,
+    &#x27;the new hire starts on monday&#x27;,
+    &#x27;we need two more days for testing&#x27;,
+    &#x27;the office will be closed on friday&#x27;,
+    &#x27;please add me to the mailing list&#x27;,
+    &#x27;i fixed the bug in the login page&#x27;,
+    &#x27;the client asked for a smaller scope&#x27;,
+    &#x27;can you send the contract to legal&#x27;,
+    &#x27;the conference call is rescheduled to tuesday&#x27;,
+    &#x27;she will present the plan tomorrow&#x27;,
+    &#x27;the vendor confirmed the delivery date&#x27;,
+    &#x27;we finished the migration over the weekend&#x27;,
+    &#x27;the budget spreadsheet is ready for review&#x27;,
+    &#x27;his feedback was very helpful&#x27;,
+    &#x27;let us book a room for the workshop&#x27;,
+    &#x27;the test results look good so far&#x27;,
+    &#x27;congratulations you won a lottery prize claim now&#x27;,
+    &#x27;win a free iphone today click this link&#x27;,
+    &#x27;limited offer buy one get one free click here&#x27;,
+    &#x27;cheap loan approved in minutes apply now&#x27;,
+    &#x27;urgent your account will be closed verify password&#x27;,
+    &#x27;earn money fast from home no experience needed&#x27;,
+    &#x27;exclusive deal ninety percent off today only&#x27;,
+    &#x27;claim your free gift card now&#x27;,
+    &#x27;your parcel is held pay a small fee to release it&#x27;,
+    &#x27;lowest price guaranteed order now and save&#x27;,
+    &#x27;final notice unpaid invoice click to avoid penalty&#x27;,
+    &#x27;free trial membership cancel anytime join today&#x27;,
+]
+labels = [&#x27;ham&#x27;] * 28 + [&#x27;spam&#x27;] * 12
+
+X_tr, X_te, y_tr, y_te = train_test_split(
+    emails, labels, test_size=0.3, random_state=7, stratify=labels)
+
+pipe = Pipeline([(&#x27;tfidf&#x27;, TfidfVectorizer(stop_words=&#x27;english&#x27;)),
+                 (&#x27;clf&#x27;, LogisticRegression(max_iter=1000))])
+pipe.fit(X_tr, y_tr)
+print(len(y_te), round(pipe.score(X_te, y_te), 3))</pre></div><div class="codebox"><div class="cap">练习 2：看混淆矩阵：它把「对了几个」拆成「哪一类错」。</div><pre>from sklearn.metrics import confusion_matrix, classification_report
+
+pred = pipe.predict(X_te)
+print(confusion_matrix(y_te, pred))
+print(classification_report(y_te, pred, zero_division=0))</pre></div><div class="codebox"><div class="cap">练习 3：对比一下：全判「正常」的程序能拿多少分？再把类别权重调平。</div><pre>import numpy as np
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import recall_score
+
+dummy = np.array([&#x27;ham&#x27;] * len(y_te))
+print(&#x27;全判正常:&#x27;, round((dummy == y_te).mean(), 3))
+
+pipe2 = Pipeline([(&#x27;tfidf&#x27;, TfidfVectorizer(stop_words=&#x27;english&#x27;)),
+                  (&#x27;clf&#x27;, LogisticRegression(max_iter=1000, class_weight=&#x27;balanced&#x27;))])
+pipe2.fit(X_tr, y_tr)
+print(&#x27;调平后:&#x27;, round(pipe2.score(X_te, y_te), 3),
+      recall_score(y_te, pipe2.predict(X_te), pos_label=&#x27;spam&#x27;))</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 一个垃圾邮件模型准确率 92%，能不能直接上线？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么测试集必须在训练之前就分出来？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 假正（正常邮件被判垃圾）和假负（垃圾邮件被判正常），哪个代价高？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— 四步分类流程、调参、以及为什么准确率会骗人</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">文本线 · 第 3 阶段 · 能判、能讲 · 第 8 关</div>
+  <h2>主题模型与可解释性：这批评论在说什么</h2>
+  <div class="q">3000 条评论，老板只问一句：客户主要在抱怨什么。你不可能一条条看完，也不甘心只挑自己熟悉的词。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：还是第 3 关那 30 条评论，这次让它自己分组。</div><pre>from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import NMF
+
+reviews = [
+    &#x27;the battery dies after two hours of use&#x27;,
+    &#x27;battery life is great i charge it once a week&#x27;,
+    &#x27;it stopped charging after one month&#x27;,
+    &#x27;charging is slow and the battery drains fast&#x27;,
+    &#x27;the charger broke after two weeks&#x27;,
+    &#x27;battery drains overnight even when the phone is idle&#x27;,
+    &#x27;i have to charge it twice a day now&#x27;,
+    &#x27;fast charging works well and the battery lasts all day&#x27;,
+    &#x27;the battery died completely and will not charge&#x27;,
+    &#x27;battery is fine but the charger gets very hot&#x27;,
+    &#x27;shipping took ten days and the tracking never updated&#x27;,
+    &#x27;the package arrived four days late&#x27;,
+    &#x27;delivery was fast and the box was in perfect condition&#x27;,
+    &#x27;my package says delivered but i never received it&#x27;,
+    &#x27;shipping is slow it took a week to arrive&#x27;,
+    &#x27;the box arrived damaged and the screen was broken&#x27;,
+    &#x27;tracking shows it is still in transit after nine days&#x27;,
+    &#x27;delivered one day early and well packed&#x27;,
+    &#x27;the shipping label was wrong and it went to another city&#x27;,
+    &#x27;two weeks late and nobody told me why&#x27;,
+    &#x27;i returned it and the refund never came&#x27;,
+    &#x27;refund was processed in three days thank you&#x27;,
+    &#x27;support did not answer my email for a week&#x27;,
+    &#x27;i want my money back the refund is late&#x27;,
+    &#x27;customer service called me back and fixed it&#x27;,
+    &#x27;returned the item ten days ago still no refund&#x27;,
+    &#x27;they refunded the money after two phone calls&#x27;,
+    &#x27;support sends the same reply every time useless&#x27;,
+    &#x27;the refund arrived quickly good service&#x27;,
+    &#x27;i am still waiting for the return label&#x27;,
+]
+
+tf = TfidfVectorizer(stop_words=&#x27;english&#x27;)
+T = tf.fit_transform(reviews)
+words = tf.get_feature_names_out()
+
+nmf = NMF(n_components=3, init=&#x27;nndsvda&#x27;, random_state=0).fit(T)
+for k, comp in enumerate(nmf.components_):
+    print(k, [words[i] for i in comp.argsort()[::-1][:5]])</pre></div><div class="codebox"><div class="cap">练习 2：换 LDA 再跑一次，然后用 coherence 判谁的主题更「像个主题」。</div><pre>import numpy as np
+from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.metrics.pairwise import cosine_similarity
+
+def coherence(comp, T, n=6):
+    idx = comp.argsort()[-n:]
+    sim = cosine_similarity(T[:, idx].toarray().T)
+    return float(sim[np.triu_indices(n, 1)].mean())
+
+lda = LatentDirichletAllocation(n_components=3, random_state=0).fit(T)
+print(&#x27;NMF&#x27;, [round(coherence(c, T), 3) for c in nmf.components_])
+print(&#x27;LDA&#x27;, [round(coherence(c, T), 3) for c in lda.components_])</pre></div><div class="codebox"><div class="cap">练习 3：最后一步：拿一条新评论，说出它属于哪个主题、凭什么。</div><pre>q = &#x27;the battery dies after two hours&#x27;
+w = nmf.transform(tf.transform([q]))[0]
+k = int(w.argmax())
+print(&#x27;topic&#x27;, k, &#x27;weight&#x27;, round(float(w[k]), 2))
+print([words[i] for i in nmf.components_[k].argsort()[::-1][:5]])</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. NMF 跑出 3 个主题，怎么判断它靠不靠谱？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 主题 2 的词是 days、took、week、updated、tracking，你会给它起什么名字，业务方拿它干嘛？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 老板问「这条为什么被判成抱怨」，什么回答才算解释？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— LDA / NMF 的数学与 coherence 选主题数的方法</p><div class="lines"><div></div><div></div></div>
+</div><div class="page"><div class="trackhead">C++ 线</div><div style="color:#64748b;margin-bottom:6mm">6 关 · 对应《Learning Modern C++ for Finance》</div><div class="q">把 Python 里「算得太慢」的那一部分，用 C++ 重写——通常快几十倍。</div><div class="label">学完能做的三件事</div><ul><li>在本机编译并运行第一个程序，看懂报错</li><li>写一个 Black-Scholes 定价类，和 Python 版对同一个数</li><li>用并发跑蒙特卡洛，把一亿条路径压进几秒</li></ul><div class="label">适合谁 / 需要什么 / 多久</div><p>想碰生产代码 / 对性能好奇 / 准备量化开发岗<br>零基础可以：前 3 关补 Python；还需要装编译器（第 1 关给命令）<br>6 关 + 3 关起步，约 4 小时</p><div class="label">不包含</div><p>不教 C++ 全部语法、不讲模板元编程、不涉及 Boost</p><div style="margin-top:6mm;color:#2563eb">这条线可以完全独立学：它和另外三条线几乎不重叠。</div></div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 1 阶段 · 能编译 · 第 1 关</div>
+  <h2>从打开终端开始</h2>
+  <div class="q">双击一个文件，它就打开了——但写程序不是双击。你要先学会「在终端里命令电脑做事」，这一步过了，后面才谈得上代码。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：按 Win 键，输入 powershell，回车。出现一个可以打字的窗口，光标在闪，就对了。</div><pre>powershell</pre></div><div class="codebox"><div class="cap">练习 2：确认电脑里有没有 Python。没有就用下面第一行装（需要联网几分钟）。</div><pre>python --version
+# 若提示找不到命令：
+winget install -e --id Python.Python.3.12</pre></div><div class="codebox"><div class="cap">练习 3：新建一个文件 hello.py（记事本另存为，注意后缀是 .py），写一行，然后在终端里运行它。</div><pre>print(&quot;你好&quot;)
+
+# 终端里，先 cd 到文件所在目录，再：
+python hello.py</pre></div><div class="codebox"><div class="cap">练习 4：故意写错一次，看报错长什么样——这比跑对更重要。</div><pre>print(nihao)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么不能双击 .py 文件来运行？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. SyntaxError 和 NameError 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 报错信息那么长，先看哪一行？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 1 阶段 · 能编译 · 第 2 关</div>
+  <h2>变量与运算：让电脑替你算数</h2>
+  <div class="q">你心算 100 块按 5% 涨一年是多少，大概要三秒；电脑要你先告诉它「100 是多少」，然后它一毫秒给你答案，而且永远不错。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先验证一件事：电脑按数学顺序算，不是从左往右。</div><pre>print(2 + 3 * 4)      # 14
+print((2 + 3) * 4)    # 20</pre></div><div class="codebox"><div class="cap">练习 2：用变量算一次复利，改数字再跑一次。</div><pre>x = 100
+x = x * 1.05
+print(x)              # 105.0
+
+x = x * 1.05
+print(x)              # 110.25</pre></div><div class="codebox"><div class="cap">练习 3：把文字和数字拼在一起，做成一句人话。</div><pre>money = 100 * 1.05 ** 20
+print(&quot;20 年后：&quot; + str(round(money, 2)) + &quot; 元&quot;)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `2 + 3 * 4` 为什么不是 20？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `x = x * 1.05` 这一句在干嘛？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `&quot;100&quot;` 和 `100` 有什么区别？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 1 阶段 · 能编译 · 第 3 关</div>
+  <h2>条件与重复：让电脑做判断</h2>
+  <div class="q">「涨了就买、跌了就卖」——这句话电脑听不懂，除非你把它翻成「如果…就…」。同理，连续 20 年复利，你不该手写 20 行。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先用比较得到 True/False，再用 if 决定做什么。</div><pre>r = 0.05
+if r &gt; 0:
+    print(&quot;上涨&quot;)
+else:
+    print(&quot;下跌或持平&quot;)</pre></div><div class="codebox"><div class="cap">练习 2：重复 3 次，看看 range 给的到底是什么。</div><pre>for i in range(3):
+    print(i)</pre></div><div class="codebox"><div class="cap">练习 3：把复利写进循环：想算 50 年，只改一个数字。</div><pre>money = 100
+for year in range(20):
+    money = money * 1.05
+print(money)</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. `range(3)` 会跑几次？分别是几？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `=` 和 `==` 有什么区别？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 为什么 if 下面的代码要缩进？</div><div class="ans"></div></div>
+  
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 1 阶段 · 能编译 · 第 4 关</div>
+  <h2>为什么金融还在用 C++</h2>
+  <div class="q">同一笔期权，同事在笔记本上跑 8 小时，你 4 分钟就出结果——公式一个字都没改。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先让程序跑起来。存成 `main.cpp`，两条命令二选一——`-std=c++20` 和 `-O2` 都不能省。Windows 上装 MSVC（Visual Studio 里勾「使用 C++ 的桌面开发」）或 MSYS2 的 g++ 都行。全书不假设你装了 Boost 或 Eigen，只有第 6 关有一步用到 Eigen，那里也给了纯手写替代。</div><pre>// 存成 main.cpp，然后二选一编译：
+//   MSVC: cl /std:c++20 /EHsc /O2 main.cpp
+//   g++ : g++ -std=c++20 -O2 main.cpp -o main
+// 运行：main.exe 或 ./main
+#include &lt;iostream&gt;
+
+int main() {
+    std::cout &lt;&lt; &quot;hello, finance&quot; &lt;&lt; std::endl;
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 2：把同一段蒙特卡洛用 C++ 写一遍：随机路径算出期末价，超过行权价才算收益。记下这个秒数，一会儿和 Python 版对一下。</div><pre>#include &lt;chrono&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;random&gt;
+
+int main() {
+    const double S0 = 100.0, K = 100.0, r = 0.05, sigma = 0.2, T = 1.0;
+    const int n = 10&#x27;000&#x27;000;                 // 一千万条路径
+
+    std::mt19937_64 rng(42);
+    std::normal_distribution&lt;double&gt; norm(0.0, 1.0);
+
+    const auto t0 = std::chrono::steady_clock::now();
+    double sum = 0.0;
+    for (int i = 0; i &lt; n; ++i) {
+        const double z = norm(rng);
+        const double ST = S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * std::sqrt(T) * z);
+        if (ST &gt; K) sum += ST - K;
+    }
+    const double price = std::exp(-r * T) * sum / n;
+    const double secs = std::chrono::duration&lt;double&gt;(std::chrono::steady_clock::now() - t0).count();
+
+    std::printf(&quot;price = %.4f  (%.2f s)\n&quot;, price, secs);
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 3：别只记「快」，量出「每条路径多少纳秒」，再乘上真实规模。这是本书里最便宜的一课：先知道贵不贵，再决定怎么写。</div><pre>#include &lt;algorithm&gt;
+#include &lt;chrono&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;random&gt;
+
+int main() {
+    const int n = 2&#x27;000&#x27;000;
+    const double S0 = 100.0, K = 100.0, r = 0.05, sigma = 0.2, T = 1.0;
+    const double sT = std::sqrt(T), df = std::exp(-r * T);
+
+    std::mt19937_64 rng(42);
+    std::normal_distribution&lt;double&gt; norm(0.0, 1.0);
+
+    const auto t0 = std::chrono::steady_clock::now();
+    double sum = 0.0;
+    for (int i = 0; i &lt; n; ++i)
+        sum += std::max(S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * sT * norm(rng)) - K, 0.0);
+    const double secs = std::chrono::duration&lt;double&gt;(std::chrono::steady_clock::now() - t0).count();
+
+    const double ns_per_path = secs * 1e9 / n;
+    const double hours = 2e10 * ns_per_path / 1e9 / 3600.0;   // 10 亿条路径 x 20 个标的
+
+    std::printf(&quot;price = %.4f\n&quot;, df * sum / n);
+    std::printf(&quot;%.1f ns/path, %d paths in %.2f s\n&quot;, ns_per_path, n, secs);
+    std::printf(&quot;20 assets, 1e9 paths = %.1f hours\n&quot;, hours);
+    return 0;
+}</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 同样是 1000 万条路径，为什么 C++ 通常快 10–100 倍？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么跑基准一定要开 `-O2`？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. C++ 快，代价是什么？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：查漏 —— C++ 标准演进与工具链的细节，课程只讲了怎么跑起来</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 1 阶段 · 能编译 · 第 5 关</div>
+  <h2>写第一个类：Black-Scholes 定价器</h2>
+  <div class="q">同一个期权，你算 10.4506，同事算出 10.4521；追到最后只是第 6 位小数上的一个常数不同。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先用 struct 把参数和公式放在一起，注意 `price()` 后面的 const——它承诺「算价格不改数据」。正态分布函数用 `std::erf` 一行写完，常数来自 C++20 的 `std::numbers`。</div><pre>#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;numbers&gt;
+
+struct BlackScholes {
+    double S, K, r, sigma, T;
+
+    static double cdf(double x) {
+        return 0.5 * (1.0 + std::erf(x / std::numbers::sqrt2));
+    }
+
+    double price() const {
+        const double sigT = sigma * std::sqrt(T);
+        const double d1 = (std::log(S / K) + (r + 0.5 * sigma * sigma) * T) / sigT;
+        const double d2 = d1 - sigT;
+        return S * cdf(d1) - K * std::exp(-r * T) * cdf(d2);
+    }
+};
+
+int main() {
+    const BlackScholes bs{100.0, 100.0, 0.05, 0.2, 1.0};
+    std::printf(&quot;call = %.4f\n&quot;, bs.price());
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 2：换成 class：字段私有、构造函数校验参数。`sigma &lt;= 0` 这种错误应该在对象出生时就炸掉，而不是算出一个负价格。注意 `price()` 和 `delta()` 都写了 const。</div><pre>#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;numbers&gt;
+#include &lt;stdexcept&gt;
+
+class BlackScholes {
+public:
+    BlackScholes(double spot, double strike, double rate, double vol, double maturity)
+        : S_(spot), K_(strike), r_(rate), sigma_(vol), T_(maturity) {
+        if (S_ &lt;= 0.0 || K_ &lt;= 0.0) throw std::invalid_argument(&quot;spot/strike must be &gt; 0&quot;);
+        if (sigma_ &lt;= 0.0)          throw std::invalid_argument(&quot;vol must be &gt; 0&quot;);
+        if (T_ &lt;= 0.0)              throw std::invalid_argument(&quot;maturity must be &gt; 0&quot;);
+    }
+
+    double price() const {
+        return S_ * cdf(d1()) - K_ * std::exp(-r_ * T_) * cdf(d2());
+    }
+
+    double delta() const { return cdf(d1()); }      // call 的 delta
+
+private:
+    static double cdf(double x) { return 0.5 * (1.0 + std::erf(x / std::numbers::sqrt2)); }
+
+    double d1() const {
+        const double sigT = sigma_ * std::sqrt(T_);
+        return (std::log(S_ / K_) + (r_ + 0.5 * sigma_ * sigma_) * T_) / sigT;
+    }
+    double d2() const { return d1() - sigma_ * std::sqrt(T_); }
+
+    double S_, K_, r_, sigma_, T_;
+};
+
+int main() {
+    const BlackScholes bs(100.0, 100.0, 0.05, 0.2, 1.0);
+    std::printf(&quot;call  = %.4f\n&quot;, bs.price());
+    std::printf(&quot;delta = %.4f\n&quot;, bs.delta());
+
+    try {
+        const BlackScholes bad(100.0, 100.0, 0.05, -0.2, 1.0);   // 波动率不能是负的
+        std::printf(&quot;not reached: %.4f\n&quot;, bad.price());
+    } catch (const std::exception&amp; e) {
+        std::printf(&quot;rejected: %s\n&quot;, e.what());
+    }
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 3：一个能复用的定价器要能一次算一条曲线。加上 Greeks，循环扫一遍波动率——交易台上真的在跑的就是这种东西，只是参数从行情里来。</div><pre>#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;numbers&gt;
+#include &lt;stdexcept&gt;
+
+class BlackScholes {
+public:
+    BlackScholes(double spot, double strike, double rate, double vol, double maturity)
+        : S_(spot), K_(strike), r_(rate), sigma_(vol), T_(maturity) {
+        if (S_ &lt;= 0.0 || K_ &lt;= 0.0) throw std::invalid_argument(&quot;spot/strike must be &gt; 0&quot;);
+        if (sigma_ &lt;= 0.0)          throw std::invalid_argument(&quot;vol must be &gt; 0&quot;);
+        if (T_ &lt;= 0.0)              throw std::invalid_argument(&quot;maturity must be &gt; 0&quot;);
+    }
+
+    double price() const { return S_ * cdf(d1()) - K_ * std::exp(-r_ * T_) * cdf(d2()); }
+    double delta() const { return cdf(d1()); }
+    double gamma() const { return pdf(d1()) / (S_ * sigma_ * std::sqrt(T_)); }
+    double vega()  const { return S_ * std::sqrt(T_) * pdf(d1()); }
+
+private:
+    static double cdf(double x) { return 0.5 * (1.0 + std::erf(x / std::numbers::sqrt2)); }
+    static double pdf(double x) { return std::exp(-0.5 * x * x) / std::sqrt(2.0 * std::numbers::pi); }
+
+    double d1() const {
+        const double sigT = sigma_ * std::sqrt(T_);
+        return (std::log(S_ / K_) + (r_ + 0.5 * sigma_ * sigma_) * T_) / sigT;
+    }
+    double d2() const { return d1() - sigma_ * std::sqrt(T_); }
+
+    double S_, K_, r_, sigma_, T_;
+};
+
+int main() {
+    const double S = 100.0, K = 100.0, r = 0.05, T = 1.0;
+
+    std::printf(&quot;%6s %9s %8s %8s %8s\n&quot;, &quot;vol&quot;, &quot;price&quot;, &quot;delta&quot;, &quot;gamma&quot;, &quot;vega&quot;);
+    for (double vol = 0.10; vol &lt; 0.51; vol += 0.10) {
+        const BlackScholes bs(S, K, r, vol, T);
+        std::printf(&quot;%6.2f %9.4f %8.4f %8.4f %8.2f\n&quot;,
+                    vol, bs.price(), bs.delta(), bs.gamma(), bs.vega());
+    }
+    return 0;
+}</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. struct 和 class 到底差在哪？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 为什么 `price()` 后面要写 const？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 硬编码 3.14159，而不是用 `std::numbers::pi`，问题在哪？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：佐证 —— BS 定价类的完整写法：const、移动语义、RVO</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 2 阶段 · 会组织 · 第 6 关</div>
+  <h2>继承与智能指针：Payoff 体系</h2>
+  <div class="q">40 种期权，40 套收益算法。同事写了一个两百行的分支；你加第 41 种，只新写一个类。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先只做继承。`Payoff` 是基类，收益算法由子类给；`operator()` 加 virtual，通过基类指针调用就会走到子类——不加 virtual 就永远走基类。</div><pre>#include &lt;algorithm&gt;
+#include &lt;cstdio&gt;
+
+class Payoff {
+public:
+    virtual ~Payoff() = default;
+    virtual double operator()(double spot) const = 0;
+};
+
+class CallPayoff : public Payoff {
+public:
+    explicit CallPayoff(double strike) : strike_(strike) {}
+    double operator()(double spot) const override { return std::max(spot - strike_, 0.0); }
+private:
+    double strike_;
+};
+
+class PutPayoff : public Payoff {
+public:
+    explicit PutPayoff(double strike) : strike_(strike) {}
+    double operator()(double spot) const override { return std::max(strike_ - spot, 0.0); }
+private:
+    double strike_;
+};
+
+int main() {
+    const CallPayoff call(100.0);
+    const PutPayoff  put(100.0);
+
+    const Payoff* a = &amp;call;      // 基类指针，指向子类对象
+    const Payoff* b = &amp;put;
+    std::printf(&quot;call at 110 = %5.2f\n&quot;, (*a)(110.0));
+    std::printf(&quot;put  at  90 = %5.2f\n&quot;, (*b)(90.0));
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 2：把收益结构装进组合。用 `unique_ptr` 持有、`make_unique` 创建——没有 new，也没有 delete，离开作用域自动回收。估值时照样当 `Payoff&amp;` 用，虚函数不受影响。</div><pre>#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;memory&gt;
+#include &lt;random&gt;
+#include &lt;vector&gt;
+
+class Payoff {
+public:
+    virtual ~Payoff() = default;
+    virtual double operator()(double spot) const = 0;
+};
+
+class CallPayoff : public Payoff {
+public:
+    explicit CallPayoff(double strike) : strike_(strike) {}
+    double operator()(double spot) const override { return std::max(spot - strike_, 0.0); }
+private:
+    double strike_;
+};
+
+class PutPayoff : public Payoff {
+public:
+    explicit PutPayoff(double strike) : strike_(strike) {}
+    double operator()(double spot) const override { return std::max(strike_ - spot, 0.0); }
+private:
+    double strike_;
+};
+
+int main() {
+    std::vector&lt;std::unique_ptr&lt;Payoff&gt;&gt; book;
+    book.push_back(std::make_unique&lt;CallPayoff&gt;(100.0));
+    book.push_back(std::make_unique&lt;PutPayoff&gt;(90.0));
+
+    std::mt19937_64 rng(7);
+    std::normal_distribution&lt;double&gt; norm(0.0, 1.0);
+    const int n = 200&#x27;000;
+    const double S0 = 100.0, r = 0.05, sigma = 0.2, T = 1.0;
+
+    std::vector&lt;double&gt; sum(book.size(), 0.0);
+    for (int i = 0; i &lt; n; ++i) {
+        const double ST = S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * std::sqrt(T) * norm(rng));
+        for (std::size_t k = 0; k &lt; book.size(); ++k) sum[k] += (*book[k])(ST);
+    }
+
+    const double df = std::exp(-r * T);
+    for (std::size_t k = 0; k &lt; book.size(); ++k)
+        std::printf(&quot;book[%zu] = %7.4f\n&quot;, k, df * sum[k] / n);
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 3：加一个工厂函数：字符串进来，对象出去。返回 `unique_ptr` 意味着所有权移交给调用方；不认识的类型返回空指针，由调用方检查。`std::move` 那行说明所有权被搬走了，原位置变空。</div><pre>#include &lt;algorithm&gt;
+#include &lt;cstdio&gt;
+#include &lt;memory&gt;
+#include &lt;string&gt;
+#include &lt;utility&gt;
+#include &lt;vector&gt;
+
+class Payoff {
+public:
+    virtual ~Payoff() = default;
+    virtual double operator()(double spot) const = 0;
+};
+
+class CallPayoff : public Payoff {
+public:
+    explicit CallPayoff(double strike) : strike_(strike) {}
+    double operator()(double spot) const override { return std::max(spot - strike_, 0.0); }
+private:
+    double strike_;
+};
+
+class PutPayoff : public Payoff {
+public:
+    explicit PutPayoff(double strike) : strike_(strike) {}
+    double operator()(double spot) const override { return std::max(strike_ - spot, 0.0); }
+private:
+    double strike_;
+};
+
+std::unique_ptr&lt;Payoff&gt; make_payoff(const std::string&amp; kind, double strike) {
+    if (kind == &quot;call&quot;) return std::make_unique&lt;CallPayoff&gt;(strike);
+    if (kind == &quot;put&quot;)  return std::make_unique&lt;PutPayoff&gt;(strike);
+    return nullptr;                       // 不认识的类型
+}
+
+int main() {
+    std::vector&lt;std::unique_ptr&lt;Payoff&gt;&gt; book;
+    book.push_back(make_payoff(&quot;call&quot;, 100.0));
+    book.push_back(make_payoff(&quot;put&quot;, 90.0));
+
+    auto unknown = make_payoff(&quot;straddle&quot;, 100.0);
+    if (!unknown) std::printf(&quot;rejected: unknown payoff\n&quot;);
+
+    std::unique_ptr&lt;Payoff&gt; moved = std::move(book[0]);   // 移交所有权，不是拷贝
+    if (!book[0]) std::printf(&quot;book[0] is now empty\n&quot;);
+
+    std::printf(&quot;moved(105)  = %.2f\n&quot;, (*moved)(105.0));
+    std::printf(&quot;book[1](85) = %.2f\n&quot;, (*book[1])(85.0));
+    return 0;
+}</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 基类析构函数不写 virtual 会怎样？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 明明能 new/delete，为什么用 unique_ptr？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `override` 只是装饰吗？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— 虚函数派发、所有权模型、Rule of Five 的完整讨论</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 2 阶段 · 会组织 · 第 7 关</div>
+  <h2>STL 与算法：把数据装进容器</h2>
+  <div class="q">一张 12 万行的成交表，老板只问三个问题：谁最亏、每个台子赚多少、大额亏损是谁。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：一批成交先装进 `vector`，用 `std::sort` 加一个 lambda 按盈亏排序。lambda 就是「就地写一个比较规则」，不用为它单独起个函数名。</div><pre>#include &lt;algorithm&gt;
+#include &lt;cstdio&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+struct Trade {
+    std::string desk;
+    double pnl;
+};
+
+int main() {
+    std::vector&lt;Trade&gt; trades = {              // 要排序，就不能是 const
+        {&quot;rates&quot;,  -120.5},  {&quot;fx&quot;,     64.0},  {&quot;equity&quot;, -310.25},
+        {&quot;rates&quot;,    88.0},  {&quot;credit&quot;,-12.5},  {&quot;equity&quot;,  140.0},
+    };
+
+    std::sort(trades.begin(), trades.end(),
+              [](const Trade&amp; a, const Trade&amp; b) { return a.pnl &gt; b.pnl; });
+
+    std::printf(&quot;worst three:\n&quot;);
+    for (std::size_t i = trades.size() - 3; i &lt; trades.size(); ++i)
+        std::printf(&quot;  %-8s %8.2f\n&quot;, trades[i].desk.c_str(), trades[i].pnl);
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 2：分组汇总不该手写两重循环：`map[键] += 值` 一行搞定（这一步不排序，容器可以是 const）。C++20 的 `ranges::sort` 还能把「按哪个字段排」写成最后一个参数——投影，不用再手写比较 lambda。</div><pre>#include &lt;algorithm&gt;
+#include &lt;cstdio&gt;
+#include &lt;functional&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+struct Trade  { std::string desk; double pnl; };
+struct DeskPnl{ std::string desk; double pnl; };
+
+int main() {
+    const std::vector&lt;Trade&gt; trades = {
+        {&quot;rates&quot;,  -120.5},  {&quot;fx&quot;,     64.0},  {&quot;equity&quot;, -310.25},
+        {&quot;rates&quot;,    88.0},  {&quot;credit&quot;,-12.5},  {&quot;equity&quot;,  140.0},
+    };
+
+    std::map&lt;std::string, double&gt; by_desk;
+    for (const auto&amp; t : trades) by_desk[t.desk] += t.pnl;   // 一行完成分组累加
+
+    std::vector&lt;DeskPnl&gt; rows;
+    for (const auto&amp; [desk, pnl] : by_desk) rows.push_back({desk, pnl});
+
+    std::ranges::sort(rows, std::greater&lt;&gt;{}, &amp;DeskPnl::pnl);   // 最后一个参数是「投影」
+
+    for (const auto&amp; r : rows)
+        std::printf(&quot;%-8s %8.2f\n&quot;, r.desk.c_str(), r.pnl);
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 3：最后一步：把条件和变形串成管道。`filter | transform` 是惰性的——数据不复制，遍历到哪算到哪，所以它比「先建一个临时 vector」便宜得多。</div><pre>#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;ranges&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+struct Trade {
+    std::string desk;
+    double pnl;
+};
+
+int main() {
+    const std::vector&lt;Trade&gt; trades = {
+        {&quot;rates&quot;,  -120.5},  {&quot;fx&quot;,     64.0},  {&quot;equity&quot;, -310.25},
+        {&quot;rates&quot;,    88.0},  {&quot;credit&quot;,-12.5},  {&quot;equity&quot;,  140.0},
+    };
+    const double limit = 50.0;
+
+    auto losers = trades | std::views::filter([limit](const Trade&amp; t) { return t.pnl &lt; -limit; });
+
+    std::printf(&quot;big losers:\n&quot;);
+    for (const auto&amp; t : losers)
+        std::printf(&quot;  %-8s %8.2f\n&quot;, t.desk.c_str(), t.pnl);
+
+    double total = 0.0;
+    for (double v : losers | std::views::transform([](const Trade&amp; t) { return std::abs(t.pnl); }))
+        total += v;
+
+    std::printf(&quot;abs total = %.2f\n&quot;, total);
+    return 0;
+}</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 什么时候用 map，什么时候用 vector？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. `[&amp;]` 和 `[=]` 差在哪？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `views::filter` 会复制一份数据吗？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：查漏 —— 容器的复杂度与选型（vector / map / unordered_map）</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 3 阶段 · 会计算 · 第 8 关</div>
+  <h2>随机数与并发：蒙特卡洛障碍期权</h2>
+  <div class="q">你算出一个价格 8.9 元，老板只问一句「误差多少」；答不出来，这个数就不能拿出去报价。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先算一条障碍期权：每天走一步 GBM，中途跌破障碍价就直接作废——break 掉，后面的步不用再抽。顺势把均值、平方和、敲出次数都记下来，误差下面要用。</div><pre>#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;random&gt;
+
+int main() {
+    const int    n_paths = 1&#x27;000&#x27;000;
+    const int    n_steps = 252;
+    const double S0 = 100.0, K = 100.0, B = 90.0, r = 0.05, sigma = 0.2, T = 1.0;
+    const double dt = T / n_steps;
+    const double drift = (r - 0.5 * sigma * sigma) * dt;
+    const double diff  = sigma * std::sqrt(dt);
+
+    std::mt19937_64 rng(7);
+    std::normal_distribution&lt;double&gt; norm(0.0, 1.0);
+
+    double sum = 0.0, sum_sq = 0.0;
+    int knocked = 0;
+    for (int i = 0; i &lt; n_paths; ++i) {
+        double s = S0;
+        bool out = false;
+        for (int t = 0; t &lt; n_steps; ++t) {
+            s *= std::exp(drift + diff * norm(rng));
+            if (s &lt;= B) { out = true; break; }     // 敲出
+        }
+        const double payoff = out ? 0.0 : std::max(s - K, 0.0);
+        sum    += payoff;
+        sum_sq += payoff * payoff;
+        if (out) ++knocked;
+    }
+
+    const double df   = std::exp(-r * T);
+    const double mean = sum / n_paths;
+    const double var  = sum_sq / n_paths - mean * mean;
+    const double se   = df * std::sqrt(var / n_paths);
+
+    std::printf(&quot;price = %.4f  +/-%.4f (1 se)\n&quot;, df * mean, se);
+    std::printf(&quot;knock-out rate = %.1f%%\n&quot;, 100.0 * knocked / n_paths);
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 2：把路径拆成 8 块，每块一个不同 seed，用 `std::async` 并行跑。Linux / MinGW 编译要加 `-pthread`。`f.get()` 既取回结果，也负责把异常重新抛出来。</div><pre>#include &lt;chrono&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;future&gt;
+#include &lt;random&gt;
+#include &lt;vector&gt;
+
+constexpr double S0 = 100.0, K = 100.0, B = 90.0, r = 0.05, sigma = 0.2, T = 1.0;
+
+// 只算「未折现的 payoff 之和」；seed 从外面传，保证每块独立、可复现
+double mc_sum(int n_paths, int n_steps, unsigned seed) {
+    const double dt    = T / n_steps;
+    const double drift = (r - 0.5 * sigma * sigma) * dt;
+    const double diff  = sigma * std::sqrt(dt);
+
+    std::mt19937_64 rng(seed);
+    std::normal_distribution&lt;double&gt; norm(0.0, 1.0);
+
+    double sum = 0.0;
+    for (int i = 0; i &lt; n_paths; ++i) {
+        double s = S0;
+        bool out = false;
+        for (int t = 0; t &lt; n_steps; ++t) {
+            s *= std::exp(drift + diff * norm(rng));
+            if (s &lt;= B) { out = true; break; }
+        }
+        if (!out &amp;&amp; s &gt; K) sum += s - K;
+    }
+    return sum;
+}
+
+int main() {
+    const int n_steps   = 252;
+    const int n_threads = 8;
+    const int per       = 200&#x27;000;                 // 每块 20 万条
+    const double df     = std::exp(-r * T);
+
+    const auto t0 = std::chrono::steady_clock::now();
+    std::vector&lt;std::future&lt;double&gt;&gt; jobs;
+    for (int k = 0; k &lt; n_threads; ++k)
+        jobs.push_back(std::async(std::launch::async, mc_sum, per, n_steps, 2024u + k));
+
+    double sum = 0.0;
+    for (auto&amp; f : jobs) sum += f.get();
+    const double secs = std::chrono::duration&lt;double&gt;(std::chrono::steady_clock::now() - t0).count();
+
+    const int total = per * n_threads;
+    std::printf(&quot;price = %.4f\n&quot;, df * sum / total);
+    std::printf(&quot;%.2f s for %d paths on %d threads (%.1f M paths/s)\n&quot;,
+                secs, total, n_threads, total / secs / 1e6);
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 3：补上老板要的那个数：标准误。监测改成每周一次（52 步）省时间，同时把样本量放大十倍——误差只除以 3.16，不是 10。注意价格会比上一步高一点：每周只看一次，敲出的路径变少，这是离散监测的真实差异，不是写错了。</div><pre>#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;random&gt;
+
+int main() {
+    const int    n_steps = 52;                     // 每周监测一次
+    const double S0 = 100.0, K = 100.0, B = 90.0, r = 0.05, sigma = 0.2, T = 1.0;
+    const double dt    = T / n_steps;
+    const double drift = (r - 0.5 * sigma * sigma) * dt;
+    const double diff  = sigma * std::sqrt(dt);
+    const double df    = std::exp(-r * T);
+
+    const int sizes[] = {20000, 200000, 2000000};
+    std::printf(&quot;%9s %8s %9s %18s\n&quot;, &quot;paths&quot;, &quot;price&quot;, &quot;1 se&quot;, &quot;95%% CI&quot;);
+
+    for (int n : sizes) {
+        std::mt19937_64 rng(11);
+        std::normal_distribution&lt;double&gt; norm(0.0, 1.0);
+        double sum = 0.0, sum_sq = 0.0;
+
+        for (int i = 0; i &lt; n; ++i) {
+            double s = S0;
+            bool out = false;
+            for (int t = 0; t &lt; n_steps; ++t) {
+                s *= std::exp(drift + diff * norm(rng));
+                if (s &lt;= B) { out = true; break; }
+            }
+            const double p = out ? 0.0 : std::max(s - K, 0.0);
+            sum    += p;
+            sum_sq += p * p;
+        }
+
+        const double mean = sum / n;
+        const double se   = df * std::sqrt((sum_sq / n - mean * mean) / n);
+        const double px   = df * mean;
+        std::printf(&quot;%9d %8.4f %9.4f  [%.3f, %.3f]\n&quot;,
+                    n, px, se, px - 1.96 * se, px + 1.96 * se);
+    }
+    return 0;
+}</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么不能让 8 个线程共用一个随机引擎？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 8 线程能把价格误差降到 1/8 吗？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. `std::async` 不写 `std::launch::async` 有什么风险？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：推导 —— 随机数引擎、分布与并发的正确用法，以及 pthread 链接细节</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page">
+  <div class="kicker">C++ 线 · 第 3 阶段 · 会计算 · 第 9 关</div>
+  <h2>线性代数与 Eigen</h2>
+  <div class="q">10 个资产的相关性，排成 100 个格子；你手算完，发现有两个格子死活对不上。</div>
+  <div class="label">我的问题（学之前先写一句）</div>
+  <div class="lines"><div></div><div></div></div>
+  <div class="label">我学到的方法 / 结论</div>
+  <div class="lines"><div></div><div></div><div></div></div>
+  <div class="codebox"><div class="cap">练习 1：先不装任何库：手写 2×2 矩阵乘和 Cholesky，再用 L·Lᵀ 验算回去。Cholesky 每一步只有开根号和除法，写两遍就会背了。注意验算那步第二项是 `L[j][k]`——这里写反是新手最常见的错。</div><pre>#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+
+int main() {
+    const double A[2][2] = {{4.0, 2.0}, {2.0, 3.0}};
+
+    // 1. 矩阵乘 C = A * A
+    double C[2][2] = {};
+    for (int i = 0; i &lt; 2; ++i)
+        for (int j = 0; j &lt; 2; ++j)
+            for (int k = 0; k &lt; 2; ++k)
+                C[i][j] += A[i][k] * A[k][j];
+    std::printf(&quot;A*A = [%g %g; %g %g]\n&quot;, C[0][0], C[0][1], C[1][0], C[1][1]);
+
+    // 2. Cholesky 分解：A = L * L^T，L 是下三角
+    double L[2][2] = {};
+    L[0][0] = std::sqrt(A[0][0]);
+    L[1][0] = A[1][0] / L[0][0];
+    L[1][1] = std::sqrt(A[1][1] - L[1][0] * L[1][0]);
+    std::printf(&quot;L   = [%g 0; %g %g]\n&quot;, L[0][0], L[1][0], L[1][1]);
+
+    // 3. 验算 L * L^T 是否回到 A
+    double D[2][2] = {};
+    for (int i = 0; i &lt; 2; ++i)
+        for (int j = 0; j &lt; 2; ++j)
+            for (int k = 0; k &lt; 2; ++k)
+                D[i][j] += L[i][k] * L[j][k];
+    std::printf(&quot;max |L*L^T - A| = %g\n&quot;,
+                std::fabs(D[0][0] - A[0][0]) + std::fabs(D[1][1] - A[1][1]));
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 2：同一件事交给 Eigen。Eigen 是外部依赖（头文件库，下载解压即可，不用编译），用 `-I` 把头文件目录指过去。没装就跳过这一步，第 1、3 步是纯标准库，一样能跑。</div><pre>// 需先装 Eigen 头文件（外部依赖，不用编译，只要解压）：
+//   g++ -std=c++20 -I /path/to/eigen main.cpp -O2
+#include &lt;Eigen/Dense&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    Eigen::MatrixXd A(2, 2);
+    A &lt;&lt; 4.0, 2.0,
+         2.0, 3.0;
+
+    Eigen::VectorXd x(2);
+    x &lt;&lt; 1.0, 2.0;
+
+    std::cout &lt;&lt; &quot;A * x =\n&quot; &lt;&lt; A * x &lt;&lt; std::endl;
+
+    Eigen::LLT&lt;Eigen::MatrixXd&gt; llt(A);
+    if (llt.info() != Eigen::Success) {
+        std::cout &lt;&lt; &quot;A is not positive definite&quot; &lt;&lt; std::endl;
+    } else {
+        Eigen::MatrixXd L = llt.matrixL();
+        std::cout &lt;&lt; &quot;L =\n&quot; &lt;&lt; L &lt;&lt; std::endl;
+        std::cout &lt;&lt; &quot;|L*L^T - A| = &quot; &lt;&lt; (L * L.transpose() - A).norm() &lt;&lt; std::endl;
+    }
+    return 0;
+}</pre></div><div class="codebox"><div class="cap">练习 3：回到业务：从收益率算协方差矩阵，再算 beta。beta 就是「与市场的协方差 ÷ 市场的方差」——一元回归不需要求逆；多因子才需要 (XᵀX)⁻¹Xᵀy，那时候直接交给 Eigen 的 `ldlt().solve()`。</div><pre>#include &lt;array&gt;
+#include &lt;cstdio&gt;
+
+int main() {
+    constexpr int n = 6, k = 3;      // 6 天收益率，3 个品种：0=市场 1=A 2=B
+    const std::array&lt;double, k * n&gt; ret = {
+         1.0, -2.0,  3.0,  0.0,  1.5, -0.5,   // 市场（单位 %）
+         2.0, -1.0,  4.0,  1.0,  2.0,  1.0,   // A
+        -1.0, -4.0,  2.0, -2.0, -1.0, -2.0,   // B
+    };
+
+    std::array&lt;double, k&gt; mean{};
+    for (int i = 0; i &lt; k; ++i) {
+        for (int t = 0; t &lt; n; ++t) mean[i] += ret[i * n + t];
+        mean[i] /= n;
+    }
+
+    std::array&lt;std::array&lt;double, k&gt;, k&gt; cov{};
+    for (int i = 0; i &lt; k; ++i)
+        for (int j = 0; j &lt; k; ++j) {
+            double s = 0.0;
+            for (int t = 0; t &lt; n; ++t)
+                s += (ret[i * n + t] - mean[i]) * (ret[j * n + t] - mean[j]);
+            cov[i][j] = s / (n - 1);      // 样本协方差
+        }
+
+    std::printf(&quot;cov matrix:\n&quot;);
+    for (int i = 0; i &lt; k; ++i)
+        std::printf(&quot;  %7.3f %7.3f %7.3f\n&quot;, cov[i][0], cov[i][1], cov[i][2]);
+
+    for (int i = 1; i &lt; k; ++i)
+        std::printf(&quot;beta[%d] = %.3f\n&quot;, i, cov[i][0] / cov[0][0]);
+    return 0;
+}</pre></div>
+  <div class="label">我的结果（跑出来的数字，和预期差多少）</div>
+  <div class="lines"><div></div></div>
+  <div class="label">自测</div>
+  <div class="quiz"><div class="qq">1. 为什么用 Cholesky 而不是直接求逆？</div><div class="ans"></div></div><div class="quiz"><div class="qq">2. 协方差矩阵的对角线是什么？</div><div class="ans"></div></div><div class="quiz"><div class="qq">3. 一元回归的 beta 和协方差什么关系？</div><div class="ans"></div></div>
+  <div class="label">回书指引</div><p>目的：拓展 —— Eigen 的表达式模板、Cholesky 与回归实现</p><div class="lines"><div></div><div></div></div>
+</div>
+<div class="page anspage"><h2>答案</h2><h3>LLM 线 · 第 1 关 · 从打开终端开始</h3><p>1. 双击只是打开编辑器；要让它执行，得用解释器运行（python 文件名）。终端就是你和解释器之间的入口。</p><p>2. SyntaxError = 语法写错了（少括号、少引号），程序根本没开始跑；NameError = 语法没问题，但你用了一个没定义的名字。</p><p>3. 先看最后一行（错误类型和原因），再往上找第一个出现你自己文件名的行号。</p><h3>LLM 线 · 第 2 关 · 变量与运算：让电脑替你算数</h3><p>1. 乘除先于加减，等价于 2 + 12 = 14。想先加就写括号。</p><p>2. 先算右边（旧 x 乘 1.05），再把结果放回 x。变量可以被覆盖，旧值就没了。</p><p>3. 前者是文字（不能做数学），后者是数字。混用会报 TypeError。</p><h3>LLM 线 · 第 3 关 · 条件与重复：让电脑做判断</h3><p>1. 3 次，i 分别是 0、1、2。要 1 到 3 得写 range(1, 4)。</p><p>2. `=` 是把右边装进左边；`==` 是问「两边相等吗」，返回 True/False。</p><p>3. Python 用缩进表示「哪些行属于这个 if」。不缩进就跑到 if 外面去了。</p><h3>LLM 线 · 第 4 关 · Python 只学够用的</h3><p>1. 前者取不到返回 None，不中断程序；后者直接抛 KeyError。解析外部返回的数据时用 get 更安全。</p><p>2. `resp[0][&quot;content&quot;]`——先按序号取元素，再按 key 取值。</p><p>3. 换模型、换字段名时只改一处；出错也只有一个地方要查。</p><h3>LLM 线 · 第 5 关 · 调第一个 API</h3><p>1. 代码会被复制、上传、截图。key 泄露后别人可以用你的额度，且很难追溯。</p><p>2. system 是给模型的长期规矩（角色、格式、语气），user 是每次的具体问题。换问题不用改 system。</p><p>3. choices 是候选列表（默认 1 个），[0] 取第一个，message 是回答对象，content 是文本。</p><h3>LLM 线 · 第 6 关 · 数一数 token</h3><p>1. 中文一个汉字常被切成 1–2 个 token，同样信息量下 token 数更多。</p><p>2. 输入 + 输出总共不超过 128k token；超了会被截断或直接报错。</p><p>3. 总 token 数 × 单价。先算钱，再决定要不要跑、要不要先抽样。</p><h3>LLM 线 · 第 7 关 · 把文本变成可检索的向量</h3><p>1. 余弦只看方向，不受文本长短影响；长文档和短句也能公平比较。</p><p>2. 同义不同词、跨语言、缩写和全称——它只认字面。</p><p>3. 切块、检索、拼提示。整篇文档太长塞不进上下文，切成小段才能只把相关的几段放进去。</p><h3>LLM 线 · 第 8 关 · 让它稳定输出 JSON</h3><p>1. 它保证「是合法 JSON」，不保证「字段齐全、类型对」；模型仍可能漏字段或给字符串 &quot;null&quot;。</p><p>2. 给 1–2 个完整示例（few-shot）、把字段类型写死、把长文本拆短、对失败样本单独改提示。</p><p>3. 没有基准就只能凭感觉说「效果不错」，出了问题也说不清是哪一类。</p><h3>LLM 线 · 第 9 关 · 推理为什么慢</h3><p>1. 是等第一个字慢，还是字一个一个字出得慢。前者是 prefill，后者是 decode。</p><p>2. 每一步只算一个 token，矩阵太小，算力闲着，瓶颈在显存带宽。</p><p>3. 省掉重复计算历史 token 的功夫；代价是显存，且随序列长度和并发数线性增长。</p><h3>LLM 线 · 第 10 关 · 用纸笔算清显存</h3><p>1. 每个参数从 2 字节压到 0.5 字节（4 位），显存降为 1/4，代价是少量精度损失。</p><p>2. KV cache 随序列长度线性增长；聊到 32k 时，光是缓存就能超过模型权重。</p><p>3. 降 KV cache：更短的上下文、更少的并发、GQA 类结构、或把一部分层放 CPU。</p><h3>LLM 线 · 第 11 关 · 本地跑起来并压测</h3><p>1. 8GB 显存放不下 8 份 KV cache，会退化成串行或爆显存；并发要按显存算，不是越大越好。</p><p>2. 单机试用、Windows、图省事用 Ollama；生产要吞吐、要批处理调度用 vLLM（Linux）。</p><p>3. 能跑只看单次；能用要看并发下的吞吐、超时、显存稳定性和降级策略。</p><h3>量化线 · 第 1 关 · 从打开终端开始</h3><p>1. 双击只是打开编辑器；要让它执行，得用解释器运行（python 文件名）。终端就是你和解释器之间的入口。</p><p>2. SyntaxError = 语法写错了（少括号、少引号），程序根本没开始跑；NameError = 语法没问题，但你用了一个没定义的名字。</p><p>3. 先看最后一行（错误类型和原因），再往上找第一个出现你自己文件名的行号。</p><h3>量化线 · 第 2 关 · 变量与运算：让电脑替你算数</h3><p>1. 乘除先于加减，等价于 2 + 12 = 14。想先加就写括号。</p><p>2. 先算右边（旧 x 乘 1.05），再把结果放回 x。变量可以被覆盖，旧值就没了。</p><p>3. 前者是文字（不能做数学），后者是数字。混用会报 TypeError。</p><h3>量化线 · 第 3 关 · 条件与重复：让电脑做判断</h3><p>1. 3 次，i 分别是 0、1、2。要 1 到 3 得写 range(1, 4)。</p><p>2. `=` 是把右边装进左边；`==` 是问「两边相等吗」，返回 True/False。</p><p>3. Python 用缩进表示「哪些行属于这个 if」。不缩进就跑到 if 外面去了。</p><h3>量化线 · 第 4 关 · 让电脑替你算钱</h3><p>1. 代表「本金 + 5% 的利息」。年化 8% 就改成 1.08。</p><p>2. 那是单利（每年只对本金计息），结果是 20 万；复利把利息也拿去生息，是 26.5 万，差 6.5 万。</p><p>3. 乘 `1 + 0.05/12`，并且循环 240 次（20 × 12）。</p><h3>量化线 · 第 5 关 · 把一年的行情装进表格</h3><p>1. 第一天没有前一天可比。算指标时删掉（dropna），但要先算完再删，否则会少一天。</p><p>2. Month End，按月分组并取月末。想按周就写 `&quot;W&quot;`。</p><p>3. 会算错——它按行顺序相减。读入后先 `df.sort_index()`。</p><h3>量化线 · 第 6 关 · 第一张图：看见波动</h3><p>1. 一年里大多数时间在 ±20% 内晃；遇到坏年份跌 30% 以上很正常。</p><p>2. 要涨 100%。这就是为什么回撤比收益更影响你能不能坚持。</p><p>3. 方差可加、标准差不可加。日方差乘 252 再开根，才是年化波动。</p><h3>量化线 · 第 7 关 · 平均数会骗人</h3><p>1. 每承担 1 单位波动（约 1 个年化标准差），赚到 1 单位超额收益。</p><p>2. 半年约 125 个样本，噪声极大；牛市中几乎任何策略夏普都好看。</p><p>3. 看回撤、看换手率（成本）、看收益是否集中在少数几天。</p><h3>量化线 · 第 8 关 · 用历史赌明天</h3><p>1. 会把未来数据混进训练集，等于用明天的报纸预测今天，指标全是假的。</p><p>2. 模型没有预测能力。金融里这是常态，不代表你做错了。</p><p>3. 先减特征、加正则，而不是换更复杂的模型。</p><h3>量化线 · 第 9 关 · 第一次回测</h3><p>1. 今天的收盘价出来时，今天已经没法交易了。信号只能用于明天。</p><p>2. 约 0.1% × 2 × 252 ≈ 50 个百分点——足以让任何高频策略归零。</p><p>3. 策略本身可能有微弱优势，但绝大部分收益是换手制造出来的幻觉。</p><h3>量化线 · 第 10 关 · 什么叫「公平的价格」</h3><p>1. 买入期权、卖空 delta 股、把差额存银行；到期无论涨跌都锁定无风险利润。</p><p>2. 因为复制组合已经锁死了现金流；你的看法影响的是期望收益，不是无套利价格。</p><p>3. 模型假设（连续对冲、无摩擦、正态）不成立；波动率本身也在交易。</p><h3>量化线 · 第 11 关 · 用随机模拟给期权定价</h3><p>1. 这是伊藤引理的修正项：对数收益的期望是 r − σ²/2，直接用 r 会系统性偏高。</p><p>2. 约为标准差 / √10000 = 1%。想要 0.1% 的精度，要 100 万条。</p><p>3. 路径依赖（障碍、雪球）、多资产、美式提前行权——没有闭式解的时候。</p><h3>量化线 · 第 12 关 · 把交易变成一场游戏</h3><p>1. 它奖励的是预测正确，不是赚钱；预测对但仓位错，照样亏。</p><p>2. 因为能否加仓取决于现在拿了多少；不给持仓，智能体会在满仓时继续买入。</p><p>3. 把目标从「赚最多」改成「赚得稳」，等价于最大化风险调整后收益。</p><h3>量化线 · 第 13 关 · 让智能体学对冲</h3><p>1. 没有标准答案——最优调整依赖未来路径；RL 通过试错和奖励来学，不需要标签。</p><p>2. 样本高度相关，网络会遗忘早期经验、训练不稳定。</p><p>3. 换一段没参与训练的行情测试，并与固定策略比较；还要跑多个随机种子看稳定性。</p><h3>文本线 · 第 1 关 · 从打开终端开始</h3><p>1. 双击只是打开编辑器；要让它执行，得用解释器运行（python 文件名）。终端就是你和解释器之间的入口。</p><p>2. SyntaxError = 语法写错了（少括号、少引号），程序根本没开始跑；NameError = 语法没问题，但你用了一个没定义的名字。</p><p>3. 先看最后一行（错误类型和原因），再往上找第一个出现你自己文件名的行号。</p><h3>文本线 · 第 2 关 · 变量与运算：让电脑替你算数</h3><p>1. 乘除先于加减，等价于 2 + 12 = 14。想先加就写括号。</p><p>2. 先算右边（旧 x 乘 1.05），再把结果放回 x。变量可以被覆盖，旧值就没了。</p><p>3. 前者是文字（不能做数学），后者是数字。混用会报 TypeError。</p><h3>文本线 · 第 3 关 · 条件与重复：让电脑做判断</h3><p>1. 3 次，i 分别是 0、1、2。要 1 到 3 得写 range(1, 4)。</p><p>2. `=` 是把右边装进左边；`==` 是问「两边相等吗」，返回 True/False。</p><p>3. Python 用缩进表示「哪些行属于这个 if」。不缩进就跑到 if 外面去了。</p><h3>文本线 · 第 4 关 · 一堆文本，先看清有什么</h3><p>1. 先别删，先数清。空值删掉会让占比失真；重复可能是同一个人反复投诉，那本身就是信息。记下数量，再决定怎么处理。</p><p>2. 有极端长句或条数少的时候。这条 34 字就把均值往上拽；分布偏斜、样本又小，中位数才代表「典型的一条」。</p><p>3. 「天了」跨了词边界，是两字切片切出来的假词。所以这种看法只能定方向，真要统计词频得先正经分词。</p><h3>文本线 · 第 5 关 · 清洗与分词：把句子切成词</h3><p>1. 会。「等了 10 天」「4 星」里的数字是抱怨强度和评分。更稳的做法是把数字换成 &lt;num&gt; 占位符，或者干脆保留。</p><p>2. 情感直接反转：&#x27;not good&#x27; 变成 &#x27;good&#x27;。否定词必须留在停用词表外面，或者单独处理。</p><p>3. arrived 会变成 arriv，这不是一个词；charge 和 charging 还可能被砍成两半。要么查词典/词性，要么用 spaCy。</p><h3>文本线 · 第 6 关 · 词袋与 TF-IDF：让机器能比较两段话</h3><p>1. 不能。词袋只数次数，顺序被丢掉了。要顺序就得用 n-gram（两词短语）或序列模型，代价是维度暴涨。</p><p>2. IDF 接近 0，权重被压到几乎没用。这类词应该进停用词表，不然它们会淹没真正有区分度的词。</p><p>3. 只能说用词高度重合。「不推荐」和「推荐」也能到 0.9，否定词、反义词它看不出来。</p><h3>文本线 · 第 7 关 · 文本分类：把邮件分成两类</h3><p>1. 不能。先看混淆矩阵和召回率。92% 可能是靠多数类撑起来的，漏掉的垃圾邮件也许有一半，还得看假正会不会拦掉正常邮件。</p><p>2. 先看测试集再调参数，等于提前看了答案；报出来的分数会虚高，上线就掉。</p><p>3. 看业务。正常邮件被拦可能丢客户，通常更贵；所以这两类错误要分开数，而不是合并成一个准确率。</p><h3>文本线 · 第 8 关 · 主题模型与可解释性：这批评论在说什么</h3><p>1. 先人眼看每个主题前 5–8 个词是否在讲同一件事，再算 coherence 和别的模型或主题数比。只看重建误差不够。</p><p>2. 物流时效。可以按月统计各主题的占比，看投诉是不是集中在配送，而不是笼统地说「体验不好」。</p><p>3. 给出词级证据：因为出现 refund、late、waiting，而且这些词在这类文本里权重最高。只答「模型算出来的」不算。</p><h3>C++ 线 · 第 1 关 · 从打开终端开始</h3><p>1. 双击只是打开编辑器；要让它执行，得用解释器运行（python 文件名）。终端就是你和解释器之间的入口。</p><p>2. SyntaxError = 语法写错了（少括号、少引号），程序根本没开始跑；NameError = 语法没问题，但你用了一个没定义的名字。</p><p>3. 先看最后一行（错误类型和原因），再往上找第一个出现你自己文件名的行号。</p><h3>C++ 线 · 第 2 关 · 变量与运算：让电脑替你算数</h3><p>1. 乘除先于加减，等价于 2 + 12 = 14。想先加就写括号。</p><p>2. 先算右边（旧 x 乘 1.05），再把结果放回 x。变量可以被覆盖，旧值就没了。</p><p>3. 前者是文字（不能做数学），后者是数字。混用会报 TypeError。</p><h3>C++ 线 · 第 3 关 · 条件与重复：让电脑做判断</h3><p>1. 3 次，i 分别是 0、1、2。要 1 到 3 得写 range(1, 4)。</p><p>2. `=` 是把右边装进左边；`==` 是问「两边相等吗」，返回 True/False。</p><p>3. Python 用缩进表示「哪些行属于这个 if」。不缩进就跑到 if 外面去了。</p><h3>C++ 线 · 第 4 关 · 为什么金融还在用 C++</h3><p>1. 先编译成机器码，循环里没有解释器和包装对象；随机数、乘法、指数都在寄存器里直接算，编译器还能做向量化和内联。</p><p>2. 不开优化时循环不向量化、函数不内联，慢几倍到十几倍。拿 Debug 版比速度，比出来的结论是假的。</p><p>3. 编译要等、内存要自己管、越界和空指针不报错（未定义行为）；同一份代码换个编译器或平台可能要小改。</p><h3>C++ 线 · 第 5 关 · 写第一个类：Black-Scholes 定价器</h3><p>1. 默认访问权限：struct 是 public，class 是 private。其余完全一样，选哪个是风格问题。</p><p>2. 承诺不改成员，这样才能在 const 对象或 const 引用上调用；漏写会让 const 对象连价格都算不出来。</p><p>3. 精度被截断，而且没有类型、没有命名空间。宏更糟，那是文本替换；`std::numbers` 是 C++20 的 constexpr 常量。</p><h3>C++ 线 · 第 6 关 · 继承与智能指针：Payoff 体系</h3><p>1. 通过基类指针 delete 子类对象是未定义行为；通常子类析构不执行，子类申请的资源泄漏。</p><p>2. 提前 return 或抛异常都会漏 delete；unique_ptr 析构时自动释放，而且不能拷贝，不会出现两个指针共有一个对象、delete 两次。运行时开销为零。</p><p>3. 不是。它让编译器检查签名确实覆盖了基类虚函数；漏写 const、参数类型不对会当场报错，而不是悄悄变成一个新函数。</p><h3>C++ 线 · 第 7 关 · STL 与算法：把数据装进容器</h3><p>1. 要按键查、要自动有序 → map；按下标、要连续内存、要遍历快 → vector。数值计算先想 vector。</p><p>2. 引用捕获（改的是外面那个变量）和值捕获（拿到副本）。累加结果用 [&amp;]；跨线程或长生命周期上别用 [&amp;]，会悬垂。</p><p>3. 不会。它是惰性视图，遍历时才调用谓词；所以别让它比底层容器活得久，容器一改它就悬空。</p><h3>C++ 线 · 第 8 关 · 随机数与并发：蒙特卡洛障碍期权</h3><p>1. 引擎内部状态被同时改写是数据竞争（未定义行为）；要么每线程一个、seed 不同，要么加锁——而锁正好把并行变回串行。</p><p>2. 不能。误差 ∝ 1/√路径数；并行只缩短时间。想让误差减半，样本量要乘 4。</p><p>3. 默认策略可能是 deferred：任务推迟到 get() 时才在调用线程跑，并行变串行，future 析构时还可能阻塞。</p><h3>C++ 线 · 第 9 关 · 线性代数与 Eigen</h3><p>1. 求逆是 O(n³) 且数值不稳；分解后前代/后代 O(n²) 就能解方程，L 还能直接用来把一列独立正态数变成相关的。</p><p>2. 每个资产自己的方差 σ²。对它开根号就是波动率，也就是你把收益率换成百分比时该盯的那个数。</p><p>3. beta = Cov(rᵢ, rₘ) / Var(rₘ)，所以不用求逆。多因子才要 (XᵀX)⁻¹Xᵀy，用 Eigen 的 ldlt().solve() 解，不要真的去求逆。</p></div>
+</body></html>

@@ -1,0 +1,24 @@
+{
+  "7.1": [
+    "数学基础首推线性代数与概率论教材",
+    "进阶可读 Rudin 的实分析与复分析",
+    "Sundaram 的优化教程支撑动态规划"
+  ],
+  "7.2": [
+    "学习 Python 的资源非常丰富",
+    "只挑一本推荐 Ramalho 的 Fluent Python"
+  ],
+  "7.3": [
+    "作者列出自己另外五本金融 Python 书",
+    "Python for Finance 讲数据驱动金融",
+    "Derivatives Analytics 讲定价与对冲"
+  ],
+  "7.4": [
+    "数据科学已成为各行业的重要职能",
+    "金融领域同样需要数据科学方法"
+  ],
+  "7.5": [
+    "算法交易是本书的自然延伸方向",
+    "作者另有 Python for Algorithmic Trading 专著"
+  ]
+}

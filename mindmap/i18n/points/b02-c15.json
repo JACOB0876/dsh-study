@@ -1,0 +1,7 @@
+{
+  "15.1": ["用 KNeighborsClassifier 做 K 近邻分类", "weights='distance' 让近邻票权更大", "algorithm 默认自动选最优算法"],
+  "15.2": ["k 太小高方差、太大高偏差", "用 GridSearchCV 五折交叉验证选 k"],
+  "15.3": ["用 RadiusNeighborsClassifier 按半径找邻居", "需用 radius 指定固定半径"],
+  "15.4": ["ANN 在小数据上结果与精确 KNN 几乎相同", "数据越大近似检索的价值越明显"],
+  "15.5": ["用 recall@k 比较 ANN 与精确 KNN", "借助 faiss 计算召回率"]
+}

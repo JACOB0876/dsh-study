@@ -1,0 +1,14 @@
+{
+  "14.1": ["决策树按杂质下降最大的规则分裂", "默认用基尼不纯度（Gini）", "递归分裂到叶节点纯或达阈值"],
+  "14.2": ["把决策树导出为 DOT 格式再画图", "用 pydotplus 与 tree.export_graphviz", "macOS 需先装 Graphviz"],
+  "14.3": ["用 RandomForestClassifier 训练随机森林", "criterion='entropy' 可换分裂度量", "森林比单棵树有更多参数"],
+  "14.4": ["用 RandomForestRegressor 做回归森林", "每棵树用自助采样的观测子集", "max_features 控制每节点考虑的特征数"],
+  "14.5": ["设 oob_score=True 用袋外误差评估", "oob_score_ 即袋外观测上的得分", "袋外观测天然充当测试集"],
+  "14.6": ["用 feature_importances_ 看特征重要性", "数值越高越重要，所有重要性之和为 1"],
+  "14.7": ["用 SelectFromModel 按重要性阈值选特征", "只用重要特征重训模型", "独热编码会稀释重要性，相关特征会偏向一个"],
+  "14.8": ["class_weight 传类别权重字典纠偏", "也可用算法内置的其他平衡方法"],
+  "14.9": ["用 max_depth、min_samples_split 等控树", "max_depth=None 会长到叶子纯为止", "限制树深可防过拟合"],
+  "14.10": ["用 AdaBoost 通过提升改善性能", "base_estimator 默认是决策树", "learning_rate 调小训练更慢但可能更好"],
+  "14.11": ["用 xgb.train 训练 XGBoost 模型", "param 里设 objective 与 num_class", "预测结果取 argmax 得类别"],
+  "14.12": ["用 LightGBM 训练更快的梯度提升模型", "适合对实时性有要求的场景"]
+}

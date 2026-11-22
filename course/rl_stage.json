@@ -1,0 +1,55 @@
+{
+  "stage": {
+    "id": "s4",
+    "name": "阶段 4 · 会决策",
+    "hint": "从「预测」走到「做决定」，对应《RL for Finance》",
+    "lessons": [
+      {
+        "id": "rl1",
+        "title": "把交易变成一场游戏",
+        "min": 25,
+        "hook": "预测明天涨跌，和「明天买多少」，是两个问题。前者答对了也未必赚钱，后者才决定盈亏。",
+        "goals": ["会把一个交易问题写成状态/动作/奖励", "理解奖励设计为什么最难", "跑通一个极简环境循环"],
+        "concepts": [
+          {"t": "状态", "en": "state", "d": "智能体看到的全部信息：当前持仓、过去几天收益、波动率。看不到的信息等于不存在。"},
+          {"t": "动作", "en": "action", "d": "它能做的选择：买 / 卖 / 不动，或者连续的头寸比例 0–1。"},
+          {"t": "奖励", "en": "reward", "d": "每步给它的分数。奖励设错了，它会精准地学会你最不想要的行为。"}
+        ],
+        "steps": [
+          {"text": "先写一个最小环境：只有三种状态（空仓/半仓/满仓）和两种动作。", "code": "class Env:\n    def __init__(self, rets):\n        self.rets, self.i, self.pos = rets, 0, 0\n    def reset(self):\n        self.i, self.pos = 0, 0\n        return self._obs()\n    def _obs(self):\n        return [self.pos, self.rets[self.i]]\n    def step(self, a):          # a: -1 减仓 / 0 不动 / 1 加仓\n        self.pos = max(0, min(1, self.pos + 0.5 * a))\n        r = self.pos * self.rets[self.i]     # 奖励 = 仓位 × 当日收益\n        self.i += 1\n        done = self.i >= len(self.rets) - 1\n        return self._obs(), r, done", "out": "一个 15 行的迷你环境"},
+          {"text": "跑一遍随机策略，看累计奖励是多少。", "code": "import numpy as np\nrets = np.random.normal(0.0003, 0.01, 250)\nenv = Env(rets); env.reset(); total = 0\nwhile True:\n    _, r, done = env.step(np.random.choice([-1, 0, 1]))\n    total += r\n    if done: break\nprint(round(total, 4))", "out": "通常接近 0 —— 随机策略不赚钱，这是基准"},
+          {"text": "换一个奖励：不只看收益，还罚波动（更接近真实目标）。", "code": "r = self.pos * self.rets[self.i] - 0.5 * (self.pos ** 2) * (0.01 ** 2)", "out": "同样的策略，奖励变小但更稳 —— 这就是「奖励设计」"}
+        ],
+        "quiz": [
+          {"q": "把「明天涨跌」当奖励会有什么问题？", "a": "它奖励的是预测正确，不是赚钱；预测对但仓位错，照样亏。"},
+          {"q": "为什么状态里要放持仓？", "a": "因为能否加仓取决于现在拿了多少；不给持仓，智能体会在满仓时继续买入。"},
+          {"q": "奖励里罚波动，相当于改变了什么？", "a": "把目标从「赚最多」改成「赚得稳」，等价于最大化风险调整后收益。"}
+        ],
+        "can": "把一个模糊的「帮我炒得更好」，翻译成状态、动作、奖励三件套。"
+      },
+      {
+        "id": "rl2",
+        "title": "让智能体学对冲",
+        "min": 30,
+        "hook": "教科书说「按 delta 对冲」，但真实市场有交易成本、有跳空。能不能让机器自己学一个「什么时候调多少」？",
+        "goals": ["理解 DQN 的核心三件套", "会训练一个对冲智能体", "会和固定间隔对冲做对比"],
+        "concepts": [
+          {"t": "Q 值", "en": "Q-value", "d": "在某个状态下做某个动作，未来能拿到的总奖励的估计。学好了，选 Q 最大的动作即可。"},
+          {"t": "经验回放", "en": "replay buffer", "d": "把过去的状态/动作/奖励存起来，随机抽一批来训练，打破时间相关性。"},
+          {"t": "探索", "en": "epsilon-greedy", "d": "小概率随机试试别的动作。不探索就永远发现不了更好的策略。"}
+        ],
+        "steps": [
+          {"text": "把对冲写成一个环境：状态含 delta 偏离，动作是调整量。", "code": "state = [abs(delta_target - delta_now), cost_level, vol_est]\naction = 0 / 1 / 2      # 不调 / 调一半 / 调到位\nreward = -abs(hedge_error) - cost * traded", "out": "每一步都在「误差」和「成本」之间权衡"},
+          {"text": "训练：每回合跑 250 天，存经验、抽批次更新网络。", "code": "for ep in range(200):\n    s = env.reset()\n    while True:\n        a = eps_greedy(q_net, s, eps=0.1)\n        s2, r, done = env.step(a)\n        buf.push(s, a, r, s2, done)\n        q_net.fit(*buf.sample(64))\n        s = s2\n        if done: break", "out": "训练曲线：前 50 回合奖励上升，之后趋于平稳"},
+          {"text": "对比：把学到的策略和「每天调一次」放在同一条曲线上。", "code": "plt.plot(test_rl, label='RL')\nplt.plot(test_fixed, label='固定间隔')\nplt.legend()", "out": "常见结果：RL 成本更低，但误差略大 —— 这就是取舍"}
+        ],
+        "quiz": [
+          {"q": "为什么不直接用监督学习预测「最优调整量」？", "a": "没有标准答案——最优调整依赖未来路径；RL 通过试错和奖励来学，不需要标签。"},
+          {"q": "回放池太小会怎样？", "a": "样本高度相关，网络会遗忘早期经验、训练不稳定。"},
+          {"q": "怎么判断「学出来了」而不是「碰巧」？", "a": "换一段没参与训练的行情测试，并与固定策略比较；还要跑多个随机种子看稳定性。"}
+        ],
+        "can": "训练一个对冲智能体，并用样本外数据证明它比固定间隔策略好（或诚实地承认没有）。"
+      }
+    ]
+  }
+}

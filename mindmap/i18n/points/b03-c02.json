@@ -1,0 +1,41 @@
+{
+  "2.1": [
+    "用 requests 库按 URL 调用 API 取数据",
+    "以 GitHub API 演示查询语言流行度",
+    "requests 是最常用的 HTTP 请求库"
+  ],
+  "2.2": [
+    "分页（pagination）逐页取完整个结果集",
+    "用递归函数翻页直到没有下一页"
+  ],
+  "2.3": [
+    "递归分页共抓到约 3800 条 PyTorch 评论",
+    "速率限制（rate limiting）限制单位时间请求数"
+  ],
+  "2.4": [
+    "用社区维护的 Tweepy 封装 Twitter API",
+    "封装库省去调用与认证的技术细节"
+  ],
+  "2.5": [
+    "在 Twitter 开发者平台建应用取凭据",
+    "凭据含 API key 与 API secret key"
+  ],
+  "2.6": [
+    "pip install tweepy 安装库",
+    "AppAuthHandler 传入密钥完成认证",
+    "实例化 tweepy.API 作为调用入口"
+  ],
+  "2.7": [
+    "搜索 API 按关键词批量拉取推文",
+    "结果转成 DataFrame 便于后续分析"
+  ],
+  "2.8": [
+    "用 screen name 取指定账号的时间线",
+    "对比两队推文词云看主题差异",
+    "max_words 与 stopwords 控制词云"
+  ],
+  "2.9": [
+    "流式 API 主动推送数据，不用反复请求",
+    "适合近实时采集，需保持长连接监听"
+  ]
+}

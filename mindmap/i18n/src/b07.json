@@ -1,0 +1,116 @@
+{
+ "book_id": "07",
+ "book_title": "Deep Learning for Finance",
+ "book_short": "DLF",
+ "chapters": [
+  "Introducing Data Science and Trading",
+  "Essential Probabilistic Methods",
+  "Descriptive Statistics and Data Analysis",
+  "Linear Algebra and Calculus",
+  "Introducing Technical Analysis",
+  "Introductory Python for Data Science",
+  "ML Models for Time Series Prediction",
+  "Deep Learning for Time Series I",
+  "Deep Learning for Time Series II",
+  "Deep RL for Time Series",
+  "Advanced Techniques and Strategies",
+  "Market Drivers and Risk Management"
+ ],
+ "sections": [
+  [
+   "Understanding Data Science",
+   "Introduction to Financial Markets and Trading",
+   "Applications of Data Science in Finance"
+  ],
+  [
+   "Introduction to Probabilistic Concepts",
+   "Sampling and Hypothesis Testing",
+   "A Primer on Information Theory"
+  ],
+  [
+   "Measures of Central Tendency",
+   "Measures of Variability",
+   "Measures of Shape",
+   "Visualizing Data",
+   "Correlation",
+   "The Concept of Stationarity",
+   "Regression Analysis and Statistical Inference"
+  ],
+  [
+   "Linear Algebra",
+   "Vectors and Matrices",
+   "Introduction to Linear Equations",
+   "Systems of Equations",
+   "Trigonometry",
+   "Calculus",
+   "Limits and Continuity",
+   "Derivatives",
+   "Integrals and the Fundamental Theorem of Calculus",
+   "Optimization"
+  ],
+  [
+   "Charting Analysis",
+   "Indicator Analysis",
+   "Moving Averages",
+   "The Relative Strength Index",
+   "Pattern Recognition"
+  ],
+  [
+   "Basic Operations and Syntax",
+   "Control Flow",
+   "Libraries and Functions",
+   "Exception Handling and Errors",
+   "Data Structures in numpy and pandas",
+   "Importing Financial Time Series in Python"
+  ],
+  [
+   "Machine Learning Models",
+   "Linear Regression",
+   "Support Vector Regression",
+   "Stochastic Gradient Descent Regression",
+   "Nearest Neighbors Regression",
+   "Decision Tree Regression",
+   "AdaBoost Regression",
+   "XGBoost Regression",
+   "Overfitting and Underfitting"
+  ],
+  [
+   "Activation Functions",
+   "Backpropagation",
+   "Optimization Algorithms",
+   "Regularization Techniques",
+   "Multilayer Perceptrons",
+   "Recurrent Neural Networks",
+   "Long Short-Term Memory",
+   "Temporal Convolutional Neural Networks"
+  ],
+  [
+   "Forecasting Threshold",
+   "Continuous Retraining",
+   "Time Series Cross Validation",
+   "Multiperiod Forecasting",
+   "Applying Regularization to MLPs"
+  ],
+  [
+   "Intuition of Reinforcement Learning",
+   "Deep Reinforcement Learning"
+  ],
+  [
+   "Algorithm 1: Indirect One-Step COT Model",
+   "Algorithm 2: MPF COT Direct Model",
+   "Algorithm 3: MPF COT Recursive Model",
+   "Putting It All Together",
+   "Using Technical Indicators as Inputs",
+   "Predicting Bitcoin’s Volatility Using Deep Learning",
+   "Real-Time Visualization of Training"
+  ],
+  [
+   "Market Drivers and Economic Intuition",
+   "News Interpretation",
+   "Risk Management",
+   "Basics of Risk Management",
+   "Behavioral Finance: The Power of Biases",
+   "Summary"
+  ]
+ ]
+}

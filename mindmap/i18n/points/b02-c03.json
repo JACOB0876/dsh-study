@@ -1,0 +1,23 @@
+{
+  "3.1": ["用字典 pd.DataFrame(dictionary) 建表", "加新列只需 df['Eyes']=[...]", "真实场景多从文件或数据库建表"],
+  "3.2": ["用 info() 看列名、非空数与类型", "info 还给出索引范围与内存占用", "载入数据后先摸清结构"],
+  "3.3": ["切片用 loc 与 iloc 两种索引", "数据清洗中会频繁用到两者"],
+  "3.4": ["用 dataframe[条件] 选行", "如 df[df['Sex']=='female']", "条件过滤是最常用的清洗操作"],
+  "3.5": ["用 sort_values 按列排序", "by 可传多列列表，按顺序排", "ascending 默认 True，设 False 降序"],
+  "3.6": ["用 replace 做查找替换", "可整表替换 df.replace(1,'One')", "regex=True 支持正则替换"],
+  "3.7": ["用 defaultdict 建旧列名到新列名的字典", "遍历 dataframe.columns 生成字典键", "再交给 rename(columns=...) 改名"],
+  "3.8": ["用 min/max/mean/sum/count 求统计量", "既可作用于单列也可作用于整表", "还有 var/std/median/skew 等"],
+  "3.9": ["用 unique() 取列中所有唯一值", "用 value_counts() 数各值出现次数"],
+  "3.10": ["用 isna() 筛出含缺失值的行", "用 fillna(列均值) 填充缺失值"],
+  "3.11": ["删列用 drop 并设 axis=1", "inplace=True 会直接改原表", "建议把 DataFrame 当作不可变对象"],
+  "3.12": ["用布尔条件 df[df['Name']!=...] 删行", "drop([0,1], axis=0) 也能删但不实用", "条件写法一次删多行更方便"],
+  "3.13": ["用 drop_duplicates 删除重复行", "subset 指定判断重复的列", "keep 控制保留首次还是末次"],
+  "3.14": ["用 groupby(列) 分组后取子列统计", "如 groupby('Survived')['Name'].count()", "传列名列表可按多列分组"],
+  "3.15": ["对时间索引用 resample('M') 按月分组", "resample 默认取时间组的右端标签", "label='left' 取左端标签"],
+  "3.16": ["groupby 后用 agg 做聚合统计", "适合探索不同子群体的差异", "聚合结果可为特征工程提供参考"],
+  "3.17": ["可遍历列中每个元素逐一处理", "但 for 循环写法不够 Pythonic", "更推荐改用 apply"],
+  "3.18": ["用 apply 对列中每个元素应用函数", "内置函数或自定义函数都能传", "比 for 循环更 Pythonic"],
+  "3.19": ["用 groupby(...).apply(函数) 算分组统计", "可传 lambda 自定义统计量", "apply 适合自定义的分组统计"],
+  "3.20": ["用 pd.concat([a,b], axis=0) 按行拼接", "axis=1 则按列拼接"],
+  "3.21": ["按共同列把两个表匹配成一张新表", "与 concat 的拼接是两种不同操作"]
+}
