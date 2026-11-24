@@ -13,7 +13,7 @@ COURSE = os.path.join(REPO, "course")
 MINDMAP = os.path.join(REPO, "mindmap")
 GRAPH = os.path.join(REPO, "graph")
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 
 def load(path):

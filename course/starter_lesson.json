@@ -6,30 +6,70 @@
   "goals": [
     "打开终端，知道它和鼠标点击的区别",
     "装好 Python 并跑通第一行输出",
-    "读懂最常见的三种报错，不再一报错就慌"
+    "读懂最常见的三种报错，不再一报错就慌",
+    "分清 shell 和 Python 解释器：知道代码该交给谁执行"
   ],
   "concepts": [
-    {"t": "终端", "en": "terminal", "d": "一个只能打字、不能点的窗口。你输入命令，电脑执行并把结果打在下面。Windows 上叫「命令提示符」或「PowerShell」。"},
-    {"t": "解释器", "en": "interpreter", "d": "一个能把你的 .py 文件翻译成电脑动作的程序。装了 Python，就等于装了这个解释器。"},
-    {"t": "报错", "en": "traceback", "d": "程序出错时打印的说明。最后一行是错误类型，往上找第一处「你自己写的文件名」，就是出事的地方。"}
+    {
+      "t": "终端",
+      "en": "terminal",
+      "d": "一个只能打字、不能点的窗口。你输入命令，电脑执行并把结果打在下面。Windows 上叫「命令提示符」或「PowerShell」。"
+    },
+    {
+      "t": "解释器",
+      "en": "interpreter",
+      "d": "一个能把你的 .py 文件翻译成电脑动作的程序。装了 Python，就等于装了这个解释器。"
+    },
+    {
+      "t": "报错",
+      "en": "traceback",
+      "d": "程序出错时打印的说明。最后一行是错误类型，往上找第一处「你自己写的文件名」，就是出事的地方。"
+    }
   ],
   "steps": [
-    {"text": "按 Win 键，输入 powershell，回车。出现一个可以打字的窗口，光标在闪，就对了。",
-     "code": "powershell", "out": "一个没有按钮、只有文字的窗口"},
-    {"text": "确认电脑里有没有 Python。没有就用下面第一行装（需要联网几分钟）。",
-     "code": "python --version\n# 若提示找不到命令：\nwinget install -e --id Python.Python.3.12",
-     "out": "Python 3.12.x"},
-    {"text": "新建一个文件 hello.py（记事本另存为，注意后缀是 .py），写一行，然后在终端里运行它。",
-     "code": "print(\"你好\")\n\n# 终端里，先 cd 到文件所在目录，再：\npython hello.py",
-     "out": "你好"},
-    {"text": "故意写错一次，看报错长什么样——这比跑对更重要。",
-     "code": "print(nihao)",
-     "out": "NameError: name 'nihao' is not defined —— 意思是「没定义过这个名字」"}
+    {
+      "text": "按 Win 键，输入 powershell，回车。出现一个可以打字的窗口，光标在闪，就对了。",
+      "code": "powershell",
+      "out": "一个没有按钮、只有文字的窗口"
+    },
+    {
+      "text": "确认电脑里有没有 Python。没有就用下面第一行装（需要联网几分钟）。",
+      "code": "python --version\n# 若提示找不到命令：\nwinget install -e --id Python.Python.3.12",
+      "out": "Python 3.12.x"
+    },
+    {
+      "text": "新建一个文件 hello.py（记事本另存为，注意后缀是 .py），写一行，然后在终端里运行它。",
+      "code": "print(\"你好\")\n\n# 终端里，先 cd 到文件所在目录，再：\npython hello.py",
+      "out": "你好"
+    },
+    {
+      "text": "第一个坑：不要在 PowerShell 里直接敲 Python 代码。PowerShell 自己有个 print 命令（意思是「发给打印机」），所以会报「无法初始化设备 PRN」——这不是 Python 的错，是你在错误的窗口里说话。",
+      "code": "print(\"你好\")\n# PowerShell 里的结果：\n# 无法初始化设备 PRN\n\n# 正确做法一：先进入解释器\npython\n>>> print(\"你好\")\n>>> exit()\n\n# 正确做法二：写进 .py 文件再运行\npython hello.py",
+      "out": "你好"
+    },
+    {
+      "text": "故意写错一次，看报错长什么样——这比跑对更重要。",
+      "code": "print(nihao)",
+      "out": "NameError: name 'nihao' is not defined —— 意思是「没定义过这个名字」"
+    }
   ],
   "quiz": [
-    {"q": "为什么不能双击 .py 文件来运行？", "a": "双击只是打开编辑器；要让它执行，得用解释器运行（python 文件名）。终端就是你和解释器之间的入口。"},
-    {"q": "SyntaxError 和 NameError 有什么区别？", "a": "SyntaxError = 语法写错了（少括号、少引号），程序根本没开始跑；NameError = 语法没问题，但你用了一个没定义的名字。"},
-    {"q": "报错信息那么长，先看哪一行？", "a": "先看最后一行（错误类型和原因），再往上找第一个出现你自己文件名的行号。"}
+    {
+      "q": "为什么不能双击 .py 文件来运行？",
+      "a": "双击只是打开编辑器；要让它执行，得用解释器运行（python 文件名）。终端就是你和解释器之间的入口。"
+    },
+    {
+      "q": "SyntaxError 和 NameError 有什么区别？",
+      "a": "SyntaxError = 语法写错了（少括号、少引号），程序根本没开始跑；NameError = 语法没问题，但你用了一个没定义的名字。"
+    },
+    {
+      "q": "报错信息那么长，先看哪一行？",
+      "a": "先看最后一行（错误类型和原因），再往上找第一个出现你自己文件名的行号。"
+    },
+    {
+      "q": "在 PowerShell 里直接敲 print(\"你好\")，为什么报的是「无法初始化设备 PRN」？",
+      "a": "因为 PowerShell 把 print 当成了自己的别名（Out-Printer，发给打印机），代码根本没交给 Python。要么先用 python 进入解释器（>>> 提示符），要么写进 .py 文件用 python 文件名运行。"
+    }
   ],
   "can": "在终端里跑通自己的第一个程序，遇到报错能说出是哪一类。"
 }
