@@ -89,7 +89,17 @@ export const progressTool = {
       const rb = c.readback?.[lessonId]
       if (refs.length || rb) {
         lines.push('', '## 回书')
-        if (rb) lines.push(`目的：**${rb[0]}** —— ${rb[1]}`)
+        const WHEN = {
+          '推导': ['必读', '现在就值得读——课程只给结论，推导在书里'],
+          '佐证': ['备查', '想验证这个结论、或写东西要引用时'],
+          '拓展': ['备查', '等你真要动手做那件事时'],
+          '查漏': ['备查', '遇到具体问题、出现意外报错时'],
+        }
+        if (rb) {
+          const w = WHEN[rb[0]] || WHEN['佐证']
+          lines.push(`【${w[0]}】目的：**${rb[0]}** —— ${rb[1]}`)
+          lines.push(`什么时候读：${w[1]}`)
+        }
         for (const [code, ch] of refs) {
           const book = c.books.find(b => b.code === code)
           const secs = c.sections?.[code]?.[ch - 1] || []

@@ -242,7 +242,9 @@ HTML = r"""<!DOCTYPE html>
   .rbrow{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;margin:8px 0;border:1px solid #eef2f7;
     border-radius:10px;background:#fff;text-decoration:none;color:#0f172a;transition:.15s}
   .rbrow:hover{border-color:#bfdbfe;transform:translateX(2px)}
-  .rbp{font-size:10.5px;padding:3px 8px;border-radius:20px;border:1px solid;white-space:nowrap;font-weight:600;margin-top:1px}
+  .rbq{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:20px;margin-right:6px;font-weight:600;white-space:nowrap}
+.rbw{display:block;font-style:normal;font-size:10.5px;color:#94a3b8;margin-top:2px}
+.rbp{font-size:10.5px;padding:3px 8px;border-radius:20px;border:1px solid;white-space:nowrap;font-weight:600;margin-top:1px}
   .rbt{flex:1;font-size:12.8px;line-height:1.6}
   .rbt b{display:block;font-weight:600}
   .rbt i{font-style:normal;color:#64748b;font-size:11.8px}
@@ -362,12 +364,21 @@ const PURPOSE_STYLE = {
   "查漏": ["#ecfeff", "#0e7490", "#a5f3fc"]
 };
 
+// 必读 / 备查：只有「推导」现在就该读，其余等遇到问题再查
+const WHEN_READ = {
+  "推导": ["必读", "#fef2f2", "#b91c1c", "现在就值得读——课程只给结论，推导在书里"],
+  "佐证": ["备查", "#f1f5f9", "#475569", "想验证这个结论、或写东西要引用时"],
+  "拓展": ["备查", "#f1f5f9", "#475569", "等你真要动手做那件事时"],
+  "查漏": ["备查", "#f1f5f9", "#475569", "遇到具体问题、出现意外报错时"]
+};
+
 function readback(id){
   const refs = LB[id] || [];
   const rb = READBACK[id];
   if (!refs.length || !rb) return "";
   const [purpose, why] = rb;
   const st = PURPOSE_STYLE[purpose] || PURPOSE_STYLE["佐证"];
+  const wr = WHEN_READ[purpose] || WHEN_READ["佐证"];
   const rows = refs.map(([code, ch]) => {
     const b = BOOKS.find(x => x.code === code);
     let extra = "";
@@ -376,7 +387,8 @@ function readback(id){
     return `<a class="rbrow" target="_blank" rel="noopener"
       href="../mindmap/books-mindmap.html#${code}-${ch}">
       <span class="rbp" style="background:${st[0]};color:${st[1]};border-color:${st[2]}">${purpose}</span>
-      <span class="rbt"><b>《${code} ${b.short}》第 ${ch} 章${extra}</b><i>${why}</i></span>
+      <span class="rbq" style="background:${wr[1]};color:${wr[2]}">${wr[0]}</span>
+      <span class="rbt"><b>《${code} ${b.short}》第 ${ch} 章${extra}</b><i>${why}</i><em class="rbw">${wr[3]}</em></span>
       <span class="rbg">打开 →</span></a>`;
   }).join("");
   return `<div class="readback"><h3>学完这关，回书补什么</h3>${rows}
