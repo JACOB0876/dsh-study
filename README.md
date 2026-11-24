@@ -68,7 +68,7 @@ docs/            学习路线、环境配置、进度表、插件设计
 四个工具：`study_catalog`（路线/关卡/进度）、`study_lesson`（一关的完整内容）、`study_search`（搜概念与章节）、`study_progress`（打勾与续学）。
 
 **从 npm 安装**（推荐）：在 DSH 对话里让 agent 执行
-`plugin_manager install_bundle  target: dsh-study@0.2.2`。
+`plugin_manager install_bundle  target: dsh-study`（装最新版，当前 0.4.0）。
 
 **从源码安装**：
 
