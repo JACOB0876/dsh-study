@@ -14,8 +14,13 @@ export const searchTool = {
   description:
     '在课程、概念、书的章节里搜索关键词（中英均可）。返回命中的关卡/概念/书章，附带 id 与出处，供继续调用 study_lesson。',
   parameters: {
-    query: { type: 'string', required: true, description: '关键词，例如「鞅测度」「回测」「PagedAttention」' },
-    limit: { type: 'number', description: '最多返回几条，默认 8' },
+    type: 'object',
+    properties: {
+      query: { type: 'string', description: '关键词，例如「鞅测度」「回测」「PagedAttention」' },
+      limit: { type: 'number', description: '最多返回几条，默认 8' },
+    },
+    required: ['query'],
+    additionalProperties: false,
   },
   output: textOutput,
   execute: async (args) => {

@@ -47,15 +47,13 @@ export const lessonTool = {
   description:
     '取一关的完整内容：钩子、目标、三个概念、动手步骤（含预期输出）、自测题与答案、回书指引。一次只讲一个环节。',
   parameters: {
-    id: {
-      type: 'string',
-      required: true,
-      description: '关卡 id，例如 start / vars / llm2 / l7 / nlp3 / cpp5。可由 study_catalog 或 study_search 获得。',
+    type: 'object',
+    properties: {
+      id: { type: 'string', description: '关卡 id，例如 start / vars / llm2 / l7 / nlp3 / cpp5。可由 study_catalog 或 study_search 获得。' },
+      section: { type: 'string', description: '只取某一部分：intro / concepts / steps / quiz / readback。省略返回全部。' },
     },
-    section: {
-      type: 'string',
-      description: '只取某一部分：intro / concepts / steps / quiz / readback。省略返回全部。',
-    },
+    required: ['id'],
+    additionalProperties: false,
   },
   output: textOutput,
   execute: async (args) => {

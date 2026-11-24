@@ -7,10 +7,12 @@ export const catalogTool = {
   description:
     '列出学习插件的所有路线与当前进度，或某条路线下的关卡清单（已完成的打勾）。先用它让用户选路线，再逐关教学。',
   parameters: {
-    track: {
-      type: 'string',
-      description: '路线 id：llm / quant / nlp / cpp。省略时返回全部路线概览。',
+    type: 'object',
+    properties: {
+      track: { type: 'string', description: '路线 id：llm / quant / nlp / cpp。省略时返回全部路线概览。' },
     },
+    required: [],
+    additionalProperties: false,
   },
   output: textOutput,
   execute: async (args) => {

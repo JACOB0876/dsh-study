@@ -286,6 +286,23 @@ npm.cmd publish --access public
 
 ---
 
+## 十二、缺陷记录（0.2.0 / 0.2.1 → 0.2.2）
+
+**现象**：安装后 DSH 重启直接打不开，报 `2 required plugins did not activate`。
+
+**根因**：`package.json` 的 `dependencies` 里钉了 `@deepseek-ai/dsh-tools@0.2.2-rc.5`。
+目标 profile 是 `nodeLinker: hoisted`，该包被提升到 profile 的 `node_modules/@deepseek-ai/dsh-tools`，
+顶掉宿主内置版本；加载器解析 `include:tools` 时版本不符 → 该行 disabled → `tools` 服务永不激活
+→ `tool-executor-native` 与 `agent-loop` 两个 required 插件不激活 → 启动致命失败。
+
+**修复**：删除全部 dependencies 与 engines；`ctx.tools.register` 直接接受普通对象定义，
+参数/输出改为标准 JSON Schema，不再 import `@deepseek-ai/dsh-tools`。
+
+**规则（以后所有 DSH 插件都适用）**：
+- 永不在 `dependencies` 里钉 `@deepseek-ai/*` 宿主内置包；
+- 确需类型时用 `peerDependencies` 且不锁版本；
+- 发版前在干净 profile 装一次并重启，检查 `crash-*-host.log` 里没有 `include:tools ... disabled`。
+
 ## 十一、交接给「创造模式」的一句话
 
 > 读 `C:\Users\LENOVO\Downloads\新建文件夹\study\PLUGIN-SPEC.md`，

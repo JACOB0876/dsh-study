@@ -1,6 +1,6 @@
 {
   "name": "dsh-study",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "private": false,
   "description": "8 本书学习路线：4 条路线 41 关的课程、51 个概念与章节索引，可在任意对话里直接开始学习",
@@ -37,9 +37,6 @@
     "cordis.patch.yml",
     "scripts"
   ],
-  "dependencies": {
-    "@deepseek-ai/dsh-tools": "0.2.2-rc.5"
-  },
   "author": "JACOB0876",
   "repository": {
     "type": "git",
@@ -52,8 +49,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "engines": {
-    "dsh": ">=0.2.2-rc.5"
   }
 }

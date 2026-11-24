@@ -2,8 +2,11 @@
 export const textOutput = {
   schema: {
     type: 'object',
+    properties: {
+      text: { type: 'string' },
+    },
+    required: ['text'],
     additionalProperties: false,
-    properties: { text: { type: 'string', required: true } },
   },
   render: (_args, value) => [{ type: 'text', text: String(value?.text ?? '') }],
 }

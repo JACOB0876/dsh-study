@@ -22,13 +22,14 @@ export const progressTool = {
   description:
     '查看或更新学习进度：show 看每条线学到哪、下一关是什么；mark 把某一关标记为已完成；unmark 取消。进度存在本机，跨会话保留。',
   parameters: {
-    action: {
-      type: 'string',
-      required: true,
-      description: 'show = 查看；mark = 标记完成；unmark = 取消标记。',
+    type: 'object',
+    properties: {
+      action: { type: 'string', enum: ['show', 'mark', 'unmark'], description: 'show = 查看；mark = 标记完成；unmark = 取消标记。' },
+      lesson_id: { type: 'string', description: 'mark / unmark 时的关卡 id，例如 l7、llm3。' },
+      track: { type: 'string', description: '只显示某条线（llm / quant / nlp / cpp）；省略则全部显示。' },
     },
-    lesson_id: { type: 'string', description: 'mark / unmark 时的关卡 id，例如 l7、llm3。' },
-    track: { type: 'string', description: '只显示某条线（llm / quant / nlp / cpp）；省略则全部显示。' },
+    required: ['action'],
+    additionalProperties: false,
   },
   output: textOutput,
   execute: async (args) => {

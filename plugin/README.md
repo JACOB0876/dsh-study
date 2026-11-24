@@ -11,6 +11,18 @@
 | `study_search` | 搜关卡 / 概念 / 书章 |
 | `study_progress` | 查看进度 / 标记完成（写 `~/.dsh/study-progress.json`） |
 
+## 设计约束（重要）
+
+本插件**不声明任何 `dependencies`**，尤其不依赖 `@deepseek-ai/*` 这类宿主内置包。
+
+原因：目标 profile 使用 `nodeLinker: hoisted`，若把宿主核心包写进 dependencies，
+pnpm 会把它提升到 `~/.dsh/profiles/<profile>/node_modules/@deepseek-ai/dsh-tools`，
+**顶掉宿主自带的版本**，导致加载器解析 `include:tools` 失败、DSH 启动直接打不开
+（`2 required plugins did not activate`）。
+
+工具用 `ctx.tools.register(普通对象)` 注册，不需要 `defineTool` 包装；
+参数与输出都用标准 JSON Schema（`type/properties/required/additionalProperties`）。
+
 ## 安装
 
 ### 从 npm（发布后）
@@ -35,8 +47,7 @@ plugin_manager install_bundle  →  target: <你克隆的路径>/plugin
 
 或图形界面：**Plugins → Add plugin**，选这个目录。
 
-> 为什么要 `pnpm install`：这一版从 `@deepseek-ai/dsh-tools` 导入 `defineTool`，
-> 依赖写在 `package.json` 里，但本地目录安装是软链，不会替你装依赖。
+> 0.2.2 起插件是零依赖的：`pnpm install` 只是让 pnpm 建立链接，不会装任何包。
 
 ## 用法
 
