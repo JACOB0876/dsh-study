@@ -1,0 +1,53 @@
+{
+  "name": "dsh-study",
+  "version": "0.2.2",
+  "type": "module",
+  "private": false,
+  "description": "8 本书学习路线：4 条路线 41 关的课程、51 个概念与章节索引，可在任意对话里直接开始学习",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "learning",
+    "course",
+    "study",
+    "finance",
+    "llm"
+  ],
+  "license": "MIT",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "files": [
+    "index.js",
+    "content.js",
+    "progress.js",
+    "tools",
+    "content/content.json",
+    "skills",
+    "locale/*.json",
+    "docs",
+    "icon.svg",
+    "cordis.patch.yml",
+    "scripts"
+  ],
+  "author": "JACOB0876",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JACOB0876/dsh-study.git",
+    "directory": "plugin"
+  },
+  "homepage": "https://github.com/JACOB0876/dsh-study#readme",
+  "bugs": {
+    "url": "https://github.com/JACOB0876/dsh-study/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
