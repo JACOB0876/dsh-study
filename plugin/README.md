@@ -25,10 +25,12 @@ pnpm 会把它提升到 `~/.dsh/profiles/<profile>/node_modules/@deepseek-ai/dsh
 
 ## 安装
 
-### 从 npm（发布后）
+### 从 npm（推荐，已验证）
 
-```bash
-dsh plugin add dsh-study
+在 DSH 对话里让 agent 安装：
+
+```
+plugin_manager install_bundle  target: dsh-study@0.2.2
 ```
 
 ### 从源码（当前可用）
