@@ -22,3 +22,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+
+# 生成过程的备份文件
+*.bak-*
