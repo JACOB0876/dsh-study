@@ -1,4 +1,4 @@
-import { content, orderedLessons, nextLessonFor, lesson as getLesson } from '../content.js'
+import { content, orderedLessons, nextLessonFor, recommendNext, lesson as getLesson } from '../content.js'
 import { load, save, mark, unmark, trackState } from '../progress.js'
 import { textOutput, ok } from './common.js'
 
@@ -6,13 +6,16 @@ function summaryLine(trackDef, state) {
   const ls = orderedLessons(trackDef.id)
   const t = state.tracks?.[trackDef.id] || { done: [], current: null }
   const done = ls.filter(l => t.done.includes(l.id)).length
-  const next = nextLessonFor(ls, t.done)
+  const rec = recommendNext(ls, t.done)
+  const next = rec.lesson
+  const gap = rec.gap
   return {
     id: trackDef.id,
     name: trackDef.name,
     done,
     total: ls.length,
     current: t.current,
+    gap,
     next: next ? { id: next.id, title: next.title, min: next.min } : null,
   }
 }
@@ -44,7 +47,10 @@ export const progressTool = {
       const lines = ['# 学习进度', '']
       for (const r of rows) {
         lines.push(`## ${r.name}：${r.done} / ${r.total}`)
-        if (r.next) lines.push(`下一关：[${r.next.id}] ${r.next.title} · ${r.next.min} 分钟`)
+        if (r.next) {
+          lines.push(`下一关：[${r.next.id}] ${r.next.title} · ${r.next.min} 分钟`)
+          if (r.gap) lines.push(`（你已学到第 ${r.learned} 关，但前面还有未学的基础关，建议先补）`)
+        }
         else lines.push('这条线已经全部完成。')
         if (r.current) {
           const cur = getLesson(r.current)

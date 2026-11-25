@@ -56,3 +56,17 @@ export function nextLessonFor(list, doneIds) {
   list.forEach((l, i) => { if (done.has(l.id)) last = i })
   return list.slice(last + 1).find(l => !done.has(l.id)) || list.find(l => !done.has(l.id)) || null
 }
+
+// 下一关推荐：优先补「前面的缺口」（比如后来新增的基础关），否则取最后一关之后的第一关
+export function recommendNext(list, doneIds) {
+  const done = new Set(doneIds || [])
+  let last = -1
+  list.forEach((l, i) => { if (done.has(l.id)) last = i })
+  for (let i = 0; i < last; i += 1) {
+    if (!done.has(list[i].id)) {
+      return { lesson: list[i], gap: true, learned: last + 1 }
+    }
+  }
+  const after = list.slice(last + 1).find(l => !done.has(l.id)) || list.find(l => !done.has(l.id)) || null
+  return { lesson: after, gap: false, learned: last + 1 }
+}

@@ -1,4 +1,4 @@
-import { content, trackList, orderedLessons, nextLessonFor } from '../content.js'
+import { content, trackList, orderedLessons, nextLessonFor, recommendNext } from '../content.js'
 import { load } from '../progress.js'
 import { textOutput, ok } from './common.js'
 
@@ -23,7 +23,7 @@ export const catalogTool = {
       const lines = tracks.map(t => {
         const ls = orderedLessons(t.id)
         const done = (state.tracks?.[t.id]?.done || []).filter(id => ls.some(l => l.id === id)).length
-        const next = nextLessonFor(ls, state.tracks?.[t.id]?.done || [])
+        const next = recommendNext(ls, state.tracks?.[t.id]?.done || []).lesson
         const prog = done ? `已学 ${done}/${ls.length}，下一关 ${next ? next.id : '（完成）'}` : '还没开始'
         return `- ${t.name}（${t.id}）：${ls.length} 关，约 ${Math.round(t.minutes / 60 * 10) / 10} 小时 · ${prog} —— ${t.sub}`
       })
