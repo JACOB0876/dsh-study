@@ -202,5 +202,32 @@
    }
   ],
   "skip": "第 4–5 章 STL（当手册）、第 7 章固定收益、第 9 章 Boost、第 10 章 modules"
+ },
+ {
+  "code": "09",
+  "short": "HTP",
+  "zh": "大语言模型的硬骨头",
+  "cover": "LLM 工程线 6 关（待建）",
+  "need": [
+   {
+    "ch": 2,
+    "t": "The Evals Gap",
+    "p": "17–52",
+    "why": "非确定性来源、温度实验、评估框架设计"
+   },
+   {
+    "ch": 4,
+    "t": "From Data to Context",
+    "p": "83–132",
+    "why": "RAG 全流程：切块、向量、重排、长上下文"
+   },
+   {
+    "ch": 5,
+    "t": "Structured Data Output",
+    "p": "133–160",
+    "why": "JSON 模式与 Pydantic 校验"
+   }
+  ],
+  "skip": "第 3 章（工具链偏具体产品）、第 8 章（DPO 案例需要 GPU）"
  }
 ]

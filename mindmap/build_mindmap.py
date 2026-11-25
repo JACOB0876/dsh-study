@@ -23,7 +23,7 @@ if os.path.isdir(_pts_dir):
         POINTS.setdefault(fn[1:3], {}).update(d)
 
 ZH = {}
-for i in range(1, 9):
+for i in range(1, 10):
     p = os.path.join(HERE, "i18n", "zh", "b%02d.json" % i)
     if os.path.exists(p):
         ZH["%02d" % i] = json.load(open(p, encoding="utf-8"))
@@ -32,7 +32,7 @@ TRACKS = [
     ("数据与 ML 底座", "Data & ML Foundations", "#2563eb", ["01", "02"]),
     ("金融理论", "Financial Theory", "#059669", ["05"]),
     ("策略与强化学习", "Strategy & RL", "#d97706", ["07", "06"]),
-    ("文本与推理工程", "Text & Inference", "#7c3aed", ["03", "04"]),
+    ("文本与推理工程", "Text & Inference", "#7c3aed", ["03", "04", "09"]),
     ("工程技能", "Engineering Craft", "#475569", ["08"]),
 ]
 
@@ -143,6 +143,17 @@ BOOKS = [
         ("The Boost Libraries", 345, "数学分布、MultiArray 二叉树、累加器", "选读"),
         ("Modules and Concepts", 379, "module/import、concepts 约束", "快读"),
         ("Appendix A–E", 399, "虚析构、对象切片、移动语义实现、valarray", "参考"),
+    ]),
+    ("09", "Large Language Models: The Hard Parts", "HTP", 341, "Souza & Regenstein", [
+        ("First Principles", 1, "上生产前的 8 项要求：合规、成本、性能、集成", "快读"),
+        ("The Evals Gap", 17, "非确定性来源、温度实验、评估框架、LLM-as-judge", "精读"),
+        ("Evaluation Tools", 53, "LangSmith、Promptfoo、LightEval 工具链", "选读"),
+        ("From Data to Context", 83, "RAG 全流程：切块、向量、重排、长上下文", "精读"),
+        ("Structured Data Output", 133, "JSON 模式、Pydantic、Outlines 约束解码", "精读"),
+        ("LLM Safety Considerations", 161, "越狱、提示注入、偏见、隐私", "选读"),
+        ("Evaluating LLMs for Safety", 179, "TruthfulQA、HarmBench、运行时护栏", "选读"),
+        ("LLM Alignment: A Case Study", 227, "RLHF、PPO、DPO 的完整落地案例", "选读"),
+        ("Epilogue", 279, "成本下降之后的应用格局", "快读"),
     ]),
 ]
 
@@ -574,7 +585,8 @@ def main():
     nch = sum(len(b[5]) for b in BOOKS)
     nsec = sum(len(r) for v in SEC.values() for r in v)
     npt = sum(len(pts) for v in POINTS.values() for pts in v.values())
-    stat = "2960 页 · %d 章 · %d 节 · %d 要点" % (nch, nsec, npt)
+    npages = sum(b[3] for b in BOOKS)
+    stat = "%d 页 · %d 章 · %d 节 · %d 要点" % (npages, nch, nsec, npt)
     html = (HTML.replace("__DATA__", json.dumps(data, ensure_ascii=False))
                 .replace("__TAGS__", json.dumps(TAG_COLOR, ensure_ascii=False))
                 .replace("__STAT__", stat))
