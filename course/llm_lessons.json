@@ -1,508 +1,695 @@
 {
-  "track": "llm",
-  "name": "LLM 线",
-  "sub": "8 关 · 前 4 关调 API，后 4 关本地部署",
-  "stages": [
+ "track": "llm",
+ "name": "LLM 线",
+ "sub": "11 关 · 先建立直觉，再调 API，最后会算账与部署",
+ "stages": [
+  {
+   "id": "llm0",
+   "name": "第 0 阶段 · LLM 是什么",
+   "hint": "不写代码也能懂：它在做什么、里面长什么样、名词怎么对",
+   "lessons": [
     {
-      "id": "l0",
-      "name": "起点 · 零基础三关",
-      "hint": "装 Python、算数、做判断，三关走完再进正课",
-      "lessons": [
-        {
-          "id": "llm1",
-          "title": "Python 只学够用的",
-          "min": 20,
-          "hook": "模型返回的是一段像这样的东西：`{\"content\": \"你好\"}`。你要从里面把「你好」取出来——这只需要字典、取值、和一个小函数。",
-          "goals": [
-            "会建字典、按 key 取值",
-            "会写一个能重复用的小函数",
-            "看得懂 KeyError 是什么意思"
-          ],
-          "concepts": [
-            {
-              "t": "字典",
-              "en": "dict",
-              "d": "「名字 → 值」的查表。`d = {\"role\": \"user\", \"content\": \"你好\"}`，用 `d[\"content\"]` 取出「你好」。"
-            },
-            {
-              "t": "键不存在",
-              "en": "KeyError",
-              "d": "取一个没存过的名字会报错。安全写法是 `d.get(\"content\", \"\")`，取不到就给空字符串。"
-            },
-            {
-              "t": "函数",
-              "en": "function",
-              "d": "把「发请求 → 取字段」包成名字，以后换一句话就能复用。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "建一个最像 API 返回的字典，练取值。",
-              "code": "resp = {\"role\": \"assistant\", \"content\": \"你好\", \"tokens\": 12}\nprint(resp[\"content\"])          # 你好\nprint(resp.get(\"finish\", \"无\"))  # 无（不报错）",
-              "out": "你好 / 无"
-            },
-            {
-              "text": "写一个函数，专门从这种结构里取正文。",
-              "code": "def get_text(resp):\n    return resp.get(\"content\", \"\")\n\nget_text({\"content\": \"第一段\"})",
-              "out": "第一段"
-            },
-            {
-              "text": "故意取一个不存在的键，看报错长什么样。",
-              "code": "resp[\"abc\"]",
-              "out": "KeyError: 'abc' —— 从最后一行往上看，就知道错在哪"
-            }
-          ],
-          "quiz": [
-            {
-              "q": "`resp.get(\"content\")` 和 `resp[\"content\"]` 有什么区别？",
-              "a": "前者取不到返回 None，不中断程序；后者直接抛 KeyError。解析外部返回的数据时用 get 更安全。"
-            },
-            {
-              "q": "如果返回的是 `[{...}, {...}]` 这样的列表，怎么取第一条的正文？",
-              "a": "`resp[0][\"content\"]`——先按序号取元素，再按 key 取值。"
-            },
-            {
-              "q": "为什么要把取字段写成函数，而不是每次都手写？",
-              "a": "换模型、换字段名时只改一处；出错也只有一个地方要查。"
-            }
-          ],
-          "can": "拿到任何一段 JSON 响应，都能把想要的字段安全地取出来。"
-        },
-        {
-          "id": "llm2",
-          "title": "调第一个 API",
-          "min": 25,
-          "hook": "你不需要训练模型，也不需要显卡——只要一个 API key，二十行代码就能让模型替你干活。",
-          "goals": [
-            "装好 SDK、配好 key",
-            "发出第一个请求拿到回答",
-            "理解 system 和 user 两种消息"
-          ],
-          "concepts": [
-            {
-              "t": "API key",
-              "en": "api key",
-              "d": "你的身份凭证。**不要写进代码提交到网上**，放进环境变量或 `.env` 文件。"
-            },
-            {
-              "t": "messages",
-              "en": "messages",
-              "d": "一段对话是一个列表：`system` 定规矩（你是助手），`user` 提问，`assistant` 是模型的回答。"
-            },
-            {
-              "t": "模型名",
-              "en": "model",
-              "d": "DeepSeek 里 `deepseek-chat` 是通用对话模型，`deepseek-reasoner` 会先推理再回答、更慢更贵。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "装 SDK（一条命令），key 放环境变量，不要硬编码。",
-              "code": "pip install openai\n\n# Windows PowerShell：\n$env:DEEPSEEK_API_KEY = \"sk-你的key\"",
-              "out": "装好后 `pip show openai` 能看到版本"
-            },
-            {
-              "text": "发第一个请求。`base_url` 是关键——同一个 SDK 可以接不同厂商。",
-              "code": "import os\nfrom openai import OpenAI\n\nclient = OpenAI(api_key=os.environ[\"DEEPSEEK_API_KEY\"],\n                base_url=\"https://api.deepseek.com\")\n\nr = client.chat.completions.create(\n    model=\"deepseek-chat\",\n    messages=[{\"role\": \"user\", \"content\": \"用一句话解释什么是 token\"}],\n)\nprint(r.choices[0].message.content)",
-              "out": "一段中文回答"
-            },
-            {
-              "text": "加上 system 约束，让回答变成「只给结论，不超过 20 字」。",
-              "code": "messages = [\n    {\"role\": \"system\", \"content\": \"你只给结论，不超过 20 字，不解释。\"},\n    {\"role\": \"user\", \"content\": \"什么是 token？\"},\n]\nr = client.chat.completions.create(model=\"deepseek-chat\", messages=messages)\nprint(r.choices[0].message.content)",
-              "out": "更短、更稳定的回答"
-            }
-          ],
-          "quiz": [
-            {
-              "q": "为什么 API key 不能写死在代码里？",
-              "a": "代码会被复制、上传、截图。key 泄露后别人可以用你的额度，且很难追溯。"
-            },
-            {
-              "q": "system 和 user 有什么区别？",
-              "a": "system 是给模型的长期规矩（角色、格式、语气），user 是每次的具体问题。换问题不用改 system。"
-            },
-            {
-              "q": "`r.choices[0].message.content` 里每一层是什么？",
-              "a": "choices 是候选列表（默认 1 个），[0] 取第一个，message 是回答对象，content 是文本。"
-            }
-          ],
-          "can": "在工作机上跑通一次真实调用，并能改成自己的提示词。"
-        }
-      ]
+     "id": "llm0a",
+     "title": "LLM 到底在做什么",
+     "min": 25,
+     "hook": "它不查资料、不搜索、也不「思考」。它只做一件事，每秒做几十次：猜下一个词。",
+     "goals": [
+      "用一句话说清 LLM 的工作方式",
+      "知道「字 → token → 数字」这条流水线",
+      "知道参数是什么，以及训练在调什么"
+     ],
+     "concepts": [
+      {
+       "t": "下一个词预测",
+       "en": "next-token prediction",
+       "d": "给一段文字，模型算出「下一个词最可能是哪个」，抽一个，再接上去。整段回答就是这样一个个词接出来的。"
+      },
+      {
+       "t": "词元",
+       "en": "token",
+       "d": "模型不认识「字」，只认识词元：常见词一个 token，生僻词拆成几段。中文一个字常占 1–2 个 token。"
+      },
+      {
+       "t": "参数",
+       "en": "parameters",
+       "d": "模型里那几百亿个数字。训练就是反复调这些数字，让「猜下一个词」越来越准。7B 表示 70 亿个参数。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "先看它「接话」：同一开头，让它续三次，观察多样性。",
+       "code": "for i in range(3):\n    r = client.chat.completions.create(\n        model=\"deepseek-chat\", temperature=1.0,\n        messages=[{\"role\": \"user\", \"content\": \"接着写下去，只写一句：今天的市场\"}],\n    )\n    print(i, r.choices[0].message.content.strip())",
+       "out": "三句话都不一样——因为每次都是「抽一个词、再接一个」，不是查好的答案"
+      },
+      {
+       "text": "把一句话拆开看长度：一个字和一次「输出」分别花多少 token。",
+       "code": "texts = [\"复利\", \"复利就是把利息也拿来生息\", \"Compound interest means interest earns interest\"]\nfor t in texts:\n    r = client.chat.completions.create(\n        model=\"deepseek-chat\", temperature=0, max_tokens=1,\n        messages=[{\"role\": \"user\", \"content\": t}],\n    )\n    print(len(t), \"字符 ->\", r.usage.prompt_tokens, \"token |\", t[:20])",
+       "out": "字符数和 token 数不成正比——中文一个字常是 1–2 个 token"
+      },
+      {
+       "text": "让它「只猜一个词」，体会它其实在算概率。",
+       "code": "r = client.chat.completions.create(\n    model=\"deepseek-chat\", temperature=0, max_tokens=1,\n    messages=[{\"role\": \"user\", \"content\": \"中国首都是\"}],\n)\nprint(\"下一个词:\", r.choices[0].message.content)\nprint(\"finish_reason:\", r.choices[0].finish_reason)",
+       "out": "下一个词: 北京 —— 它做的就是这个动作，重复成千上万次"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "模型并没有「查资料」，为什么很多事实它答得对？",
+       "a": "因为训练时这些事实大量出现在语料里，参数已经把「北京常接在中国首都后面」这种统计规律记下来了。它是在复现规律，不是查库。"
+      },
+      {
+       "q": "token 和「字」有什么区别？",
+       "a": "字是人写的单位，token 是模型切分的单位。一个英文词约 1 个 token，一个中文字常 1–2 个；生僻词会被拆成几段。"
+      },
+      {
+       "q": "7B 模型里的 7B 指什么？",
+       "a": "70 亿个参数（权重数字）。参数越多通常越能记住复杂规律，但推理更慢、显存更大。"
+      }
+     ],
+     "can": "用「猜下一个词」解释模型的行为，并说出 token 与参数各是什么。"
     },
     {
-      "id": "l1s",
-      "name": "第 1 阶段 · 会用它",
-      "hint": "token、检索、结构化输出——LLM 应用的三块地基",
-      "lessons": [
-        {
-          "id": "llm3",
-          "title": "数一数 token",
-          "min": 25,
-          "hook": "同一句话，中文账单比英文贵；同样 1000 字，有的模型算 800 token，有的算 1200。钱是按 token 收的，不是按字。",
-          "goals": [
-            "知道 token 不等于字",
-            "会从响应里读用量和成本",
-            "会估算一次任务的费用"
-          ],
-          "concepts": [
-            {
-              "t": "token",
-              "en": "token",
-              "d": "模型的最小计价单位。英文一个词约 1 个 token，中文一个字常常 1–2 个 token。"
-            },
-            {
-              "t": "上下文窗口",
-              "en": "context window",
-              "d": "一次能塞进去的 token 上限（输入 + 输出）。超了要么截断，要么报错。"
-            },
-            {
-              "t": "用量字段",
-              "en": "usage",
-              "d": "每次响应都带 `prompt_tokens`（输入）、`completion_tokens`（输出）、`total_tokens`。按这几个数算钱。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "同一段意思，分别用中英文问一次，比较用量。",
-              "code": "def ask(text):\n    r = client.chat.completions.create(\n        model=\"deepseek-chat\",\n        messages=[{\"role\": \"user\", \"content\": text}])\n    u = r.usage\n    return u.prompt_tokens, u.completion_tokens\n\nask(\"用一句话解释什么是折现\")\nask(\"Explain discounting in one sentence.\")",
-              "out": "同样是 10 来个字，中文的 prompt_tokens 通常更多"
-            },
-            {
-              "text": "按单价算这笔请求花了多少钱（单位：元 / 百万 token）。",
-              "code": "IN_PRICE, OUT_PRICE = 2.0, 8.0   # 以官网定价为准，随时会变\ncost = (pin * IN_PRICE + pout * OUT_PRICE) / 1_000_000\nprint(f\"{cost:.6f} 元\")",
-              "out": "单次通常是 0.0000x 元，跑 1 万次才有感觉"
-            },
-            {
-              "text": "估一个真实任务：1000 条文本分类，每条 300 字输入、20 字输出。",
-              "code": "n = 1000\npin, pout = 600, 30        # 粗估：中文一字≈1.5 token\nprint((pin*n*IN_PRICE + pout*n*OUT_PRICE) / 1_000_000, \"元\")",
-              "out": "约 1.4 元 —— 先算钱，再决定要不要跑"
-            }
-          ],
-          "quiz": [
-            {
-              "q": "为什么中文通常比英文贵？",
-              "a": "中文一个汉字常被切成 1–2 个 token，同样信息量下 token 数更多。"
-            },
-            {
-              "q": "上下文窗口 128k 是指什么？",
-              "a": "输入 + 输出总共不超过 128k token；超了会被截断或直接报错。"
-            },
-            {
-              "q": "跑批任务前，第一件事该算什么？",
-              "a": "总 token 数 × 单价。先算钱，再决定要不要跑、要不要先抽样。"
-            }
-          ],
-          "can": "拿到一个任务，能估算它的大致花费，而不是跑完才看账单。"
-        },
-        {
-          "id": "llm4",
-          "title": "把文本变成可检索的向量",
-          "min": 30,
-          "hook": "你有 1000 条笔记，想找出「和这句话最像的 3 条」。搜关键词会漏，因为「折现」和「现值」一个字都不同。",
-          "goals": [
-            "理解「相似」怎么变成数字",
-            "会用 TF-IDF 做第一版检索",
-            "知道 RAG 的三步"
-          ],
-          "concepts": [
-            {
-              "t": "向量化",
-              "en": "vectorize",
-              "d": "把一段文本压成一串数字。意思越近，数字越接近。"
-            },
-            {
-              "t": "余弦相似度",
-              "en": "cosine similarity",
-              "d": "看两个向量的夹角而不是长度。结果在 -1 到 1 之间，1 表示方向完全一致。"
-            },
-            {
-              "t": "RAG",
-              "en": "retrieval-augmented generation",
-              "d": "先检索出相关片段，再把片段塞进提示词让模型回答。三步：切块 → 检索 → 拼提示。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "先用最土的办法：TF-IDF + 余弦，不下载任何模型。",
-              "code": "from sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\ndocs = [\"折现是把未来的钱换算成今天的价值\",\n        \"复利是利息也生利息\",\n        \"期权是未来买卖的权利\"]\nv = TfidfVectorizer().fit_transform(docs + [\"现值怎么算\"])\nsim = cosine_similarity(v[-1], v[:-1])\nprint(sim, docs[sim.argmax()])",
-              "out": "第一条最像 —— 它认出了「现值/折现」的字面接近"
-            },
-            {
-              "text": "看它的局限：换一批词完全不同的同义句。",
-              "code": "docs2 = [\"discount future cash flows\", \"compound interest\"]\nv2 = TfidfVectorizer().fit_transform(docs2 + [\"现值怎么算\"])\ncosine_similarity(v2[-1], v2[:-1])",
-              "out": "相似度接近 0 —— 字面匹配到此为止"
-            },
-            {
-              "text": "工业界的做法：把 TF-IDF 换成 embedding 模型，其余流程一模一样。",
-              "code": "# 换成 embedding 后，只需替换这一行：\n# vec = embed(text)\n# 余弦、top-k、拼提示 全都不变",
-              "out": "流程不变，只换「把文本变数字」的那一步"
-            }
-          ],
-          "quiz": [
-            {
-              "q": "为什么用余弦而不用欧氏距离？",
-              "a": "余弦只看方向，不受文本长短影响；长文档和短句也能公平比较。"
-            },
-            {
-              "q": "TF-IDF 在什么情况下会失效？",
-              "a": "同义不同词、跨语言、缩写和全称——它只认字面。"
-            },
-            {
-              "q": "RAG 的三步是什么？为什么要有第一步「切块」？",
-              "a": "切块、检索、拼提示。整篇文档太长塞不进上下文，切成小段才能只把相关的几段放进去。"
-            }
-          ],
-          "can": "给自己的一批笔记做一个「输入一句话、返回最像的 3 条」的小工具。"
-        },
-        {
-          "id": "llm5",
-          "title": "让它稳定输出 JSON",
-          "min": 30,
-          "hook": "你让模型输出结构化数据，它有时带解释、有时用单引号、有时干脆多说一句「好的」——你的程序当场崩。",
-          "goals": [
-            "会用 JSON 模式约束输出",
-            "会写「解析失败就重试」的保护",
-            "会用 20 条测试集算通过率"
-          ],
-          "concepts": [
-            {
-              "t": "JSON 模式",
-              "en": "response_format",
-              "d": "请求里声明 `{\"type\": \"json_object\"}`，模型会保证输出是合法 JSON。但字段结构还得靠提示词说清。"
-            },
-            {
-              "t": "重试",
-              "en": "retry",
-              "d": "解析失败时把错误信息塞回去再问一次，通常第二次就对了。最多重试 2 次。"
-            },
-            {
-              "t": "通过率",
-              "en": "pass rate",
-              "d": "拿 20 条人工标好的样本跑一遍，算「格式对且内容对」的比例。这是你唯一能拿来说服别人的数字。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "先写清字段，再开 JSON 模式。",
-              "code": "prompt = \"\"\"从下面这句话里抽取信息，输出 JSON：\n{\"company\": \"公司名\", \"amount\": 数字或 null, \"date\": \"YYYY-MM-DD 或 null\"}\n句子：{\"我们在 2024 年 3 月向某某公司投资了 5000 万元\"}\"\"\"\nr = client.chat.completions.create(\n    model=\"deepseek-chat\",\n    messages=[{\"role\": \"user\", \"content\": prompt}],\n    response_format={\"type\": \"json_object\"},\n)\nprint(r.choices[0].message.content)",
-              "out": "{\"company\": \"某某公司\", \"amount\": 50000000, \"date\": \"2024-03-01\"}"
-            },
-            {
-              "text": "加保护：解析失败就重试，两次还不行就记失败。",
-              "code": "import json\n\ndef extract(text, tries=2):\n    for _ in range(tries):\n        r = client.chat.completions.create(\n            model=\"deepseek-chat\",\n            messages=[{\"role\": \"user\", \"content\": prompt.replace(\"{句子}\", text)}],\n            response_format={\"type\": \"json_object\"})\n        try:\n            return json.loads(r.choices[0].message.content)\n        except json.JSONDecodeError:\n            continue\n    return None",
-              "out": "None 表示这条失败，交给人工"
-            },
-            {
-              "text": "用 20 条样本算通过率——这是最容易被忽略、也最能说明问题的一步。",
-              "code": "ok = sum(1 for s in samples if extract(s) is not None)\nprint(f\"{ok}/{len(samples)} = {ok/len(samples):.0%}\")",
-              "out": "例如 17/20 = 85%，剩下的 3 条要人工或改提示"
-            }
-          ],
-          "quiz": [
-            {
-              "q": "开了 JSON 模式，为什么还需要重试？",
-              "a": "它保证「是合法 JSON」，不保证「字段齐全、类型对」；模型仍可能漏字段或给字符串 \"null\"。"
-            },
-            {
-              "q": "怎么提高结构化抽取的通过率？",
-              "a": "给 1–2 个完整示例（few-shot）、把字段类型写死、把长文本拆短、对失败样本单独改提示。"
-            },
-            {
-              "q": "为什么一定要有 20 条以上的人工标注样本？",
-              "a": "没有基准就只能凭感觉说「效果不错」，出了问题也说不清是哪一类。"
-            }
-          ],
-          "can": "把一段非结构化文本稳定地变成程序能用的字段，并给出一个可信的通过率。"
-        }
-      ]
+     "id": "llm0b",
+     "title": "模型里面长什么样",
+     "min": 30,
+     "hook": "它是一摞几十层一模一样的积木，每层只做两件事：让词互相看一眼，再各自消化一下。",
+     "goals": [
+      "说清一层 Transformer 的两个部件",
+      "知道「注意力」在干什么（不推公式）",
+      "理解上下文窗口和显存的账为什么这么算"
+     ],
+     "concepts": [
+      {
+       "t": "自注意力",
+       "en": "self-attention",
+       "d": "每个词都去问其他词：「你跟我有多相关？」然后按相关度把别人的信息加权汇总到自己身上。「银行」会更多吸收「利率」的信息。"
+      },
+      {
+       "t": "前馈层",
+       "en": "feed-forward",
+       "d": "每个词单独过一次小网络，做非线性变换。大量「知识」存在这里。注意力和前馈层交替堆叠几十层。"
+      },
+      {
+       "t": "上下文窗口",
+       "en": "context window",
+       "d": "一次能读进来的 token 上限（输入+输出）。它决定模型「同时能看多少字」，也直接决定显存和费用。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "手算一个小注意力：3 个词的「相关度」怎么变成权重。",
+       "code": "import numpy as np\n# 三个词的「向量」（简化为 2 维）\nX = np.array([[1.0, 0.0],   # 利率\n              [0.9, 0.1],   # 银行\n              [0.0, 1.0]])  # 天气\nscores = X @ X.T            # 两两相似度\nw = np.exp(scores) / np.exp(scores).sum(axis=1, keepdims=True)\nnp.set_printoptions(precision=2, suppress=True)\nprint(\"相关度:\\n\", scores)\nprint(\"权重(softmax):\\n\", w)",
+       "out": "「银行」那一行对「利率」的权重明显更大——它会更用力地吸收利率的信息"
+      },
+      {
+       "text": "看上下文如何改变同一个词的理解。",
+       "code": "for ctx in [\"银行旁边有个公园\", \"银行提高了存款利率\"]:\n    r = client.chat.completions.create(\n        model=\"deepseek-chat\", temperature=0,\n        messages=[{\"role\": \"user\", \"content\": f\"这句话里的「银行」是什么意思？{ctx}\"}],\n    )\n    print(ctx, \"->\", r.choices[0].message.content.strip()[:40])",
+       "out": "同一个词，两种解释——因为注意力把它周围的词吸收进来了"
+      },
+      {
+       "text": "算一遍参数与显存的账：为什么 7B 要 14 GB。",
+       "code": "params = 7e9\nfor name, bytes_per in [(\"fp16\", 2), (\"int8\", 1), (\"int4\", 0.5)]:\n    print(name, \"权重约\", round(params * bytes_per / 1e9, 1), \"GB\")\nprint(\"还要另外留：KV cache + 中间激活 + 框架开销\")",
+       "out": "fp16 14.0GB / int8 7.0GB / int4 3.5GB——这就是 8GB 显存能跑什么的分界线"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "一层 Transformer 里，注意力和前馈层分别负责什么？",
+       "a": "注意力负责「词与词之间传信息」（汇总上下文），前馈层负责「每个词自己消化」（非线性变换、存知识）。两者交替堆叠。"
+      },
+      {
+       "q": "为什么上下文越长越贵、越慢？",
+       "a": "注意力要让每个词和其他所有词算相关度，长度翻倍计算量约翻四倍；同时 KV cache 占用线性增长，显存也更紧张。"
+      },
+      {
+       "q": "7B 模型用 int4 量化后约 3.5 GB，为什么实际跑起来还要更多？",
+       "a": "权重只是第一部分，还要 KV cache、激活值和框架开销。上下文越长，KV cache 越大，常常比权重还占地方。"
+      }
+     ],
+     "can": "画出一层 Transformer 的两个部件，并解释注意力、上下文窗口和显存的关系。"
     },
     {
-      "id": "l2s",
-      "name": "第 2 阶段 · 会算账、会部署",
-      "hint": "推理为什么慢、显存怎么算、本地怎么跑起来",
-      "lessons": [
-        {
-          "id": "llm6",
-          "title": "推理为什么慢",
-          "min": 25,
-          "hook": "同一个问题，有人等 0.5 秒看到第一个字，有人等 8 秒才出字。差别不在模型大小，在「两段式推理」。",
-          "goals": [
-            "分清 prefill 和 decode",
-            "会测首个 token 时间与总时间",
-            "知道 KV cache 是什么、为什么吃显存"
-          ],
-          "concepts": [
-            {
-              "t": "预填充",
-              "en": "prefill",
-              "d": "把整段输入一次性算完。输入越长越慢，但能并行，吃的是算力。"
-            },
-            {
-              "t": "解码",
-              "en": "decode",
-              "d": "一个词一个词往外吐，每吐一个都要把前面所有 token 重新过一遍注意力。吃的是显存带宽。"
-            },
-            {
-              "t": "KV cache",
-              "en": "KV cache",
-              "d": "把算过的键值对存下来，避免重复计算。代价是显存：序列越长占得越多。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "用流式输出，测「多久看到第一个字」和「总共多久」。",
-              "code": "import time\n\nt0 = time.time(); first = None; text = \"\"\nfor chunk in client.chat.completions.create(\n        model=\"deepseek-chat\",\n        messages=[{\"role\": \"user\", \"content\": \"写一段 200 字的产品介绍\"}],\n        stream=True):\n    delta = chunk.choices[0].delta.content or \"\"\n    if delta and first is None:\n        first = time.time() - t0\n    text += delta\nprint(f\"首字 {first:.2f}s，总 {time.time()-t0:.2f}s，{len(text)} 字\")",
-              "out": "首字通常 0.3–1s，总时间随字数线性增长"
-            },
-            {
-              "text": "换个长输入（比如 3000 字文档），看首字时间怎么变。",
-              "code": "long_doc = \"...\" * 1000\n# 只问「这段讲了什么」，输入很长、输出很短\nt0 = time.time()\nclient.chat.completions.create(model=\"deepseek-chat\",\n    messages=[{\"role\": \"user\", \"content\": long_doc + \"\\n用一句话总结\"}])\nprint(time.time()-t0)",
-              "out": "输入越长，首字越慢——这是 prefill 在变长"
-            },
-            {
-              "text": "记住一个判据：首字慢 = 输入太长；出字慢 = 输出太长。",
-              "code": "# 优化方向完全不同：\n# 首字慢 → 截断/检索/缓存输入\n# 出字慢 → 减少输出、换更快的模型、流式展示",
-              "out": ""
-            }
-          ],
-          "quiz": [
-            {
-              "q": "用户抱怨「很慢」，你该先问什么？",
-              "a": "是等第一个字慢，还是字一个一个字出得慢。前者是 prefill，后者是 decode。"
-            },
-            {
-              "q": "为什么 decode 阶段 GPU 用不满？",
-              "a": "每一步只算一个 token，矩阵太小，算力闲着，瓶颈在显存带宽。"
-            },
-            {
-              "q": "KV cache 为什么能加速？代价是什么？",
-              "a": "省掉重复计算历史 token 的功夫；代价是显存，且随序列长度和并发数线性增长。"
-            }
-          ],
-          "can": "拿到一个「慢」的反馈，能判断是 prefill 还是 decode，并说清优化方向。"
-        },
-        {
-          "id": "llm7",
-          "title": "用纸笔算清显存",
-          "min": 25,
-          "hook": "「我这 8GB 显存能跑 7B 吗？」——先别下载，三分钟就能算出来，省下两小时。",
-          "goals": [
-            "会算权重显存",
-            "会估 KV cache",
-            "能判断一张卡跑不跑得动"
-          ],
-          "concepts": [
-            {
-              "t": "权重显存",
-              "en": "weights",
-              "d": "参数量 × 每参数字节数。7B 模型用 FP16 是 14GB，用 4 位量化约 3.5–4GB。"
-            },
-            {
-              "t": "量化",
-              "en": "quantization",
-              "d": "用更少的位存同一个参数。8 位省一半，4 位省四分之三，代价是精度略降。"
-            },
-            {
-              "t": "KV cache 显存",
-              "en": "KV cache size",
-              "d": "约 2 × 层数 × 头数 × 维度 × 序列长 × 并发数 × 精度。长对话、高并发时它会超过权重。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "先算权重，三种精度对比。",
-              "code": "params = 7e9\nfor name, bytes_per in [(\"FP16\", 2), (\"INT8\", 1), (\"Q4\", 0.5)]:\n    print(f\"{name}: {params * bytes_per / 1e9:.1f} GB\")",
-              "out": "FP16 14.0 GB / INT8 7.0 GB / Q4 3.5 GB"
-            },
-            {
-              "text": "再算 KV cache：模型参数从官方配置里查（这里用典型值）。",
-              "code": "layers, heads, dim, seq, batch, bytes_per = 32, 8, 128, 4096, 1, 2\nkv = 2 * layers * heads * dim * seq * batch * bytes_per / 1e9\nprint(f\"KV cache ≈ {kv:.2f} GB\")",
-              "out": "约 0.54 GB（单条 4k 对话）；32 并发就是 17 GB"
-            },
-            {
-              "text": "加起来判断：8GB 卡能跑什么。",
-              "code": "print(3.5 + 0.54)   # Q4 + 单条 4k：约 4 GB → 能跑，还剩 4GB 给批处理和开销\nprint(14 + 0.54)    # FP16：14.5 GB → 跑不动",
-              "out": "结论：8GB 只能跑 4 位量化的 7B，且并发不能高"
-            }
-          ],
-          "quiz": [
-            {
-              "q": "同样是 7B，为什么 Q4 只要 3.5GB？",
-              "a": "每个参数从 2 字节压到 0.5 字节（4 位），显存降为 1/4，代价是少量精度损失。"
-            },
-            {
-              "q": "为什么长对话越来越吃显存？",
-              "a": "KV cache 随序列长度线性增长；聊到 32k 时，光是缓存就能超过模型权重。"
-            },
-            {
-              "q": "8GB 卡想提高并发，优先做什么？",
-              "a": "降 KV cache：更短的上下文、更少的并发、GQA 类结构、或把一部分层放 CPU。"
-            }
-          ],
-          "can": "在下载任何模型之前，用两行算术判断它能不能跑、能跑几个并发。"
-        },
-        {
-          "id": "llm8",
-          "title": "本地跑起来并压测",
-          "min": 30,
-          "hook": "模型文件 4GB，双击打不开。你需要一个「推理引擎」，就像视频文件需要播放器。",
-          "goals": [
-            "在本机跑起一个 7B 模型",
-            "会测吞吐和延迟",
-            "理解批处理带来的取舍"
-          ],
-          "concepts": [
-            {
-              "t": "推理引擎",
-              "en": "inference engine",
-              "d": "把权重变成能服务的程序：llama.cpp（轻、跨平台）、Ollama（更好装）、vLLM（吞吐最高，但要 Linux）。"
-            },
-            {
-              "t": "吞吐 vs 延迟",
-              "en": "throughput vs latency",
-              "d": "一次服务更多人（吞吐高）往往让每个人等更久（延迟高）。这两个指标永远要一起看。"
-            },
-            {
-              "t": "并发",
-              "en": "concurrency",
-              "d": "同时处理的请求数。批处理能提高吞吐，但会拉长单请求完成时间。"
-            }
-          ],
-          "steps": [
-            {
-              "text": "装 Ollama，一条命令拉一个 4 位量化的 7B。",
-              "code": "winget install Ollama.Ollama\nollama run qwen2.5:7b-instruct-q4_K_M",
-              "out": "进入对话界面，能回答就说明跑通了"
-            },
-            {
-              "text": "用 HTTP 接口测单次延迟（Ollama 默认监听 11434）。",
-              "code": "import time, requests\n\nt0 = time.time()\nr = requests.post(\"http://localhost:11434/api/generate\", json={\n    \"model\": \"qwen2.5:7b-instruct-q4_K_M\", \"prompt\": \"用一句话解释复利\", \"stream\": False})\nprint(f\"{time.time()-t0:.2f}s\", r.json()[\"response\"][:30])",
-              "out": "首字不含流式，这里测的是总耗时"
-            },
-            {
-              "text": "发 20 个并发请求，算每秒完成数（吞吐）。",
-              "code": "from concurrent.futures import ThreadPoolExecutor\nimport time, requests\n\ndef one(_):\n    return requests.post(\"http://localhost:11434/api/generate\", json={\n        \"model\": \"qwen2.5:7b-instruct-q4_K_M\", \"prompt\": \"说一句短话\", \"stream\": False}).status_code\n\nt0 = time.time()\nwith ThreadPoolExecutor(max_workers=8) as ex:\n    list(ex.map(one, range(20)))\ndt = time.time() - t0\nprint(f\"20 个请求 {dt:.1f}s，吞吐 {20/dt:.2f} req/s\")",
-              "out": "例如 20 个请求 40s → 0.5 req/s；调小 max_workers 通常更快"
-            }
-          ],
-          "quiz": [
-            {
-              "q": "为什么并发开到 8 反而可能更慢？",
-              "a": "8GB 显存放不下 8 份 KV cache，会退化成串行或爆显存；并发要按显存算，不是越大越好。"
-            },
-            {
-              "q": "Ollama 和 vLLM 该怎么选？",
-              "a": "单机试用、Windows、图省事用 Ollama；生产要吞吐、要批处理调度用 vLLM（Linux）。"
-            },
-            {
-              "q": "「模型能跑」和「服务能用」差在哪？",
-              "a": "能跑只看单次；能用要看并发下的吞吐、超时、显存稳定性和降级策略。"
-            }
-          ],
-          "can": "在 8GB 笔记本上跑起 7B 模型，并给出它的吞吐和延迟数字（而不是「感觉还挺快」）。"
-        }
-      ]
+     "id": "llm0c",
+     "title": "二十个名词一次对齐",
+     "min": 25,
+     "hook": "读原文卡住，多半不是数学难，而是名词没对齐：同一个东西，三本书三种叫法。",
+     "goals": [
+      "认得 20 个高频术语的中英文与含义",
+      "能区分最容易混的五组词",
+      "学会遇到生词时的定位方法"
+     ],
+     "concepts": [
+      {
+       "t": "推理",
+       "en": "inference",
+       "d": "用训练好的模型生成回答的过程。对应「训练 training」——一个是一次性的大工程，一个是每次调用都在发生的事。"
+      },
+      {
+       "t": "幻觉",
+       "en": "hallucination",
+       "d": "模型自信地说出不实内容。根源是它在「猜下一个词」而不是「查事实」，流畅性和真实性是两回事。"
+      },
+      {
+       "t": "嵌入",
+       "en": "embedding",
+       "d": "把文字变成一串数字（向量），意思相近的向量距离近。RAG 检索、聚类、去重都靠它。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "先把名词卡建成字典，打印出来背一遍。",
+       "code": "terms = {\n  \"token\": \"词元，模型的最小计价与处理单位\",\n  \"prompt\": \"提示词，你发给模型的全部内容\",\n  \"completion\": \"模型生成的回答\",\n  \"context window\": \"上下文窗口，一次能读的 token 上限\",\n  \"temperature\": \"温度，控制随机性，0 最稳定\",\n  \"top_p\": \"核采样，只从高概率词里抽\",\n  \"inference\": \"推理，用模型生成回答\",\n  \"prefill\": \"预填充，先把 prompt 一次性算完\",\n  \"decode\": \"解码，逐个 token 生成\",\n  \"KV cache\": \"缓存已算过的键值，避免重复计算\",\n  \"embedding\": \"嵌入，把文字变成向量\",\n  \"RAG\": \"检索增强生成，先查资料再回答\",\n  \"fine-tuning\": \"微调，用你的数据继续训练\",\n  \"LoRA\": \"低秩适配，省显存的微调方式\",\n  \"quantization\": \"量化，降低数值精度省显存\",\n  \"hallucination\": \"幻觉，编造不实内容\",\n  \"guardrail\": \"护栏，模型之外的检查层\",\n  \"agent\": \"智能体，能调工具、多步完成任务\",\n  \"TTFT\": \"首字延迟，从发出请求到第一个字\",\n  \"throughput\": \"吞吐，每秒能处理多少 token/请求\",\n}\nfor k, v in terms.items():\n    print(f\"{k:16} {v}\")",
+       "out": "20 行名词卡——遇到不认识的，先回来对一下"
+      },
+      {
+       "text": "用模型自己做一次「名词标注」，看你哪几个词还不确定。",
+       "code": "para = \"预填充阶段并行处理 prompt，解码阶段逐 token 生成；KV cache 让历史不必重算，量化则降低了权重精度。\"\nr = client.chat.completions.create(\n    model=\"deepseek-chat\", temperature=0,\n    messages=[{\"role\": \"user\", \"content\": f\"把这段话里的专业术语挑出来，逐个用一句话解释：{para}\"}],\n)\nprint(r.choices[0].message.content)",
+       "out": "模型会列出 prefill/decode/KV cache/量化——解释里有你不熟的，回去查书页码"
+      },
+      {
+       "text": "练「术语 → 书 → 页码」的定位：用课程搜索找到它在哪一章。",
+       "code": "# 在课程里搜索（等价于追问「这个词在哪讲过」）\n# study_search(\"KV cache\")\n# 返回：概念卡 + 章节页码，例如《04 LLM》第 2 章 p.69\nprint(\"遇到生词的固定动作：搜索 → 看概念卡 → 翻对应页\")",
+       "out": "搜索 → 概念卡 → 翻页，三步固定下来，就不用从头读"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "「训练」和「推理」最大的区别是什么？",
+       "a": "训练是把参数调好（一次性、极贵、在数据中心）；推理是用调好的参数生成回答（每次调用都在发生）。你平时用 API，用的是推理。"
+      },
+      {
+       "q": "幻觉和「答错」有什么区别？",
+       "a": "答错可能是知识不足或理解偏差；幻觉是「编造出看似合理但不实的内容」，且语气自信。防幻觉靠检索与核验，不是靠让它「想清楚」。"
+      },
+      {
+       "q": "微调和 RAG，什么时候用哪个？",
+       "a": "缺知识（资料常更新）用 RAG；缺格式/风格/固定行为用微调。多数业务先上 RAG，微调是后手且成本更高。"
+      }
+     ],
+     "can": "认出 20 个高频术语，并能把不会的词定位到书里的具体章节。"
     }
-  ]
+   ]
+  },
+  {
+   "id": "l0",
+   "name": "起点 · 零基础三关",
+   "hint": "装 Python、算数、做判断，三关走完再进正课",
+   "lessons": [
+    {
+     "id": "llm1",
+     "title": "Python 只学够用的",
+     "min": 20,
+     "hook": "模型返回的是一段像这样的东西：`{\"content\": \"你好\"}`。你要从里面把「你好」取出来——这只需要字典、取值、和一个小函数。",
+     "goals": [
+      "会建字典、按 key 取值",
+      "会写一个能重复用的小函数",
+      "看得懂 KeyError 是什么意思"
+     ],
+     "concepts": [
+      {
+       "t": "字典",
+       "en": "dict",
+       "d": "「名字 → 值」的查表。`d = {\"role\": \"user\", \"content\": \"你好\"}`，用 `d[\"content\"]` 取出「你好」。"
+      },
+      {
+       "t": "键不存在",
+       "en": "KeyError",
+       "d": "取一个没存过的名字会报错。安全写法是 `d.get(\"content\", \"\")`，取不到就给空字符串。"
+      },
+      {
+       "t": "函数",
+       "en": "function",
+       "d": "把「发请求 → 取字段」包成名字，以后换一句话就能复用。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "建一个最像 API 返回的字典，练取值。",
+       "code": "resp = {\"role\": \"assistant\", \"content\": \"你好\", \"tokens\": 12}\nprint(resp[\"content\"])          # 你好\nprint(resp.get(\"finish\", \"无\"))  # 无（不报错）",
+       "out": "你好 / 无"
+      },
+      {
+       "text": "写一个函数，专门从这种结构里取正文。",
+       "code": "def get_text(resp):\n    return resp.get(\"content\", \"\")\n\nget_text({\"content\": \"第一段\"})",
+       "out": "第一段"
+      },
+      {
+       "text": "故意取一个不存在的键，看报错长什么样。",
+       "code": "resp[\"abc\"]",
+       "out": "KeyError: 'abc' —— 从最后一行往上看，就知道错在哪"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "`resp.get(\"content\")` 和 `resp[\"content\"]` 有什么区别？",
+       "a": "前者取不到返回 None，不中断程序；后者直接抛 KeyError。解析外部返回的数据时用 get 更安全。"
+      },
+      {
+       "q": "如果返回的是 `[{...}, {...}]` 这样的列表，怎么取第一条的正文？",
+       "a": "`resp[0][\"content\"]`——先按序号取元素，再按 key 取值。"
+      },
+      {
+       "q": "为什么要把取字段写成函数，而不是每次都手写？",
+       "a": "换模型、换字段名时只改一处；出错也只有一个地方要查。"
+      }
+     ],
+     "can": "拿到任何一段 JSON 响应，都能把想要的字段安全地取出来。"
+    },
+    {
+     "id": "llm2",
+     "title": "调第一个 API",
+     "min": 25,
+     "hook": "你不需要训练模型，也不需要显卡——只要一个 API key，二十行代码就能让模型替你干活。",
+     "goals": [
+      "装好 SDK、配好 key",
+      "发出第一个请求拿到回答",
+      "理解 system 和 user 两种消息"
+     ],
+     "concepts": [
+      {
+       "t": "API key",
+       "en": "api key",
+       "d": "你的身份凭证。**不要写进代码提交到网上**，放进环境变量或 `.env` 文件。"
+      },
+      {
+       "t": "messages",
+       "en": "messages",
+       "d": "一段对话是一个列表：`system` 定规矩（你是助手），`user` 提问，`assistant` 是模型的回答。"
+      },
+      {
+       "t": "模型名",
+       "en": "model",
+       "d": "DeepSeek 里 `deepseek-chat` 是通用对话模型，`deepseek-reasoner` 会先推理再回答、更慢更贵。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "装 SDK（一条命令），key 放环境变量，不要硬编码。",
+       "code": "pip install openai\n\n# Windows PowerShell：\n$env:DEEPSEEK_API_KEY = \"sk-你的key\"",
+       "out": "装好后 `pip show openai` 能看到版本"
+      },
+      {
+       "text": "发第一个请求。`base_url` 是关键——同一个 SDK 可以接不同厂商。",
+       "code": "import os\nfrom openai import OpenAI\n\nclient = OpenAI(api_key=os.environ[\"DEEPSEEK_API_KEY\"],\n                base_url=\"https://api.deepseek.com\")\n\nr = client.chat.completions.create(\n    model=\"deepseek-chat\",\n    messages=[{\"role\": \"user\", \"content\": \"用一句话解释什么是 token\"}],\n)\nprint(r.choices[0].message.content)",
+       "out": "一段中文回答"
+      },
+      {
+       "text": "加上 system 约束，让回答变成「只给结论，不超过 20 字」。",
+       "code": "messages = [\n    {\"role\": \"system\", \"content\": \"你只给结论，不超过 20 字，不解释。\"},\n    {\"role\": \"user\", \"content\": \"什么是 token？\"},\n]\nr = client.chat.completions.create(model=\"deepseek-chat\", messages=messages)\nprint(r.choices[0].message.content)",
+       "out": "更短、更稳定的回答"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "为什么 API key 不能写死在代码里？",
+       "a": "代码会被复制、上传、截图。key 泄露后别人可以用你的额度，且很难追溯。"
+      },
+      {
+       "q": "system 和 user 有什么区别？",
+       "a": "system 是给模型的长期规矩（角色、格式、语气），user 是每次的具体问题。换问题不用改 system。"
+      },
+      {
+       "q": "`r.choices[0].message.content` 里每一层是什么？",
+       "a": "choices 是候选列表（默认 1 个），[0] 取第一个，message 是回答对象，content 是文本。"
+      }
+     ],
+     "can": "在工作机上跑通一次真实调用，并能改成自己的提示词。"
+    }
+   ]
+  },
+  {
+   "id": "l1s",
+   "name": "第 1 阶段 · 会用它",
+   "hint": "token、检索、结构化输出——LLM 应用的三块地基",
+   "lessons": [
+    {
+     "id": "llm3",
+     "title": "数一数 token",
+     "min": 25,
+     "hook": "同一句话，中文账单比英文贵；同样 1000 字，有的模型算 800 token，有的算 1200。钱是按 token 收的，不是按字。",
+     "goals": [
+      "知道 token 不等于字",
+      "会从响应里读用量和成本",
+      "会估算一次任务的费用"
+     ],
+     "concepts": [
+      {
+       "t": "token",
+       "en": "token",
+       "d": "模型的最小计价单位。英文一个词约 1 个 token，中文一个字常常 1–2 个 token。"
+      },
+      {
+       "t": "上下文窗口",
+       "en": "context window",
+       "d": "一次能塞进去的 token 上限（输入 + 输出）。超了要么截断，要么报错。"
+      },
+      {
+       "t": "用量字段",
+       "en": "usage",
+       "d": "每次响应都带 `prompt_tokens`（输入）、`completion_tokens`（输出）、`total_tokens`。按这几个数算钱。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "同一段意思，分别用中英文问一次，比较用量。",
+       "code": "def ask(text):\n    r = client.chat.completions.create(\n        model=\"deepseek-chat\",\n        messages=[{\"role\": \"user\", \"content\": text}])\n    u = r.usage\n    return u.prompt_tokens, u.completion_tokens\n\nask(\"用一句话解释什么是折现\")\nask(\"Explain discounting in one sentence.\")",
+       "out": "同样是 10 来个字，中文的 prompt_tokens 通常更多"
+      },
+      {
+       "text": "按单价算这笔请求花了多少钱（单位：元 / 百万 token）。",
+       "code": "IN_PRICE, OUT_PRICE = 2.0, 8.0   # 以官网定价为准，随时会变\ncost = (pin * IN_PRICE + pout * OUT_PRICE) / 1_000_000\nprint(f\"{cost:.6f} 元\")",
+       "out": "单次通常是 0.0000x 元，跑 1 万次才有感觉"
+      },
+      {
+       "text": "估一个真实任务：1000 条文本分类，每条 300 字输入、20 字输出。",
+       "code": "n = 1000\npin, pout = 600, 30        # 粗估：中文一字≈1.5 token\nprint((pin*n*IN_PRICE + pout*n*OUT_PRICE) / 1_000_000, \"元\")",
+       "out": "约 1.4 元 —— 先算钱，再决定要不要跑"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "为什么中文通常比英文贵？",
+       "a": "中文一个汉字常被切成 1–2 个 token，同样信息量下 token 数更多。"
+      },
+      {
+       "q": "上下文窗口 128k 是指什么？",
+       "a": "输入 + 输出总共不超过 128k token；超了会被截断或直接报错。"
+      },
+      {
+       "q": "跑批任务前，第一件事该算什么？",
+       "a": "总 token 数 × 单价。先算钱，再决定要不要跑、要不要先抽样。"
+      }
+     ],
+     "can": "拿到一个任务，能估算它的大致花费，而不是跑完才看账单。"
+    },
+    {
+     "id": "llm4",
+     "title": "把文本变成可检索的向量",
+     "min": 30,
+     "hook": "你有 1000 条笔记，想找出「和这句话最像的 3 条」。搜关键词会漏，因为「折现」和「现值」一个字都不同。",
+     "goals": [
+      "理解「相似」怎么变成数字",
+      "会用 TF-IDF 做第一版检索",
+      "知道 RAG 的三步"
+     ],
+     "concepts": [
+      {
+       "t": "向量化",
+       "en": "vectorize",
+       "d": "把一段文本压成一串数字。意思越近，数字越接近。"
+      },
+      {
+       "t": "余弦相似度",
+       "en": "cosine similarity",
+       "d": "看两个向量的夹角而不是长度。结果在 -1 到 1 之间，1 表示方向完全一致。"
+      },
+      {
+       "t": "RAG",
+       "en": "retrieval-augmented generation",
+       "d": "先检索出相关片段，再把片段塞进提示词让模型回答。三步：切块 → 检索 → 拼提示。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "先用最土的办法：TF-IDF + 余弦，不下载任何模型。",
+       "code": "from sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\ndocs = [\"折现是把未来的钱换算成今天的价值\",\n        \"复利是利息也生利息\",\n        \"期权是未来买卖的权利\"]\nv = TfidfVectorizer().fit_transform(docs + [\"现值怎么算\"])\nsim = cosine_similarity(v[-1], v[:-1])\nprint(sim, docs[sim.argmax()])",
+       "out": "第一条最像 —— 它认出了「现值/折现」的字面接近"
+      },
+      {
+       "text": "看它的局限：换一批词完全不同的同义句。",
+       "code": "docs2 = [\"discount future cash flows\", \"compound interest\"]\nv2 = TfidfVectorizer().fit_transform(docs2 + [\"现值怎么算\"])\ncosine_similarity(v2[-1], v2[:-1])",
+       "out": "相似度接近 0 —— 字面匹配到此为止"
+      },
+      {
+       "text": "工业界的做法：把 TF-IDF 换成 embedding 模型，其余流程一模一样。",
+       "code": "# 换成 embedding 后，只需替换这一行：\n# vec = embed(text)\n# 余弦、top-k、拼提示 全都不变",
+       "out": "流程不变，只换「把文本变数字」的那一步"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "为什么用余弦而不用欧氏距离？",
+       "a": "余弦只看方向，不受文本长短影响；长文档和短句也能公平比较。"
+      },
+      {
+       "q": "TF-IDF 在什么情况下会失效？",
+       "a": "同义不同词、跨语言、缩写和全称——它只认字面。"
+      },
+      {
+       "q": "RAG 的三步是什么？为什么要有第一步「切块」？",
+       "a": "切块、检索、拼提示。整篇文档太长塞不进上下文，切成小段才能只把相关的几段放进去。"
+      }
+     ],
+     "can": "给自己的一批笔记做一个「输入一句话、返回最像的 3 条」的小工具。"
+    },
+    {
+     "id": "llm5",
+     "title": "让它稳定输出 JSON",
+     "min": 30,
+     "hook": "你让模型输出结构化数据，它有时带解释、有时用单引号、有时干脆多说一句「好的」——你的程序当场崩。",
+     "goals": [
+      "会用 JSON 模式约束输出",
+      "会写「解析失败就重试」的保护",
+      "会用 20 条测试集算通过率"
+     ],
+     "concepts": [
+      {
+       "t": "JSON 模式",
+       "en": "response_format",
+       "d": "请求里声明 `{\"type\": \"json_object\"}`，模型会保证输出是合法 JSON。但字段结构还得靠提示词说清。"
+      },
+      {
+       "t": "重试",
+       "en": "retry",
+       "d": "解析失败时把错误信息塞回去再问一次，通常第二次就对了。最多重试 2 次。"
+      },
+      {
+       "t": "通过率",
+       "en": "pass rate",
+       "d": "拿 20 条人工标好的样本跑一遍，算「格式对且内容对」的比例。这是你唯一能拿来说服别人的数字。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "先写清字段，再开 JSON 模式。",
+       "code": "prompt = \"\"\"从下面这句话里抽取信息，输出 JSON：\n{\"company\": \"公司名\", \"amount\": 数字或 null, \"date\": \"YYYY-MM-DD 或 null\"}\n句子：{\"我们在 2024 年 3 月向某某公司投资了 5000 万元\"}\"\"\"\nr = client.chat.completions.create(\n    model=\"deepseek-chat\",\n    messages=[{\"role\": \"user\", \"content\": prompt}],\n    response_format={\"type\": \"json_object\"},\n)\nprint(r.choices[0].message.content)",
+       "out": "{\"company\": \"某某公司\", \"amount\": 50000000, \"date\": \"2024-03-01\"}"
+      },
+      {
+       "text": "加保护：解析失败就重试，两次还不行就记失败。",
+       "code": "import json\n\ndef extract(text, tries=2):\n    for _ in range(tries):\n        r = client.chat.completions.create(\n            model=\"deepseek-chat\",\n            messages=[{\"role\": \"user\", \"content\": prompt.replace(\"{句子}\", text)}],\n            response_format={\"type\": \"json_object\"})\n        try:\n            return json.loads(r.choices[0].message.content)\n        except json.JSONDecodeError:\n            continue\n    return None",
+       "out": "None 表示这条失败，交给人工"
+      },
+      {
+       "text": "用 20 条样本算通过率——这是最容易被忽略、也最能说明问题的一步。",
+       "code": "ok = sum(1 for s in samples if extract(s) is not None)\nprint(f\"{ok}/{len(samples)} = {ok/len(samples):.0%}\")",
+       "out": "例如 17/20 = 85%，剩下的 3 条要人工或改提示"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "开了 JSON 模式，为什么还需要重试？",
+       "a": "它保证「是合法 JSON」，不保证「字段齐全、类型对」；模型仍可能漏字段或给字符串 \"null\"。"
+      },
+      {
+       "q": "怎么提高结构化抽取的通过率？",
+       "a": "给 1–2 个完整示例（few-shot）、把字段类型写死、把长文本拆短、对失败样本单独改提示。"
+      },
+      {
+       "q": "为什么一定要有 20 条以上的人工标注样本？",
+       "a": "没有基准就只能凭感觉说「效果不错」，出了问题也说不清是哪一类。"
+      }
+     ],
+     "can": "把一段非结构化文本稳定地变成程序能用的字段，并给出一个可信的通过率。"
+    }
+   ]
+  },
+  {
+   "id": "l2s",
+   "name": "第 2 阶段 · 会算账、会部署",
+   "hint": "推理为什么慢、显存怎么算、本地怎么跑起来",
+   "lessons": [
+    {
+     "id": "llm6",
+     "title": "推理为什么慢",
+     "min": 25,
+     "hook": "同一个问题，有人等 0.5 秒看到第一个字，有人等 8 秒才出字。差别不在模型大小，在「两段式推理」。",
+     "goals": [
+      "分清 prefill 和 decode",
+      "会测首个 token 时间与总时间",
+      "知道 KV cache 是什么、为什么吃显存"
+     ],
+     "concepts": [
+      {
+       "t": "预填充",
+       "en": "prefill",
+       "d": "把整段输入一次性算完。输入越长越慢，但能并行，吃的是算力。"
+      },
+      {
+       "t": "解码",
+       "en": "decode",
+       "d": "一个词一个词往外吐，每吐一个都要把前面所有 token 重新过一遍注意力。吃的是显存带宽。"
+      },
+      {
+       "t": "KV cache",
+       "en": "KV cache",
+       "d": "把算过的键值对存下来，避免重复计算。代价是显存：序列越长占得越多。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "用流式输出，测「多久看到第一个字」和「总共多久」。",
+       "code": "import time\n\nt0 = time.time(); first = None; text = \"\"\nfor chunk in client.chat.completions.create(\n        model=\"deepseek-chat\",\n        messages=[{\"role\": \"user\", \"content\": \"写一段 200 字的产品介绍\"}],\n        stream=True):\n    delta = chunk.choices[0].delta.content or \"\"\n    if delta and first is None:\n        first = time.time() - t0\n    text += delta\nprint(f\"首字 {first:.2f}s，总 {time.time()-t0:.2f}s，{len(text)} 字\")",
+       "out": "首字通常 0.3–1s，总时间随字数线性增长"
+      },
+      {
+       "text": "换个长输入（比如 3000 字文档），看首字时间怎么变。",
+       "code": "long_doc = \"...\" * 1000\n# 只问「这段讲了什么」，输入很长、输出很短\nt0 = time.time()\nclient.chat.completions.create(model=\"deepseek-chat\",\n    messages=[{\"role\": \"user\", \"content\": long_doc + \"\\n用一句话总结\"}])\nprint(time.time()-t0)",
+       "out": "输入越长，首字越慢——这是 prefill 在变长"
+      },
+      {
+       "text": "记住一个判据：首字慢 = 输入太长；出字慢 = 输出太长。",
+       "code": "# 优化方向完全不同：\n# 首字慢 → 截断/检索/缓存输入\n# 出字慢 → 减少输出、换更快的模型、流式展示",
+       "out": ""
+      }
+     ],
+     "quiz": [
+      {
+       "q": "用户抱怨「很慢」，你该先问什么？",
+       "a": "是等第一个字慢，还是字一个一个字出得慢。前者是 prefill，后者是 decode。"
+      },
+      {
+       "q": "为什么 decode 阶段 GPU 用不满？",
+       "a": "每一步只算一个 token，矩阵太小，算力闲着，瓶颈在显存带宽。"
+      },
+      {
+       "q": "KV cache 为什么能加速？代价是什么？",
+       "a": "省掉重复计算历史 token 的功夫；代价是显存，且随序列长度和并发数线性增长。"
+      }
+     ],
+     "can": "拿到一个「慢」的反馈，能判断是 prefill 还是 decode，并说清优化方向。"
+    },
+    {
+     "id": "llm7",
+     "title": "用纸笔算清显存",
+     "min": 25,
+     "hook": "「我这 8GB 显存能跑 7B 吗？」——先别下载，三分钟就能算出来，省下两小时。",
+     "goals": [
+      "会算权重显存",
+      "会估 KV cache",
+      "能判断一张卡跑不跑得动"
+     ],
+     "concepts": [
+      {
+       "t": "权重显存",
+       "en": "weights",
+       "d": "参数量 × 每参数字节数。7B 模型用 FP16 是 14GB，用 4 位量化约 3.5–4GB。"
+      },
+      {
+       "t": "量化",
+       "en": "quantization",
+       "d": "用更少的位存同一个参数。8 位省一半，4 位省四分之三，代价是精度略降。"
+      },
+      {
+       "t": "KV cache 显存",
+       "en": "KV cache size",
+       "d": "约 2 × 层数 × 头数 × 维度 × 序列长 × 并发数 × 精度。长对话、高并发时它会超过权重。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "先算权重，三种精度对比。",
+       "code": "params = 7e9\nfor name, bytes_per in [(\"FP16\", 2), (\"INT8\", 1), (\"Q4\", 0.5)]:\n    print(f\"{name}: {params * bytes_per / 1e9:.1f} GB\")",
+       "out": "FP16 14.0 GB / INT8 7.0 GB / Q4 3.5 GB"
+      },
+      {
+       "text": "再算 KV cache：模型参数从官方配置里查（这里用典型值）。",
+       "code": "layers, heads, dim, seq, batch, bytes_per = 32, 8, 128, 4096, 1, 2\nkv = 2 * layers * heads * dim * seq * batch * bytes_per / 1e9\nprint(f\"KV cache ≈ {kv:.2f} GB\")",
+       "out": "约 0.54 GB（单条 4k 对话）；32 并发就是 17 GB"
+      },
+      {
+       "text": "加起来判断：8GB 卡能跑什么。",
+       "code": "print(3.5 + 0.54)   # Q4 + 单条 4k：约 4 GB → 能跑，还剩 4GB 给批处理和开销\nprint(14 + 0.54)    # FP16：14.5 GB → 跑不动",
+       "out": "结论：8GB 只能跑 4 位量化的 7B，且并发不能高"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "同样是 7B，为什么 Q4 只要 3.5GB？",
+       "a": "每个参数从 2 字节压到 0.5 字节（4 位），显存降为 1/4，代价是少量精度损失。"
+      },
+      {
+       "q": "为什么长对话越来越吃显存？",
+       "a": "KV cache 随序列长度线性增长；聊到 32k 时，光是缓存就能超过模型权重。"
+      },
+      {
+       "q": "8GB 卡想提高并发，优先做什么？",
+       "a": "降 KV cache：更短的上下文、更少的并发、GQA 类结构、或把一部分层放 CPU。"
+      }
+     ],
+     "can": "在下载任何模型之前，用两行算术判断它能不能跑、能跑几个并发。"
+    },
+    {
+     "id": "llm8",
+     "title": "本地跑起来并压测",
+     "min": 30,
+     "hook": "模型文件 4GB，双击打不开。你需要一个「推理引擎」，就像视频文件需要播放器。",
+     "goals": [
+      "在本机跑起一个 7B 模型",
+      "会测吞吐和延迟",
+      "理解批处理带来的取舍"
+     ],
+     "concepts": [
+      {
+       "t": "推理引擎",
+       "en": "inference engine",
+       "d": "把权重变成能服务的程序：llama.cpp（轻、跨平台）、Ollama（更好装）、vLLM（吞吐最高，但要 Linux）。"
+      },
+      {
+       "t": "吞吐 vs 延迟",
+       "en": "throughput vs latency",
+       "d": "一次服务更多人（吞吐高）往往让每个人等更久（延迟高）。这两个指标永远要一起看。"
+      },
+      {
+       "t": "并发",
+       "en": "concurrency",
+       "d": "同时处理的请求数。批处理能提高吞吐，但会拉长单请求完成时间。"
+      }
+     ],
+     "steps": [
+      {
+       "text": "装 Ollama，一条命令拉一个 4 位量化的 7B。",
+       "code": "winget install Ollama.Ollama\nollama run qwen2.5:7b-instruct-q4_K_M",
+       "out": "进入对话界面，能回答就说明跑通了"
+      },
+      {
+       "text": "用 HTTP 接口测单次延迟（Ollama 默认监听 11434）。",
+       "code": "import time, requests\n\nt0 = time.time()\nr = requests.post(\"http://localhost:11434/api/generate\", json={\n    \"model\": \"qwen2.5:7b-instruct-q4_K_M\", \"prompt\": \"用一句话解释复利\", \"stream\": False})\nprint(f\"{time.time()-t0:.2f}s\", r.json()[\"response\"][:30])",
+       "out": "首字不含流式，这里测的是总耗时"
+      },
+      {
+       "text": "发 20 个并发请求，算每秒完成数（吞吐）。",
+       "code": "from concurrent.futures import ThreadPoolExecutor\nimport time, requests\n\ndef one(_):\n    return requests.post(\"http://localhost:11434/api/generate\", json={\n        \"model\": \"qwen2.5:7b-instruct-q4_K_M\", \"prompt\": \"说一句短话\", \"stream\": False}).status_code\n\nt0 = time.time()\nwith ThreadPoolExecutor(max_workers=8) as ex:\n    list(ex.map(one, range(20)))\ndt = time.time() - t0\nprint(f\"20 个请求 {dt:.1f}s，吞吐 {20/dt:.2f} req/s\")",
+       "out": "例如 20 个请求 40s → 0.5 req/s；调小 max_workers 通常更快"
+      }
+     ],
+     "quiz": [
+      {
+       "q": "为什么并发开到 8 反而可能更慢？",
+       "a": "8GB 显存放不下 8 份 KV cache，会退化成串行或爆显存；并发要按显存算，不是越大越好。"
+      },
+      {
+       "q": "Ollama 和 vLLM 该怎么选？",
+       "a": "单机试用、Windows、图省事用 Ollama；生产要吞吐、要批处理调度用 vLLM（Linux）。"
+      },
+      {
+       "q": "「模型能跑」和「服务能用」差在哪？",
+       "a": "能跑只看单次；能用要看并发下的吞吐、超时、显存稳定性和降级策略。"
+      }
+     ],
+     "can": "在 8GB 笔记本上跑起 7B 模型，并给出它的吞吐和延迟数字（而不是「感觉还挺快」）。"
+    }
+   ]
+  }
+ ]
 }

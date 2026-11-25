@@ -13,7 +13,7 @@ COURSE = os.path.join(REPO, "course")
 MINDMAP = os.path.join(REPO, "mindmap")
 GRAPH = os.path.join(REPO, "graph")
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 
 def load(path):
@@ -31,6 +31,11 @@ def literals_from_builder():
                 if isinstance(t, ast.Name) and t.id in ("INTROS", "BOOKS", "LESSON_BOOKS"):
                     out[t.id] = ast.literal_eval(node.value)
     return out
+
+
+NEXT_TRACK = {
+    "llm": {"id": "eng", "why": "LLM 线讲「怎么用起来」，工程线（eng1–eng6）讲「怎么不崩」：评估、RAG、结构化输出、安全"},
+}
 
 
 def build_tracks():
@@ -70,7 +75,8 @@ def build_tracks():
                     "steps": l["steps"], "quiz": l["quiz"], "can": l["can"],
                 })
             out_stages.append({"name": st["name"], "hint": st.get("hint", ""), "lessons": lessons})
-        tracks.append({"id": tid, "name": name, "sub": sub, "intro": intro, "stages": out_stages})
+        tracks.append({"id": tid, "name": name, "sub": sub, "intro": intro, "stages": out_stages,
+                       "next": NEXT_TRACK.get(tid)})
     return tracks
 
 

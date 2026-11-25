@@ -80,6 +80,11 @@ export const progressTool = {
     lines.push(`${s.name}：${s.done} / ${s.total}`)
     if (s.next) lines.push(`下一关：[${s.next.id}] ${s.next.title} · ${s.next.min} 分钟`)
     else lines.push('这条线全部完成了。')
+    const td = content().tracks.find(t => t.id === trackId)
+    if (s.done >= s.total && td?.next) {
+      const nx = content().tracks.find(x => x.id === td.next.id)
+      lines.push('', `## ✅ ${s.name} 已全部学完`, `建议下一步：**${nx ? nx.name : td.next.id}**（${td.next.id}）`, td.next.why)
+    }
     if (!res.ok) lines.push(`⚠ 进度没能写入磁盘（${res.error}），本次会话有效，重启会丢。写在 ${res.path}`)
 
     // 回书指引：完成一关后顺手给
