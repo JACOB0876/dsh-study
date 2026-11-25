@@ -16,6 +16,7 @@ function summaryLine(trackDef, state) {
     total: ls.length,
     current: t.current,
     gap,
+    learned: rec.learned,
     next: next ? { id: next.id, title: next.title, min: next.min } : null,
   }
 }
@@ -29,7 +30,7 @@ export const progressTool = {
     properties: {
       action: { type: 'string', enum: ['show', 'mark', 'unmark'], description: 'show = 查看；mark = 标记完成；unmark = 取消标记。' },
       lesson_id: { type: 'string', description: 'mark / unmark 时的关卡 id，例如 l7、llm3。' },
-      track: { type: 'string', description: '只显示某条线（llm / quant / nlp / cpp）；省略则全部显示。' },
+      track: { type: 'string', description: '只显示某条线（llm / quant / nlp / cpp / eng）；省略则全部显示。' },
     },
     required: ['action'],
     additionalProperties: false,

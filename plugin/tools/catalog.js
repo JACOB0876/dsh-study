@@ -9,7 +9,7 @@ export const catalogTool = {
   parameters: {
     type: 'object',
     properties: {
-      track: { type: 'string', description: '路线 id：llm / quant / nlp / cpp。省略时返回全部路线概览。' },
+      track: { type: 'string', description: '路线 id：llm / quant / nlp / cpp / eng。省略时返回全部路线概览。' },
     },
     required: [],
     additionalProperties: false,
@@ -39,7 +39,7 @@ export const catalogTool = {
       }
       const started = tracks.some(t => (state.tracks?.[t.id]?.done || []).length)
       return ok([
-        `# 8 本书 · 学习路线（内容版本 ${content().version}）`,
+        `# ${content().books.length} 本书 · 学习路线（内容版本 ${content().version}）`,
         '',
         ...lines,
         '',
