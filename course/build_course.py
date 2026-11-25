@@ -17,6 +17,7 @@ QUANT = load("lessons.json")
 RL = load("rl_stage.json")
 NLP = load("nlp_lessons.json")
 CPP = load("cpp_lessons.json")
+ENG = load("eng_lessons.json")
 
 q_stages = list(QUANT["stages"]) if QUANT else []
 if RL:
@@ -79,6 +80,20 @@ INTROS = {
                  "往下走：Eigen 做矩阵运算、多线程做蒙特卡洛",
                  "再往后：把定价库包成 Python 扩展，给研究端调用"]
     },
+    "eng": {
+        "why": "把「演示能跑」变成「上线不崩」：评估、检索、结构化输出、安全，这四件工程活。",
+        "do": ["建一套 20 条的评估集，用数字比较 prompt 版本",
+               "把手头文档做成能问答的 RAG，回答带引用",
+               "让模型稳定输出 JSON，接进你的程序"],
+        "who": "已经会调 API、准备把模型接进真实流程或产品的人",
+        "need": "会 Python、跑通过一次 API 调用（LLM 线前 6 关即可）",
+        "time": "6 关，约 3 小时；每关都能直接用在自己的项目上",
+        "not": "不训练模型、不微调、不碰 GPU 部署（那是《04 LLM Serving》的事）",
+        "first": "一句话：这条线只解决一件事——让模型从「看着挺好」变成「敢给人用」。",
+        "next": ["给自己做一个文档问答机器人，带引用和评估集",
+                 "往下走：Promptfoo 做回归测试、DPO 做领域对齐（第 8 章）",
+                 "再往后：多模型路由、成本与延迟优化"]
+    },
 }
 
 
@@ -98,6 +113,9 @@ if NLP:
 if CPP:
     TRACKS.append({"id": "cpp", "name": "C++ 线", "sub": CPP["sub"], "stages": CPP["stages"],
                    "intro": INTROS["cpp"]})
+if ENG:
+    TRACKS.append({"id": "eng", "name": "LLM 工程线", "sub": ENG["sub"], "stages": ENG["stages"],
+                   "intro": INTROS["eng"]})
 
 
 READLIST = json.load(open(os.path.join(HERE, "readlist.json"), encoding="utf-8"))
@@ -321,7 +339,9 @@ LESSON_BOOKS = {
             "08",
             8
         ]
-    ]
+    ],
+    "eng1": [["09", 1]], "eng2": [["09", 2]], "eng3": [["09", 2]],
+    "eng4": [["09", 4]], "eng5": [["09", 5]], "eng6": [["09", 6]],
 }
 
 BY_ORDER = {"nlp": [(3, 1), (3, 4), (3, 5), (3, 6), (3, 8)],

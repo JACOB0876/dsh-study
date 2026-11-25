@@ -39,6 +39,7 @@ def build_tracks():
     rl = load(os.path.join(COURSE, "rl_stage.json"))
     nlp = load(os.path.join(COURSE, "nlp_lessons.json"))
     cpp = load(os.path.join(COURSE, "cpp_lessons.json"))
+    eng = load(os.path.join(COURSE, "eng_lessons.json"))
     starters = [load(os.path.join(COURSE, f)) for f in
                 ("starter_lesson.json", "starter_vars.json", "starter_control.json")]
 
@@ -51,6 +52,7 @@ def build_tracks():
         ("quant", "量化线", "10 关 + 3 关起步", q_stages, intros["quant"]),
         ("nlp", "文本线", nlp["sub"], nlp["stages"], intros["nlp"]),
         ("cpp", "C++ 线", cpp["sub"], cpp["stages"], intros["cpp"]),
+        ("eng", "LLM 工程线", eng["sub"], eng["stages"], intros["eng"]),
     ]
 
     tracks = []
